@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=IntelliJ
-Icon=idea.png
-Exec="/home/zack/bin/idea-IU-241.15989.150/bin/idea.sh"
-Version=1.0
-Type=Application
-Categories=Development;IDE;
-Terminal=false
-StartupNotify=true
