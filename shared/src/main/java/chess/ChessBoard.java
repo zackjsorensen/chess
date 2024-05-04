@@ -39,7 +39,25 @@ public class ChessBoard {
      * (How the game of chess normally starts)
      */
     public void resetBoard() {
-        throw new RuntimeException("Not implemented");
+        setUpPlayer(ChessGame.TeamColor.WHITE, board[1], board[0]);
+        setUpPlayer(ChessGame.TeamColor.BLACK, board[6], board[7]);
+    }
+
+    //ctr alt p -> refactors to be a parameter
+    // ctrl alt m -> methodizes the thing
+
+    private void setUpPlayer(ChessGame.TeamColor teamColor, ChessPiece[] pawnRow, ChessPiece[] baseRow) {
+        for (int i = 0; i < 8; i++) {
+            pawnRow[i] = new ChessPiece(teamColor, ChessPiece.PieceType.PAWN);
+        }
+        baseRow[0]= new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
+        baseRow[1]= new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
+        baseRow[2]= new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
+        baseRow[3]= new ChessPiece(teamColor, teamColor== ChessGame.TeamColor.WHITE ? ChessPiece.PieceType.QUEEN: ChessPiece.PieceType.KING);
+        baseRow[4]= new ChessPiece(teamColor, teamColor == ChessGame.TeamColor.WHITE ? ChessPiece.PieceType.KING: ChessPiece.PieceType.QUEEN);
+        baseRow[5]= new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
+        baseRow[6]= new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
+        baseRow[7]= new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
     }
 
     private
