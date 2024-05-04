@@ -10,6 +10,9 @@ public class ChessMove {
 
     public ChessMove(ChessPosition startPosition, ChessPosition endPosition,
                      ChessPiece.PieceType promotionPiece) {
+        start = startPosition;
+        end = endPosition;
+        promoPiece = promotionPiece;
     }
 
     /**
@@ -35,4 +38,9 @@ public class ChessMove {
     public ChessPiece.PieceType getPromotionPiece() {
         throw new RuntimeException("Not implemented");
     }
+
+    private
+    ChessPosition start;
+    ChessPosition end;
+    ChessPiece.PieceType promoPiece;
 }
