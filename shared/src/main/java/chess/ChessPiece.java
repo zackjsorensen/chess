@@ -18,6 +18,15 @@ public class ChessPiece {
     private final ChessGame.TeamColor pieceColor;
     private final PieceType pieceType;
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
 

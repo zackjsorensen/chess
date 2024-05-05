@@ -40,6 +40,16 @@ public class ChessBoard {
         return board[position.getRow()-1][position.getColumn()-1];
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
     /**
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
