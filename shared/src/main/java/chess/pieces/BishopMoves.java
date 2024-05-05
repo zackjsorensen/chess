@@ -18,7 +18,7 @@ public class BishopMoves {
     }
 
     public ArrayList<ChessMove> FindPositions(){
-        ArrayList<ChessPosition> positions = null;
+        ArrayList<ChessPosition> positions = new ArrayList<>();
 
         TryOneWay(positions, 1,1);
         TryOneWay(positions, -1,1);
