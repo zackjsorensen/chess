@@ -1,16 +1,15 @@
 package chess.pieces;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Vector;
 
 public class BishopMoves {
     ChessPiece empty = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.EMPTY);
 
-    BishopMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color){
+    public BishopMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color){
         this.board = board;
         this.myPosition = myPosition;
         this.color = color;
@@ -18,18 +17,26 @@ public class BishopMoves {
         col = myPosition.getColumn();
     }
 
-    public Vector<ChessPosition> FindPositionsUpLeft(){
-        Vector<ChessPosition> moves = null;
+    public ArrayList<ChessMove> FindPositions(){
+        ArrayList<ChessPosition> positions = null;
 
-        TryOneWay(moves, 1,1);
-        TryOneWay(moves, -1,1);
-        TryOneWay(moves, -1,-1);
-        TryOneWay(moves, 1,-1);
+        TryOneWay(positions, 1,1);
+        TryOneWay(positions, -1,1);
+        TryOneWay(positions, -1,-1);
+        TryOneWay(positions, 1,-1);
 
+        return MakeMovesArray(positions);
+    }
+
+    private ArrayList<ChessMove> MakeMovesArray(ArrayList<ChessPosition> positions){
+        ArrayList<ChessMove> moves = null;
+        for (ChessPosition item : positions){
+            moves.add(new ChessMove(myPosition, item, ChessPiece.PieceType.QUEEN));  // figure that out later...
+        }
         return moves;
     }
 
-    private void TryOneWay(Vector<ChessPosition> moves, int rowIncrement, int colIncrement) {
+    private void TryOneWay(ArrayList<ChessPosition> moves, int rowIncrement, int colIncrement) {
         ChessPosition nextPosition;
         for(int i = 0; i < 7; i++){
              nextPosition= new ChessPosition(row+ rowIncrement, col+ colIncrement);

@@ -1,6 +1,10 @@
 package chess;
 
+import chess.pieces.BishopMoves;
+
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Vector;
 
 
 /**
@@ -61,9 +65,8 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 //        throw new RuntimeException("Not implemented");
-        switch (pieceType) {
-            case PieceType.BISHOP ->
-        }
+        BishopMoves bishopset = new BishopMoves(board, myPosition, pieceColor);
+        return bishopset.FindPositions();
     }
 
 
