@@ -1,7 +1,7 @@
 package chess;
 
-import java.util.ArrayList;
 import java.util.Collection;
+
 
 /**
  * Represents a single chess piece
@@ -61,7 +61,9 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
 //        throw new RuntimeException("Not implemented");
-        return new ArrayList<>();
+        switch (pieceType) {
+            case PieceType.BISHOP ->
+        }
     }
 
 

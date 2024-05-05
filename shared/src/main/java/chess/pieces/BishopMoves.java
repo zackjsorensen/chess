@@ -21,13 +21,18 @@ public class BishopMoves {
     public Vector<ChessPosition> FindPositionsUpLeft(){
         Vector<ChessPosition> moves = null;
 
-        TryOneWay(moves);
+        TryOneWay(moves, 1,1);
+        TryOneWay(moves, -1,1);
+        TryOneWay(moves, -1,-1);
+        TryOneWay(moves, 1,-1);
+
         return moves;
     }
 
-    private void TryOneWay(Vector<ChessPosition> moves) {
-        ChessPosition nextPosition = new ChessPosition(row+1, col+1);
-        for(int i = 2; i < 9; i++){
+    private void TryOneWay(Vector<ChessPosition> moves, int rowIncrement, int colIncrement) {
+        ChessPosition nextPosition;
+        for(int i = 0; i < 7; i++){
+             nextPosition= new ChessPosition(row+ rowIncrement, col+ colIncrement);
             if (!inBounds(nextPosition)){
                 break;
             }
