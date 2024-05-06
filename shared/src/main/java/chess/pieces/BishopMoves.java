@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.Vector;
 
 public class BishopMoves {
-    ChessPiece empty = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.EMPTY);
+
 
     public BishopMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color){
         this.board = board;
@@ -44,10 +44,14 @@ public class BishopMoves {
                 break;
             }
             if( board.getPiece(nextPosition).getPieceType() != ChessPiece.PieceType.EMPTY){
-                break;
-            } else {
-                positions.add(nextPosition);
+                if (board.getPiece(nextPosition).getTeamColor() == color){
+                    break;
+                } else {
+                    positions.add(nextPosition);
+                    break;
+                }
             }
+            positions.add(nextPosition);
         }
     }
 
