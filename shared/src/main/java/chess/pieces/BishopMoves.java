@@ -31,7 +31,7 @@ public class BishopMoves {
     private ArrayList<ChessMove> MakeMovesArray(Vector<ChessPosition> positions){
         ArrayList<ChessMove> moves = new ArrayList<>();
         for (ChessPosition item : positions){
-            moves.add(new ChessMove(myPosition, item, ChessPiece.PieceType.QUEEN));  // figure that out later...
+            moves.add(new ChessMove(myPosition, item, null));  // figure that out later...
         }
         return moves;
     }
