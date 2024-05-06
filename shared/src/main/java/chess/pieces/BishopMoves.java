@@ -18,7 +18,7 @@ public class BishopMoves {
     }
 
     public ArrayList<ChessMove> FindPositions(){
-        ArrayList<ChessPosition> positions = new ArrayList<>();
+        Vector<ChessPosition> positions = new Vector<ChessPosition>();
 
         TryOneWay(positions, 1,1);
         TryOneWay(positions, -1,1);
@@ -28,35 +28,34 @@ public class BishopMoves {
         return MakeMovesArray(positions);
     }
 
-    private ArrayList<ChessMove> MakeMovesArray(ArrayList<ChessPosition> positions){
-        ArrayList<ChessMove> moves = null;
+    private ArrayList<ChessMove> MakeMovesArray(Vector<ChessPosition> positions){
+        ArrayList<ChessMove> moves = new ArrayList<>();
         for (ChessPosition item : positions){
             moves.add(new ChessMove(myPosition, item, ChessPiece.PieceType.QUEEN));  // figure that out later...
         }
         return moves;
     }
 
-    private void TryOneWay(ArrayList<ChessPosition> moves, int rowIncrement, int colIncrement) {
+    private void TryOneWay(Vector<ChessPosition> positions, int rowIncrement, int colIncrement) {
         ChessPosition nextPosition;
-        for(int i = 0; i < 7; i++){
-             nextPosition= new ChessPosition(row+ rowIncrement, col+ colIncrement);
+        for(int i = 1; i < 7; i++){
+             nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
             if (!inBounds(nextPosition)){
                 break;
             }
-            if( board.getPiece(nextPosition) != empty){
+            if( board.getPiece(nextPosition).getPieceType() != ChessPiece.PieceType.EMPTY){
                 break;
             } else {
-                moves.add(nextPosition);
-                nextPosition = new ChessPosition(row+i, col+i);
+                positions.add(nextPosition);
             }
         }
     }
 
     private boolean inBounds(ChessPosition positionToCheck) {
-        if (positionToCheck.getColumn() < 0 || positionToCheck.getColumn() > 7) {
+        if (positionToCheck.getColumn() < 1 || positionToCheck.getColumn() > 8) {
             return false;
         }
-        if (positionToCheck.getRow() < 0 || positionToCheck.getRow() > 7) {
+        if (positionToCheck.getRow() < 1 || positionToCheck.getRow() > 8) {
             return false;
         }
         return true;
