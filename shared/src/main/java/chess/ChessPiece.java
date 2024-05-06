@@ -2,6 +2,7 @@ package chess;
 
 import chess.pieces.BishopMoves;
 import chess.pieces.KingMoves;
+import chess.pieces.KnightMoves;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -87,6 +88,10 @@ public class ChessPiece {
             case KING -> {
                 KingMoves kingSet = new KingMoves(board, myPosition, pieceColor);
                 return kingSet.FindPositions();
+            }
+            case KNIGHT -> {
+                KnightMoves knightSet = new KnightMoves(board, myPosition, pieceColor);
+                return knightSet.FindPositions();
             }
             default -> {return new ArrayList<>();}
 
