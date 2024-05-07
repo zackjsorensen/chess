@@ -74,8 +74,8 @@ public class ChessBoard {
         baseRow[0]= new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
         baseRow[1]= new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
         baseRow[2]= new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
-        baseRow[3]= new ChessPiece(teamColor, teamColor== ChessGame.TeamColor.WHITE ? ChessPiece.PieceType.QUEEN: ChessPiece.PieceType.KING);
-        baseRow[4]= new ChessPiece(teamColor, teamColor == ChessGame.TeamColor.WHITE ? ChessPiece.PieceType.KING: ChessPiece.PieceType.QUEEN);
+        baseRow[3]= new ChessPiece(teamColor, ChessPiece.PieceType.QUEEN);
+        baseRow[4]= new ChessPiece(teamColor, ChessPiece.PieceType.KING);
         baseRow[5]= new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
         baseRow[6]= new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
         baseRow[7]= new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);

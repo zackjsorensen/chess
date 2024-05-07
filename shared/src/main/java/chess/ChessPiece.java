@@ -85,6 +85,10 @@ public class ChessPiece {
                 RookMoves rookSet = new RookMoves(board, myPosition, pieceColor);
                 return rookSet.FindPositions();
             }
+            case QUEEN -> {
+                QueenMoves queenSet = new QueenMoves(board, myPosition, pieceColor);
+                return queenSet.FindPositions();
+            }
             default -> {return new ArrayList<>();}
 
         }
