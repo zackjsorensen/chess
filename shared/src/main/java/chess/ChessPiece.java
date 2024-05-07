@@ -1,9 +1,6 @@
 package chess;
 
-import chess.pieces.BishopMoves;
-import chess.pieces.KingMoves;
-import chess.pieces.KnightMoves;
-import chess.pieces.PawnMoves;
+import chess.pieces.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -83,6 +80,10 @@ public class ChessPiece {
             case PAWN -> {
                 PawnMoves pawnSet = new PawnMoves(board, myPosition, pieceColor);
                 return pawnSet.FindPositions();
+            }
+            case ROOK -> {
+                RookMoves rookSet = new RookMoves(board, myPosition, pieceColor);
+                return rookSet.FindPositions();
             }
             default -> {return new ArrayList<>();}
 
