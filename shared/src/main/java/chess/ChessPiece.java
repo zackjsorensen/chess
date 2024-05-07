@@ -3,6 +3,7 @@ package chess;
 import chess.pieces.BishopMoves;
 import chess.pieces.KingMoves;
 import chess.pieces.KnightMoves;
+import chess.pieces.PawnMoves;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,22 +18,8 @@ import java.util.Vector;
  * signature of the existing methods.
  */
 public class ChessPiece {
-
     private final ChessGame.TeamColor pieceColor;
     private final PieceType pieceType;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessPiece that = (ChessPiece) o;
-        return pieceColor == that.pieceColor && pieceType == that.pieceType;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(pieceColor, pieceType);
-    }
 
     public ChessPiece(ChessGame.TeamColor pieceColor, ChessPiece.PieceType type) {
 
@@ -93,11 +80,26 @@ public class ChessPiece {
                 KnightMoves knightSet = new KnightMoves(board, myPosition, pieceColor);
                 return knightSet.FindPositions();
             }
+            case PAWN -> {
+                PawnMoves pawnSet = new PawnMoves(board, myPosition, pieceColor);
+                return pawnSet.FindPositions();
+            }
             default -> {return new ArrayList<>();}
 
         }
 
     }
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessPiece that = (ChessPiece) o;
+        return pieceColor == that.pieceColor && pieceType == that.pieceType;
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(pieceColor, pieceType);
+    }
 
 }
