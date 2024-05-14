@@ -1,5 +1,7 @@
 package chess;
 
+import com.sun.jdi.ThreadGroupReference;
+
 import java.util.Collection;
 
 /**
@@ -74,7 +76,30 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        try {
+            ChessBoard clonedBoard = (ChessBoard) board.clone();
+            // Iterate through enemy pieces and see if they can get to King's Position
+            // first - find our king
+            ChessPosition kingPos = findKing(teamColor, clonedBoard);
+            
+
+
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private ChessPosition findKing(TeamColor teamColor, ChessBoard clonedBoard) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition currentPos = new ChessPosition(i, j);
+                ChessPiece currentPiece = clonedBoard.getPiece(currentPos);
+                if (currentPiece.getTeamColor() == teamColor && currentPiece.getPieceType() == ChessPiece.PieceType.KING){
+                    return currentPos;
+                }
+            }
+        }
+        return null;
     }
 
     /**

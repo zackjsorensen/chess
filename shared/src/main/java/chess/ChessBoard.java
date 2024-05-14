@@ -67,7 +67,7 @@ public class ChessBoard implements Cloneable {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         ChessBoard clone = (ChessBoard) super.clone();
         ChessPiece[][] pieces = new ChessPiece[8][8];
 
@@ -76,7 +76,6 @@ public class ChessBoard implements Cloneable {
                 clone.board[i][j] = this.board[i][j]; // will that work?
             }
         }
-
         return clone;
     }
 
