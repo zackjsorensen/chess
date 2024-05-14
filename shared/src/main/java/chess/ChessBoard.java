@@ -1,5 +1,7 @@
 package chess;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Vector;
@@ -10,7 +12,7 @@ import java.util.Vector;
  * Note: You can add to this class, but you may not alter
  * signature of the existing methods.
  */
-public class ChessBoard {
+public class ChessBoard implements Cloneable {
 
     public ChessBoard() {
         board = new ChessPiece[8][8]; // array of array, initialized with null values
@@ -23,7 +25,7 @@ public class ChessBoard {
      * @param piece    the piece to add
      */
     public void addPiece(ChessPosition position, ChessPiece piece) {
-        board[position.getRow()-1][position.getColumn()-1] = piece;
+        board[position.getRow() - 1][position.getColumn() - 1] = piece;
         // -1 is needed because internally arrays go from 0 to 7, but position notation is from 1 to 8
     }
 
@@ -35,11 +37,11 @@ public class ChessBoard {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        if (board[position.getRow()-1][position.getColumn()-1]== null) {
+        if (board[position.getRow() - 1][position.getColumn() - 1] == null) {
             return new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.EMPTY);
             // if null, return white empty
         }
-        return board[position.getRow()-1][position.getColumn()-1];
+        return board[position.getRow() - 1][position.getColumn() - 1];
     }
 
     @Override
@@ -64,6 +66,20 @@ public class ChessBoard {
         setUpPlayer(ChessGame.TeamColor.BLACK, board[6], board[7]);
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        ChessBoard clone = (ChessBoard) super.clone();
+        ChessPiece[][] pieces = new ChessPiece[8][8];
+
+        for (int i = 0; i < clone.board.length; i++) {
+            for (int j = 0; j < clone.board.length; j++) {
+                clone.board[i][j] = this.board[i][j]; // will that work?
+            }
+        }
+
+        return clone;
+    }
+
     //ctr alt p -> refactors to be a parameter
     // ctrl alt m -> methodizes the thing
 
@@ -71,14 +87,14 @@ public class ChessBoard {
         for (int i = 0; i < 8; i++) {
             pawnRow[i] = new ChessPiece(teamColor, ChessPiece.PieceType.PAWN);
         }
-        baseRow[0]= new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
-        baseRow[1]= new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
-        baseRow[2]= new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
-        baseRow[3]= new ChessPiece(teamColor, ChessPiece.PieceType.QUEEN);
-        baseRow[4]= new ChessPiece(teamColor, ChessPiece.PieceType.KING);
-        baseRow[5]= new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
-        baseRow[6]= new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
-        baseRow[7]= new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
+        baseRow[0] = new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
+        baseRow[1] = new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
+        baseRow[2] = new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
+        baseRow[3] = new ChessPiece(teamColor, ChessPiece.PieceType.QUEEN);
+        baseRow[4] = new ChessPiece(teamColor, ChessPiece.PieceType.KING);
+        baseRow[5] = new ChessPiece(teamColor, ChessPiece.PieceType.BISHOP);
+        baseRow[6] = new ChessPiece(teamColor, ChessPiece.PieceType.KNIGHT);
+        baseRow[7] = new ChessPiece(teamColor, ChessPiece.PieceType.ROOK);
     }
 
     private

@@ -49,8 +49,13 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece myPiece = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
+        Collection<ChessMove> possibleMoves = myPiece.pieceMoves(board, startPosition);
+        // from here
+        // deepCopy the board and check all possible positions
+        // Add those that are valid to the ArrayList to return
     }
+
 
     /**
      * Makes a move in a chess game
