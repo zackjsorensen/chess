@@ -2,6 +2,7 @@ package chess;
 
 import com.sun.jdi.ThreadGroupReference;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -76,31 +77,51 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        try {
-            ChessBoard clonedBoard = (ChessBoard) board.clone();
+
             // Iterate through enemy pieces and see if they can get to King's Position
             // first - find our king
-            ChessPosition kingPos = findKing(teamColor, clonedBoard);
-            
-
-
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ChessPosition findKing(TeamColor teamColor, ChessBoard clonedBoard) {
+            ChessPosition kingPos = findKing(teamColor);
+            // iterate through enemy's pieces, see if their possibleMoves endanger the King
+            // iterate thorugh board to find all enemy pieces
+            //      when enemy is found, get possibleMoves
+            //      Check if any of those ending Positions == kingPos. If so, return true. Else, keep going
+            // Go until end of board or number of pieces checked reaches 16.
+        int piecesChecked = 0;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ChessPosition currentPos = new ChessPosition(i, j);
-                ChessPiece currentPiece = clonedBoard.getPiece(currentPos);
-                if (currentPiece.getTeamColor() == teamColor && currentPiece.getPieceType() == ChessPiece.PieceType.KING){
+                ChessPiece currentPiece = board.getPiece(currentPos);
+                if (currentPiece != null && currentPiece.getTeamColor() != teamColor){
+                    ArrayList<ChessMove> enemyMoves = (ArrayList<ChessMove>) currentPiece.pieceMoves(this.board, currentPos);
+                    for (ChessMove move : enemyMoves){
+                        if (move.endPosition == kingPos){
+                            return true;
+                        }
+                        piecesChecked++;
+                        if (piecesChecked > 15){
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private ChessPosition findKing(TeamColor teamColor) {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                ChessPosition currentPos = new ChessPosition(i, j);
+                ChessPiece currentPiece = board.getPiece(currentPos);
+                if (currentPiece != null && currentPiece.getTeamColor() == teamColor && currentPiece.getPieceType() == ChessPiece.PieceType.KING){
                     return currentPos;
                 }
             }
         }
         return null;
     }
+
+
 
     /**
      * Determines if the given team is in checkmate
