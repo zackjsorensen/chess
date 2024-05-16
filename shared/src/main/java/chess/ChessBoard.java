@@ -69,14 +69,14 @@ public class ChessBoard implements Cloneable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         ChessBoard clone = (ChessBoard) super.clone();
-        ChessPiece[][] pieces = new ChessPiece[8][8];
+        ChessBoard pieces = new ChessBoard();
 
         for (int i = 0; i < clone.board.length; i++) {
             for (int j = 0; j < clone.board.length; j++) {
-                clone.board[i][j] = this.board[i][j]; // will that work?
+                pieces.board[i][j] = this.board[i][j]; // will that work?
             }
         }
-        return clone;
+        return pieces;
     }
 
     //ctr alt p -> refactors to be a parameter

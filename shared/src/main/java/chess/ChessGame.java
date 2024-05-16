@@ -4,6 +4,7 @@ import com.sun.jdi.ThreadGroupReference;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -14,6 +15,7 @@ import java.util.Collection;
 public class ChessGame {
     private TeamColor currentTeam;
     private ChessBoard board;
+
     public ChessGame() {
         currentTeam = TeamColor.WHITE; // should that be there?
         board = new ChessBoard();
@@ -51,13 +53,38 @@ public class ChessGame {
      * @return Set of valid moves for requested piece, or null if no piece at
      * startPosition
      */
-    public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessPiece myPiece = new ChessPiece(board.getPiece(startPosition).getTeamColor(), board.getPiece(startPosition).getPieceType());
+    public Collection<ChessMove> validMoves(ChessPosition startPosition)  {
+        TeamColor myColor = board.getPiece(startPosition).getTeamColor();
+        ChessPiece myPiece = new ChessPiece(myColor, board.getPiece(startPosition).getPieceType());
         Collection<ChessMove> possibleMoves = myPiece.pieceMoves(board, startPosition);
+        final ChessBoard oldestBoard = getBoard();
         // from here
         // deepCopy the board and check all possible positions
         // Add those that are valid to the ArrayList to return
-        return null;
+        Collection<ChessMove> validMovesCollection = new ArrayList<>();   // why collection? Why not just ArrayList?
+        for (ChessMove onePossibleMove: possibleMoves){
+            // do I need to create a new ChessGame instance? Or do I reassign the board? Ah. That sounds more efficient and less convoluted
+            ChessBoard oldBoard = getBoard();
+            try {
+                setBoard((ChessBoard) board.clone());
+            } catch (Exception e){
+                throw new RuntimeException("Cloneable killed me");
+            }
+
+            // we need to make the move and see if the king is in check
+            tryOneMove(onePossibleMove);
+            if (!isInCheck(myColor)){
+                validMovesCollection.add(onePossibleMove);
+            }
+            setBoard(oldBoard);
+        }
+        return validMovesCollection;
+    }
+
+    private void tryOneMove(ChessMove onePossibleMove) {
+        ChessPiece pieceToMove = board.getPiece(onePossibleMove.getStartPosition());
+        board.addPiece(onePossibleMove.getStartPosition(), null);
+        board.addPiece(onePossibleMove.getEndPosition(), pieceToMove);
     }
 
 
@@ -68,7 +95,12 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        // get piece at start, empty the start position, update the end position, update whose turn it is
+        ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
+        board.addPiece(move.getStartPosition(), null);
+        board.addPiece(move.getEndPosition(), pieceToMove);
+        setTeamTurn((currentTeam == TeamColor.BLACK) ? TeamColor.WHITE : TeamColor.BLACK);
+        // TODO: Handle Pawn Promotions, Determine that move is valid, throw exception if not
     }
 
     /**
@@ -78,27 +110,17 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-
-            // Iterate through enemy pieces and see if they can get to King's Position
-            // first - find our king
-            ChessPosition kingPos = findKing(teamColor);
-            // iterate through enemy's pieces, see if their possibleMoves endanger the King
-            // iterate thorugh board to find all enemy pieces
-            //      when enemy is found, get possibleMoves
-            //      Check if any of those ending Positions == kingPos. If so, return true. Else, keep going
-            // Go until end of board or number of pieces checked reaches 16.
-        int piecesChecked = 0;
+        ChessPosition kingPos = findKing(teamColor);
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition currentPos = new ChessPosition(i, j);
                 ChessPiece currentPiece = board.getPiece(currentPos);
-                if (currentPiece.getPieceType() != ChessPiece.PieceType.EMPTY && currentPiece.getTeamColor() != teamColor){
+                if (currentPiece.getPieceType() != ChessPiece.PieceType.EMPTY && currentPiece.getTeamColor() != teamColor) {
                     ArrayList<ChessMove> enemyMoves = (ArrayList<ChessMove>) currentPiece.pieceMoves(this.board, currentPos);
-                    for (ChessMove move : enemyMoves){
-                        if (move.endPosition.equals(kingPos)){
+                    for (ChessMove move : enemyMoves) {
+                        if (move.endPosition.equals(kingPos)) {
                             return true;
                         }
-
                     }
                 }
             }
@@ -111,14 +133,13 @@ public class ChessGame {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition currentPos = new ChessPosition(i, j);
                 ChessPiece currentPiece = board.getPiece(currentPos); // get piece is 1 to 8 based
-                if (currentPiece != null && currentPiece.getTeamColor() == teamColor && currentPiece.getPieceType() == ChessPiece.PieceType.KING){
+                if (currentPiece != null && currentPiece.getTeamColor() == teamColor && currentPiece.getPieceType() == ChessPiece.PieceType.KING) {
                     return currentPos;
                 }
             }
         }
         return null;
     }
-
 
 
     /**
