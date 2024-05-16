@@ -57,6 +57,7 @@ public class ChessGame {
         // from here
         // deepCopy the board and check all possible positions
         // Add those that are valid to the ArrayList to return
+        return null;
     }
 
 
@@ -87,20 +88,17 @@ public class ChessGame {
             //      Check if any of those ending Positions == kingPos. If so, return true. Else, keep going
             // Go until end of board or number of pieces checked reaches 16.
         int piecesChecked = 0;
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
                 ChessPosition currentPos = new ChessPosition(i, j);
                 ChessPiece currentPiece = board.getPiece(currentPos);
-                if (currentPiece != null && currentPiece.getTeamColor() != teamColor){
+                if (currentPiece.getPieceType() != ChessPiece.PieceType.EMPTY && currentPiece.getTeamColor() != teamColor){
                     ArrayList<ChessMove> enemyMoves = (ArrayList<ChessMove>) currentPiece.pieceMoves(this.board, currentPos);
                     for (ChessMove move : enemyMoves){
-                        if (move.endPosition == kingPos){
+                        if (move.endPosition.equals(kingPos)){
                             return true;
                         }
-                        piecesChecked++;
-                        if (piecesChecked > 15){
-                            return false;
-                        }
+
                     }
                 }
             }
@@ -109,10 +107,10 @@ public class ChessGame {
     }
 
     private ChessPosition findKing(TeamColor teamColor) {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
                 ChessPosition currentPos = new ChessPosition(i, j);
-                ChessPiece currentPiece = board.getPiece(currentPos);
+                ChessPiece currentPiece = board.getPiece(currentPos); // get piece is 1 to 8 based
                 if (currentPiece != null && currentPiece.getTeamColor() == teamColor && currentPiece.getPieceType() == ChessPiece.PieceType.KING){
                     return currentPos;
                 }
