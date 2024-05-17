@@ -32,12 +32,12 @@
 
       private void TryOneWay( int rowIncrement, int colIncrement) {
           ChessPosition nextPosition;
-          for(int i = 1; i < 7; i++){
+          for(int i = 1; i <= 7; i++){
               nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
               if (!inBounds(nextPosition)){
                   break;
               }
-              if( board.getPiece(nextPosition).getPieceType() != ChessPiece.PieceType.EMPTY){ // if nextPosition is not empty
+              if( board.getPiece(nextPosition) != null){ // if nextPosition is not empty
                   if (board.getPiece(nextPosition).getTeamColor() == color){ // if it's our teammate, break, we can't move there
                       break;
                   } else { // if it's an enemy piece, we can move there

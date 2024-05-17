@@ -1,10 +1,7 @@
 package chess;
 
-import com.sun.jdi.ThreadGroupReference;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -61,7 +58,7 @@ public class ChessGame {
         // from here
         // deepCopy the board and check all possible positions
         // Add those that are valid to the ArrayList to return
-        Collection<ChessMove> validMovesCollection = new ArrayList<>();   // why collection? Why not just ArrayList?
+        ArrayList<ChessMove> validMovesCollection = new ArrayList<>();   // why collection? Why not just ArrayList?
         for (ChessMove onePossibleMove: possibleMoves){
             // do I need to create a new ChessGame instance? Or do I reassign the board? Ah. That sounds more efficient and less convoluted
             ChessBoard oldBoard = getBoard();
@@ -97,10 +94,25 @@ public class ChessGame {
     public void makeMove(ChessMove move) throws InvalidMoveException {
         // get piece at start, empty the start position, update the end position, update whose turn it is
         ChessPiece pieceToMove = board.getPiece(move.getStartPosition());
+        if (pieceToMove == null){
+            throw new InvalidMoveException("No piece to move");
+        }
+
+        ArrayList<ChessMove> validMovesArray = (ArrayList<ChessMove>) validMoves(move.getStartPosition());
+        if (!validMovesArray.contains(move)){
+            throw new InvalidMoveException("This move is not permitted");
+        } else if (pieceToMove.getTeamColor() != currentTeam){
+            throw new InvalidMoveException("It is not your turn");
+        }
+
         board.addPiece(move.getStartPosition(), null);
-        board.addPiece(move.getEndPosition(), pieceToMove);
+        if (move.promotionPiece != null){
+            board.addPiece(move.getEndPosition(), new ChessPiece(currentTeam, move.promotionPiece));
+        } else {
+            board.addPiece(move.getEndPosition(), pieceToMove);
+        }
         setTeamTurn((currentTeam == TeamColor.BLACK) ? TeamColor.WHITE : TeamColor.BLACK);
-        // TODO: Handle Pawn Promotions, Determine that move is valid, throw exception if not
+        // TODO: Handle Pawn Promotions
     }
 
     /**
@@ -115,7 +127,7 @@ public class ChessGame {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition currentPos = new ChessPosition(i, j);
                 ChessPiece currentPiece = board.getPiece(currentPos);
-                if (currentPiece.getPieceType() != ChessPiece.PieceType.EMPTY && currentPiece.getTeamColor() != teamColor) {
+                if (currentPiece != null && currentPiece.getTeamColor() != teamColor) {
                     ArrayList<ChessMove> enemyMoves = (ArrayList<ChessMove>) currentPiece.pieceMoves(this.board, currentPos);
                     for (ChessMove move : enemyMoves) {
                         if (move.endPosition.equals(kingPos)) {
@@ -149,7 +161,23 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        // if in check, iterate through all of your own pieces, see if there are any valid moves
+        if (!isInCheck(teamColor)){
+            return false;
+        }
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition currentPos = new ChessPosition(i, j);
+                ChessPiece currentPiece = board.getPiece(currentPos);
+                if (currentPiece != null && currentPiece.getTeamColor() == teamColor) {
+                    var myMoves = validMoves(currentPos);
+                    if (!myMoves.isEmpty()){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -160,7 +188,22 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        if (isInCheck(teamColor)){
+            return false;
+        }
+        for (int i = 1; i <= 8; i++) {
+            for (int j = 1; j <= 8; j++) {
+                ChessPosition currentPos = new ChessPosition(i, j);
+                ChessPiece currentPiece = board.getPiece(currentPos);
+                if (currentPiece != null && currentPiece.getTeamColor() == teamColor) {
+                    var myMoves = validMoves(currentPos);
+                    if (!myMoves.isEmpty()){
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     /**

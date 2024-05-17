@@ -43,7 +43,7 @@ public class BishopMoves {
             if (!inBounds(nextPosition)){
                 break;
             }
-            if( board.getPiece(nextPosition).getPieceType() != ChessPiece.PieceType.EMPTY){
+            if( board.getPiece(nextPosition) != null){
                 if (board.getPiece(nextPosition).getTeamColor() == color){
                     break;
                 } else {

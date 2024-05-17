@@ -37,10 +37,6 @@ public class ChessBoard implements Cloneable {
      * position
      */
     public ChessPiece getPiece(ChessPosition position) {
-        if (board[position.getRow() - 1][position.getColumn() - 1] == null) {
-            return new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.EMPTY);
-            // if null, return white empty
-        }
         return board[position.getRow() - 1][position.getColumn() - 1];
     }
 

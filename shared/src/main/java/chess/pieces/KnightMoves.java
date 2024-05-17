@@ -38,7 +38,7 @@ public class KnightMoves {
     private void TryOneWay(int rowIncrement, int colIncrement){
         ChessPosition nextPosition = new ChessPosition(row + rowIncrement, col + colIncrement);
         if (inBounds(nextPosition)){
-            if ( board.getPiece(nextPosition).getPieceType() != ChessPiece.PieceType.EMPTY) {
+            if ( board.getPiece(nextPosition) != null) {
                 if (board.getPiece(nextPosition).getTeamColor() != color) { // if it's an enemy piece
                     positions.add(nextPosition);
                 }

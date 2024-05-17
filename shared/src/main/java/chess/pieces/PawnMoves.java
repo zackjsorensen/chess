@@ -32,7 +32,7 @@ public class PawnMoves {
     }
 
     private void GoForward(ChessPosition nextPosition, int i) {
-        if (board.getPiece(nextPosition).getPieceType() == ChessPiece.PieceType.EMPTY){ // if 1 square forward is empty
+        if (board.getPiece(nextPosition) == null){ // if 1 square forward is empty
             int prePromotionRow = (color == ChessGame.TeamColor.WHITE) ? 7 : 2;
             if (row == prePromotionRow){ // we are about to get promoted
                 PromoteOptions(nextPosition);
@@ -40,7 +40,7 @@ public class PawnMoves {
                 positions.add(new ChessMove(myPosition, nextPosition, null));
                 int startingRow = (color == ChessGame.TeamColor.WHITE) ? 2 : 7;
                 if (row == startingRow){ // if it's the pawn's first move
-                    if (board.getPiece(new ChessPosition(row+2*i, col)).getPieceType() == ChessPiece.PieceType.EMPTY){  // if the next sqaure forward is empty
+                    if (board.getPiece(new ChessPosition(row+2*i, col)) == null){  // if the next sqaure forward is empty
                         positions.add(new ChessMove(myPosition, new ChessPosition(row+2*i, col), null));
                     }
                 }
@@ -49,7 +49,7 @@ public class PawnMoves {
     }
 
     private void GoDiangol(ChessPosition cornerSpace){
-        if (inBounds(cornerSpace) && board.getPiece(cornerSpace).getPieceType() != ChessPiece.PieceType.EMPTY && board.getPiece(cornerSpace).getTeamColor() != color){
+        if (inBounds(cornerSpace) && board.getPiece(cornerSpace) != null && board.getPiece(cornerSpace).getTeamColor() != color){
             // aka if there's an enemy piece there to capture
             int prePromotionRow = (color == ChessGame.TeamColor.WHITE) ? 7 : 2;
             if (row == prePromotionRow){ // we are about to get promoted
