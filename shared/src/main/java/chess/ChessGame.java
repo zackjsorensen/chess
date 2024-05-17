@@ -14,7 +14,7 @@ public class ChessGame {
     private ChessBoard board;
 
     public ChessGame() {
-        currentTeam = TeamColor.WHITE; // should that be there?
+        currentTeam = TeamColor.WHITE;
         board = new ChessBoard();
         board.resetBoard();
     }
@@ -55,12 +55,8 @@ public class ChessGame {
         ChessPiece myPiece = new ChessPiece(myColor, board.getPiece(startPosition).getPieceType());
         Collection<ChessMove> possibleMoves = myPiece.pieceMoves(board, startPosition);
         final ChessBoard oldestBoard = getBoard();
-        // from here
-        // deepCopy the board and check all possible positions
-        // Add those that are valid to the ArrayList to return
         ArrayList<ChessMove> validMovesCollection = new ArrayList<>();   // why collection? Why not just ArrayList?
         for (ChessMove onePossibleMove: possibleMoves){
-            // do I need to create a new ChessGame instance? Or do I reassign the board? Ah. That sounds more efficient and less convoluted
             ChessBoard oldBoard = getBoard();
             try {
                 setBoard((ChessBoard) board.clone());
@@ -68,7 +64,6 @@ public class ChessGame {
                 throw new RuntimeException("Cloneable killed me");
             }
 
-            // we need to make the move and see if the king is in check
             tryOneMove(onePossibleMove);
             if (!isInCheck(myColor)){
                 validMovesCollection.add(onePossibleMove);
@@ -83,7 +78,6 @@ public class ChessGame {
         board.addPiece(onePossibleMove.getStartPosition(), null);
         board.addPiece(onePossibleMove.getEndPosition(), pieceToMove);
     }
-
 
     /**
      * Makes a move in a chess game
@@ -165,6 +159,10 @@ public class ChessGame {
         if (!isInCheck(teamColor)){
             return false;
         }
+        return iterateThroughBoard(teamColor);
+    }
+
+    private boolean iterateThroughBoard(TeamColor teamColor) {
         for (int i = 1; i <= 8; i++) {
             for (int j = 1; j <= 8; j++) {
                 ChessPosition currentPos = new ChessPosition(i, j);
@@ -191,19 +189,7 @@ public class ChessGame {
         if (isInCheck(teamColor)){
             return false;
         }
-        for (int i = 1; i <= 8; i++) {
-            for (int j = 1; j <= 8; j++) {
-                ChessPosition currentPos = new ChessPosition(i, j);
-                ChessPiece currentPiece = board.getPiece(currentPos);
-                if (currentPiece != null && currentPiece.getTeamColor() == teamColor) {
-                    var myMoves = validMoves(currentPos);
-                    if (!myMoves.isEmpty()){
-                        return false;
-                    }
-                }
-            }
-        }
-        return true;
+        return iterateThroughBoard(teamColor);
     }
 
     /**
