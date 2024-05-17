@@ -16,7 +16,7 @@ public class ChessGame {
     public ChessGame() {
         currentTeam = TeamColor.WHITE; // should that be there?
         board = new ChessBoard();
-        board.resetBoard();  // constructor makes a game that is ready to start, but that can be overriden if needed.
+        board.resetBoard();
     }
 
     /**
@@ -112,7 +112,7 @@ public class ChessGame {
             board.addPiece(move.getEndPosition(), pieceToMove);
         }
         setTeamTurn((currentTeam == TeamColor.BLACK) ? TeamColor.WHITE : TeamColor.BLACK);
-        // TODO: Handle Pawn Promotions
+
     }
 
     /**
