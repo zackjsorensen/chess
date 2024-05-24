@@ -1,31 +1,56 @@
 package dataaccess;
 
+import model.GameData;
 import model.UserData;
 import org.eclipse.jetty.server.Authentication;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MemoryUserDAO implements DataAccessInterface {
-    private Map<String, UserData> myUsers;
+public class MemoryUserDAO extends MemoryParentDAO<String, UserData> {
 
     public MemoryUserDAO() {
-        myUsers = new HashMap<>();
+        super();
     }
 
     @Override
-    public void clear() {
-        myUsers = new HashMap<>();
+    public String getIdentifier(UserData dataObj) {
+        return dataObj.username();
+    }
+
+
+    @Override
+    public Object get() {
+        return null;
     }
 
     @Override
-    public void add(Record thingToAdd) {
-        UserData user = (UserData) thingToAdd;
-        myUsers.put(user.username(), user);
+    public Object getIdentifier(Object dataObj) {
+        return null;
     }
 
-    @Override
-    public Record get(String identifier) {
-        return myUsers.get(identifier);
-    }
+
 }
+
+//    private Map<String, UserData> myUsers;
+//
+//    public MemoryUserDAO() {
+//        myUsers = new HashMap<>();
+//    }
+//
+//    @Override
+//    public void clear() {
+//        myUsers = new HashMap<>();
+//    }
+//
+//    @Override
+//    public void add(UserData thingToAdd) {
+//        UserData user = (UserData) thingToAdd;
+//        myUsers.put(user.username(), user);
+//    }
+//
+//    @Override
+//    public UserData get(String identifier) {
+//        return myUsers.get(identifier);
+//    }
+//}

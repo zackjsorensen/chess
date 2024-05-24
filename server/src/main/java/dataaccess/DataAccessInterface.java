@@ -1,11 +1,13 @@
 package dataaccess;
 
-public interface DataAccessInterface {
+public interface DataAccessInterface<T, U> {
 
     public void clear();
 
-    public void add(Record thingToAdd);
+    public void add(U dataObj);
 
-    public Record get(String identifier);
+    public U get();
+
+    public T getIdentifier(U dataObj);
 
 }
