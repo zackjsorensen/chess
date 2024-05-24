@@ -6,8 +6,8 @@ public interface DataAccessInterface<T, U> {
 
     public void add(U dataObj);
 
-    public U get();
+    public U get(T identifier);
 
-    public T getIdentifier(U dataObj);
+//    public T getIdentifier(U dataObj);
 
 }
