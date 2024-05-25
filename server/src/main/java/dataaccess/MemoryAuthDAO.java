@@ -26,4 +26,8 @@ public class MemoryAuthDAO implements DataAccessInterface<String, AuthData> {
     public AuthData get(String identifier) {
         return myData.get(identifier);
     }
+
+    public void delete(String authToken){
+        myData.remove(authToken);
+    }
 }
