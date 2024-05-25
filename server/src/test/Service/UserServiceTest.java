@@ -1,5 +1,6 @@
 package Service;
 
+import dataaccess.DataAccessException;
 import dataaccess.MemoryUserDAO;
 import model.UserData;
 import org.eclipse.jetty.server.Authentication;
@@ -17,11 +18,13 @@ class UserServiceTest {
     @BeforeEach
     void setUp(){
         service = new UserService(new MemoryUserDAO());
+        service.addUser(george);
     }
+
 
     @Test
     void getUserCleared() {
-        service.addUser(george);
+
         service.addUser(elena);
         service.clearUsers();
         assertNull(service.getUser("George"));
@@ -29,14 +32,12 @@ class UserServiceTest {
 
     @Test
     void addUser(){
-        service.addUser(george);
         Assertions.assertEquals(service.getUser("George"), george);
         assertEquals(service.getUser("George").email(), "George@test.com");
     }
 
     @Test
     void addMultipleUsers(){
-        service.addUser(george);
         service.addUser(elena);
         assertEquals(service.getUser("Elena"), elena);
         assertEquals(service.getUser("George"), george);
@@ -44,4 +45,27 @@ class UserServiceTest {
     }
 
 
+    @Test
+    void getUser() {
+    }
+
+    @Test
+    void testAddUser() {
+    }
+
+    @Test
+    void clearUsers() {
+    }
+
+    @Test
+    void verifyWrongUserName() {
+        Assertions.assertFalse(service.verify(elena));
+        // do I need to implement custom exceptions here?
+    }
+
+    @Test
+    void verifyWrongPassword()  {
+        UserData notGeorge = new UserData("George", "wrong", "George@test.com");
+        Assertions.assertFalse(service.verify(notGeorge));
+    }
 }
