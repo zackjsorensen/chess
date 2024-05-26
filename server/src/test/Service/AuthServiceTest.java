@@ -46,9 +46,17 @@ class AuthServiceTest {
 
     @Test
     void deleteAuth(){
-        String joeAuth = service.createAuth("Joe");;
+        String joeAuth = service.createAuth("Joe");
         assertNotNull(service.getAuth(joeAuth));
         service.deleteAuth(joeAuth);
         assertNull(service.getAuth(joeAuth));
+    }
+
+    @Test
+    void createTwo(){
+        String joeAuth = service.createAuth("Joe");
+        String bobAuth = service.createAuth("Bob");
+        assertEquals("Bob", service.getAuth(bobAuth).username());
+        assertEquals("Joe", service.getAuth(joeAuth).username());
     }
 }

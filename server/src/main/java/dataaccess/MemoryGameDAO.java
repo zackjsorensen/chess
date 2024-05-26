@@ -28,4 +28,8 @@ public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
         return dataMap.get(identifier);
     }
 
+    public int size(){
+        return dataMap.size();
+    }
+
 }
