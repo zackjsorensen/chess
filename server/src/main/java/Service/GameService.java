@@ -15,7 +15,7 @@ public class GameService {
     }
 
     public Collection listGames(){
-        
+        return null;
     }
 
     public int createGame(String name, String authToken){
