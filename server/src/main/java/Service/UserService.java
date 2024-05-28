@@ -1,5 +1,6 @@
 package Service;
 
+import dataaccess.BadRequestException;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryUserDAO;
 import model.UserData;
@@ -16,7 +17,14 @@ public class UserService {
         return (UserData) dataAccess.get(username);
     }
 
-    public void addUser(UserData user){
+    public boolean checkRequest(UserData user){
+        if (user.password() == null || user.username() == null || user.email() == null){
+            return false;
+        }
+        return true;
+    }
+
+    public void addUser(UserData user) {
         dataAccess.add(user);
     }
 

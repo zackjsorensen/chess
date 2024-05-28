@@ -2,6 +2,8 @@ package dataaccess;
 
 import model.GameData;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,5 +33,15 @@ public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
     public int size(){
         return dataMap.size();
     }
+
+    public ArrayList listGames(){
+        return (ArrayList<GameData>) dataMap.values();
+    }
+
+    public void updateGame(int gameID, GameData game){
+        dataMap.put(gameID, game);
+    }
+
+
 
 }

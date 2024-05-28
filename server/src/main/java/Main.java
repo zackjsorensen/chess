@@ -14,11 +14,7 @@ public class Main {
             // create a server - something like this
             Server server = new Server();
             server.run(port);
-//            var port = server.run(port);
-//            System.out.println("Started test HTTP server on " + port);
-//            createRoutes();
 
-//            Spark.awaitInitialization();
             System.out.println("Listening on port " + port);
         } catch (ArrayIndexOutOfBoundsException | NumberFormatException ex) {
             System.err.println("Specify the port number as a command line parameter");
