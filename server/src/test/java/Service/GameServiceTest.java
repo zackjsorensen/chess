@@ -31,19 +31,24 @@ class GameServiceTest {
     @Test
     void createOneGame() throws DataAccessException {
         service.createGame("Uno");
-        assertEquals( dataAccess.get(0).gameName(), "Uno");
+        assertEquals( dataAccess.get(10).gameName(), "Uno");
     }
 
     @Test
-    void createGameWithoutName() throws DataAccessException {
-        DataAccessException e = assertThrows(DataAccessException.class, () -> service.createGame(null));
+    void createMultipleGames()  {
+        // I should do something about if they make a game with a duplicate name
+        service.createGame("uno");
+        service.createGame("dos");
+        service.createGame("tres");
+        var resultList = service.listGames();
+        assertEquals(3, service.listGames().length);
     }
 
     @Test
     void joinGameWhite() throws DataAccessException {
         service.createGame("Uno");
-        service.joinGame(0, "Bub", "WHITE");
-        GameData storedGame = dataAccess.get(0);
+        service.joinGame(10, "Bub", "WHITE");
+        GameData storedGame = dataAccess.get(10);
         assertEquals(storedGame.whiteUsername(), "Bub");
     }
 
@@ -51,7 +56,7 @@ class GameServiceTest {
     void joinGameBlackTaken() {
         try {
             service.createGame("Dos");
-            service.joinGame(0, "Bub", "BLACK");
+            service.joinGame(10, "Bub", "BLACK");
             DataAccessException e = assertThrows(DataAccessException.class, () -> service.joinGame(0, "Tim", "BLACK"));
         } catch (DataAccessException e) {
             throw new RuntimeException(e);

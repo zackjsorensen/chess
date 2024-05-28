@@ -7,7 +7,9 @@ import model.GameData;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 public class GameService {
     public MemoryGameDAO dataAccess;
@@ -16,7 +18,7 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
-    public Collection listGames(){
+    public Object[] listGames(){
         return dataAccess.listGames();
     }
 
