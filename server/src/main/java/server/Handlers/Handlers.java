@@ -34,36 +34,40 @@ public class Handlers {
     public String registerUser(Request req, Response res) {
         model.UserData user = gson.fromJson(req.body(), UserData.class);
         if(!userService.checkRequest(user)){
-            res.status(400);
-            return gson.toJson(new LoginResult(null, "Error: bad request"));
+            return RespondToBadReq(res);
         }
         if (userService.getUser(user.username()) != null){
             res.status(403);
             return gson.toJson(new LoginResult(null, "Error: already taken"));
         }
-
         userService.addUser(user);
         res.status(200);
         return gson.toJson(authService.createAuth(user.username()));
+    }
 
+    private String RespondToBadReq(Response res) {
+        res.status(400);
+        return gson.toJson(new ErrorResponse("Error: bad request"));
     }
 
     public String login(Request req, Response res) {
-        model.UserData user = gson.fromJson(req.body(), UserData.class); // so then email should just be null, yeah?
+        model.UserData user = gson.fromJson(req.body(), UserData.class);
         if (!userService.verify(user)) {
-            res.status(401);
-            return gson.toJson(new LoginResult(null, "Error: unauthorized"));
-            // should I be throwing errors for these??
+            return RespondToUnauthorized(res);
         }
         res.status(200);
         return gson.toJson(authService.createAuth(user.username()));
     }
 
+    private String RespondToUnauthorized(Response res) {
+        res.status(401);
+        return gson.toJson(new ErrorResponse( "Error: unauthorized"));
+    }
+
     public String logout(Request req, Response res) {
         String authToken = req.headers("authorization");
         if (authService.getAuth(authToken)== null){
-            res.status(401);
-            return gson.toJson( new ErrorResponse("Error: unauthorized"));
+           return RespondToUnauthorized(res);
         }
         authService.deleteAuth(authToken);
         res.status(200);
@@ -92,8 +96,7 @@ public class Handlers {
             return gson.toJson(new ErrorResponse("Error: bad request"));
         }
         if (!checkAuthToken(req)){
-            res.status(401);
-            return gson.toJson(new ErrorResponse("Error: unauthorized"));
+            return RespondToUnauthorized(res);
         }
         int gameID = gameService.createGame(gameName);
         res.status(200);
@@ -111,21 +114,17 @@ public class Handlers {
     public String joinGame(Request req, Response res) throws DataAccessException {
         JoinRequest joinRequest = gson.fromJson(req.body(), JoinRequest.class);
         if (!checkAuthToken(req)){
-            res.status(401);
-            return gson.toJson(new ErrorResponse("Error: unauthorized"));
+            return RespondToUnauthorized(res);
         }
         if (joinRequest.gameID() == 0){
-            res.status(400);
-            return gson.toJson(new LoginResult(null, "Error: bad request"));
+            return RespondToBadReq(res);
         }
         String username = authService.getAuth(req.headers("authorization")).username();
         if (username == null){
-            res.status(401);
-            return gson.toJson(new ErrorResponse("Error: unauthorized"));
+            return RespondToUnauthorized(res);
         }
         if (joinRequest.playerColor()== null || (!joinRequest.playerColor().equals("BLACK") && !joinRequest.playerColor().equals("WHITE"))){
-            res.status(400);
-            return gson.toJson(new LoginResult(null, "Error: bad request"));
+            return RespondToBadReq(res);
         }
         try {
             if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.playerColor())){
@@ -144,8 +143,7 @@ public class Handlers {
 
     public String listGames(Request req, Response res){
         if (!checkAuthToken(req)){
-            res.status(401);
-            return gson.toJson(new ErrorResponse("Error: unauthorized"));
+            return RespondToUnauthorized(res);
         }
 //        if (gameService.listGames() == null){
 //            res.status(200);
