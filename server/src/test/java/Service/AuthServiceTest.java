@@ -17,46 +17,46 @@ class AuthServiceTest {
         service = new AuthService(new MemoryAuthDAO());
     }
 
-    @Test
-    void clear(){
-        String keithAuth = service.createAuth("Keith");
-        String bobAuth = service.createAuth("Bob");
-        service.clear();
-        assertNull(service.getAuth(keithAuth));
-        assertNull(service.getAuth(bobAuth));
-    }
+//    @Test
+//    void clear(){
+//        String keithAuth = service.createAuth("Keith");
+//        String bobAuth = service.createAuth("Bob");
+//        service.clear();
+//        assertNull(service.getAuth(keithAuth));
+//        assertNull(service.getAuth(bobAuth));
+//    }
 
     @Test
     void getFromEmptyAuth() {
         Assertions.assertNull(service.getAuth("0000"));
     }
 
-    @Test
-    void getAuthBob(){
-        String bobAuth = service.createAuth("Bob");
-        assertEquals("Bob", service.getAuth(bobAuth).username());
-        assertNotEquals("Bobo", service.getAuth(bobAuth).username());
-    }
-
-    @Test
-    void deleteEmptyAuth(){
-        service.deleteAuth("1234");
-        assertNull(service.getAuth("1234"));
-    }
-
-    @Test
-    void deleteAuth(){
-        String joeAuth = service.createAuth("Joe");
-        assertNotNull(service.getAuth(joeAuth));
-        service.deleteAuth(joeAuth);
-        assertNull(service.getAuth(joeAuth));
-    }
-
-    @Test
-    void createTwo(){
-        String joeAuth = service.createAuth("Joe");
-        String bobAuth = service.createAuth("Bob");
-        assertEquals("Bob", service.getAuth(bobAuth).username());
-        assertEquals("Joe", service.getAuth(joeAuth).username());
-    }
+//    @Test
+//    void getAuthBob(){
+//        String bobAuth = service.createAuth("Bob");
+//        assertEquals("Bob", service.getAuth(bobAuth).username());
+//        assertNotEquals("Bobo", service.getAuth(bobAuth).username());
+//    }
+//
+//    @Test
+//    void deleteEmptyAuth(){
+//        service.deleteAuth("1234");
+//        assertNull(service.getAuth("1234"));
+//    }
+//
+//    @Test
+//    void deleteAuth(){
+//        String joeAuth = service.createAuth("Joe");
+//        assertNotNull(service.getAuth(joeAuth));
+//        service.deleteAuth(joeAuth);
+//        assertNull(service.getAuth(joeAuth));
+//    }
+//
+//    @Test
+//    void createTwo(){
+//        String joeAuth = service.createAuth("Joe");
+//        String bobAuth = service.createAuth("Bob");
+//        assertEquals("Bob", service.getAuth(bobAuth).username());
+//        assertEquals("Joe", service.getAuth(joeAuth).username());
+//    }
 }

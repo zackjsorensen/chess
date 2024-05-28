@@ -30,12 +30,12 @@ public class GameService {
         // I guess I could check auth from here, but that seems complicated
     }
 
-    public void updateGame(int gameID, String username, String color) throws DataAccessException {
+    public void joinGame(int gameID, String username, String color) throws DataAccessException {
         if (dataAccess.get(gameID) == null){
             throw new DataAccessException("Game does not exist");
         }
         if (isColorTaken(gameID, color)){
-            throw new DataAccessException("Error: Color already taken");
+            throw new DataAccessException("Error: already taken");
         }
         GameData oldGameData = dataAccess.get(gameID);
         String newWhite = "", newBlack = "";
@@ -51,7 +51,7 @@ public class GameService {
                 oldGameData.gameName(), oldGameData.game()));
     }
 
-    private boolean isColorTaken(int gameID, String color) throws DataAccessException {
+    public boolean isColorTaken(int gameID, String color) throws DataAccessException {
         if (color.equals("WHITE")){
             return dataAccess.get(gameID).whiteUsername() != null;
         } else if (color.equals("BLACK")) {

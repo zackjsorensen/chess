@@ -25,10 +25,11 @@ public class AuthService {
         dataAccess.delete(authToken);
     }
 
-    public String createAuth(String username){
+    public AuthData createAuth(String username){
         // do I need to check for an existing auth?
         String newAuth = UUID.randomUUID().toString();
-        dataAccess.add(new AuthData(newAuth, username));
-        return newAuth;
+        AuthData myAuth = new AuthData(newAuth, username);
+        dataAccess.add(myAuth);
+        return myAuth;
     }
 }
