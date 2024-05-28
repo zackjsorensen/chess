@@ -61,4 +61,8 @@ public class GameService {
             throw new DataAccessException("Bad color Request");
         }
     }
+
+    public void clear(){
+        dataAccess.clear();
+    }
 }

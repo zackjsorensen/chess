@@ -44,6 +44,4 @@ public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
         dataMap.put(gameID, game);
     }
 
-
-
 }
