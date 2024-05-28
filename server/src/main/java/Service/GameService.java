@@ -13,13 +13,8 @@ import java.util.List;
 
 public class GameService {
     public MemoryGameDAO dataAccess;
-
     public GameService(MemoryGameDAO dataAccess) {
         this.dataAccess = dataAccess;
-    }
-
-    public Object[] listGames(){
-        return dataAccess.listGames();
     }
 
     public int createGame(String name)  {
@@ -29,6 +24,10 @@ public class GameService {
         return gameID;
         // will need to handle failures...
         // I guess I could check auth from here, but that seems complicated
+    }
+
+    public Object[] listGames(){
+        return dataAccess.listGames();
     }
 
     public void joinGame(int gameID, String username, String color) throws DataAccessException {
