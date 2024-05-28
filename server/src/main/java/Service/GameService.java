@@ -19,11 +19,13 @@ public class GameService {
         return dataAccess.listGames();
     }
 
-    public int createGame(String name) throws DataAccessException {
-        if (name == null){
-            throw new DataAccessException("Game Name required");
-        }
-        int gameID = dataAccess.size();
+//    public GameData getGame(){
+//
+//    }
+
+    public int createGame(String name)  {
+
+        int gameID = dataAccess.size() + 10;
         dataAccess.add(new GameData(gameID, null, null, name, new ChessGame()));
         return gameID;
         // will need to handle failures...
