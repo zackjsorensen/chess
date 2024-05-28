@@ -21,21 +21,21 @@ public class KnightMoves {
         positions = new ArrayList<>();
     }
     /** Returns an ArrayList of all Possible Chess Moves for the current piece and board */
-    public ArrayList<ChessMove> FindPositions() {
-        TryOneWay(2, 1);
-        TryOneWay(1, 2);
-        TryOneWay(-1, 2);
-        TryOneWay(-2, 1);
-        TryOneWay(-2, -1);
-        TryOneWay(-1, -2);
-        TryOneWay(1, -2);
-        TryOneWay(2, -1);
+    public ArrayList<ChessMove> findPositions() {
+        tryOneWay(2, 1);
+        tryOneWay(1, 2);
+        tryOneWay(-1, 2);
+        tryOneWay(-2, 1);
+        tryOneWay(-2, -1);
+        tryOneWay(-1, -2);
+        tryOneWay(1, -2);
+        tryOneWay(2, -1);
 
-        return MakeMovesArray(positions);
+        return makeMovesArray(positions);
     }
 
     /** Checks a given relative position to see if it's empty or can be captured*/
-    private void TryOneWay(int rowIncrement, int colIncrement){
+    private void tryOneWay(int rowIncrement, int colIncrement){
         ChessPosition nextPosition = new ChessPosition(row + rowIncrement, col + colIncrement);
         if (inBounds(nextPosition)){
             if ( board.getPiece(nextPosition) != null) {
@@ -49,7 +49,7 @@ public class KnightMoves {
     }
 
     /** Takes the ArrayList of available positions and uses it to make an ArrayList of Chess Moves*/
-    private ArrayList<ChessMove> MakeMovesArray(ArrayList<ChessPosition> positions){
+    private ArrayList<ChessMove> makeMovesArray(ArrayList<ChessPosition> positions){
         ArrayList<ChessMove> moves = new ArrayList<>();
         for (ChessPosition item : positions){
             moves.add(new ChessMove(myPosition, item, null));  // figure that out later...

@@ -5,7 +5,6 @@ import chess.pieces.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
-import java.util.Vector;
 
 
 /**
@@ -63,27 +62,27 @@ public class ChessPiece {
         switch (pieceType){
             case BISHOP -> {
                 BishopMoves bishopSet = new BishopMoves(board, myPosition, pieceColor);
-                return bishopSet.FindPositions();
+                return bishopSet.findPositions();
             }
             case KING -> {
                 KingMoves kingSet = new KingMoves(board, myPosition, pieceColor);
-                return kingSet.FindPositions();
+                return kingSet.findPositions();
             }
             case KNIGHT -> {
                 KnightMoves knightSet = new KnightMoves(board, myPosition, pieceColor);
-                return knightSet.FindPositions();
+                return knightSet.findPositions();
             }
             case PAWN -> {
                 PawnMoves pawnSet = new PawnMoves(board, myPosition, pieceColor);
-                return pawnSet.FindPositions();
+                return pawnSet.findPositions();
             }
             case ROOK -> {
                 RookMoves rookSet = new RookMoves(board, myPosition, pieceColor);
-                return rookSet.FindPositions();
+                return rookSet.findPositions();
             }
             case QUEEN -> {
                 QueenMoves queenSet = new QueenMoves(board, myPosition, pieceColor);
-                return queenSet.FindPositions();
+                return queenSet.findPositions();
             }
             default -> {return new ArrayList<>();}
 

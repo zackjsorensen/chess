@@ -21,20 +21,20 @@ public class KingMoves {
         positions = new ArrayList<>();
     }
 /** Returns an ArrayList of all Possible Chess Moves for the current piece and board */
-    public ArrayList<ChessMove> FindPositions() {
-        TryOneWay(0, 1);
-        TryOneWay(-1, 1);
-        TryOneWay(-1, 0);
-        TryOneWay(-1, -1);
-        TryOneWay(0, -1);
-        TryOneWay(1, -1);
-        TryOneWay(1, 0);
-        TryOneWay(1, 1);
+    public ArrayList<ChessMove> findPositions() {
+        tryOneWay(0, 1);
+        tryOneWay(-1, 1);
+        tryOneWay(-1, 0);
+        tryOneWay(-1, -1);
+        tryOneWay(0, -1);
+        tryOneWay(1, -1);
+        tryOneWay(1, 0);
+        tryOneWay(1, 1);
 
-        return MakeMovesArray(positions);
+        return makeMovesArray(positions);
     }
 /** Takes the ArrayList of available positions and uses it to make an ArrayList of Chess Moves*/
-    private ArrayList<ChessMove> MakeMovesArray(ArrayList<ChessPosition> positions){
+    private ArrayList<ChessMove> makeMovesArray(ArrayList<ChessPosition> positions){
         ArrayList<ChessMove> moves = new ArrayList<>();
         for (ChessPosition item : positions){
             moves.add(new ChessMove(myPosition, item, null));  // figure that out later...
@@ -42,7 +42,7 @@ public class KingMoves {
         return moves;
     }
 /** Checks if 1 spot away from the king is available, given relative position to King's position*/
-    private void TryOneWay(int rowIncrement, int colIncrement){
+    private void tryOneWay(int rowIncrement, int colIncrement){
         ChessPosition nextPosition = new ChessPosition(row + rowIncrement, col + colIncrement);
         if (inBounds(nextPosition)){
             if ( board.getPiece(nextPosition) != null) {

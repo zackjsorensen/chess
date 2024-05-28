@@ -3,7 +3,6 @@
   import chess.*;
 
   import java.util.ArrayList;
-  import java.util.Vector;
 
   public class RookMoves {
       private ChessGame.TeamColor color;
@@ -22,15 +21,15 @@
           positions = new ArrayList<>();
       }
 
-      public ArrayList<ChessMove> FindPositions(){
-          TryOneWay(1, 0);
-          TryOneWay(-1, 0);
-          TryOneWay(0, 1);
-          TryOneWay(0, -1);
-          return MakeMovesArray(positions);
+      public ArrayList<ChessMove> findPositions(){
+          tryOneWay(1, 0);
+          tryOneWay(-1, 0);
+          tryOneWay(0, 1);
+          tryOneWay(0, -1);
+          return makeMovesArray(positions);
       }
 
-      private void TryOneWay( int rowIncrement, int colIncrement) {
+      private void tryOneWay(int rowIncrement, int colIncrement) {
           ChessPosition nextPosition;
           for(int i = 1; i <= 7; i++){
               nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
@@ -50,7 +49,7 @@
       }
 
       /** Takes the ArrayList of available positions and uses it to make an ArrayList of Chess Moves*/
-      private ArrayList<ChessMove> MakeMovesArray(ArrayList<ChessPosition> positions){
+      private ArrayList<ChessMove> makeMovesArray(ArrayList<ChessPosition> positions){
           ArrayList<ChessMove> moves = new ArrayList<>();
           for (ChessPosition item : positions){
               moves.add(new ChessMove(myPosition, item, null));  // figure that out later...

@@ -3,7 +3,6 @@ package chess.pieces;
 import chess.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Vector;
 
 public class BishopMoves {
@@ -17,18 +16,18 @@ public class BishopMoves {
         col = myPosition.getColumn();
     }
 
-    public ArrayList<ChessMove> FindPositions(){
+    public ArrayList<ChessMove> findPositions(){
         Vector<ChessPosition> positions = new Vector<ChessPosition>();
 
-        TryOneWay(positions, 1,1);
-        TryOneWay(positions, -1,1);
-        TryOneWay(positions, -1,-1);
-        TryOneWay(positions, 1,-1);
+        tryOneWay(positions, 1,1);
+        tryOneWay(positions, -1,1);
+        tryOneWay(positions, -1,-1);
+        tryOneWay(positions, 1,-1);
 
-        return MakeMovesArray(positions);
+        return makeMovesArray(positions);
     }
 
-    private ArrayList<ChessMove> MakeMovesArray(Vector<ChessPosition> positions){
+    private ArrayList<ChessMove> makeMovesArray(Vector<ChessPosition> positions){
         ArrayList<ChessMove> moves = new ArrayList<>();
         for (ChessPosition item : positions){
             moves.add(new ChessMove(myPosition, item, null));  // figure that out later...
@@ -36,7 +35,7 @@ public class BishopMoves {
         return moves;
     }
 
-    private void TryOneWay(Vector<ChessPosition> positions, int rowIncrement, int colIncrement) {
+    private void tryOneWay(Vector<ChessPosition> positions, int rowIncrement, int colIncrement) {
         ChessPosition nextPosition;
         for(int i = 1; i < 7; i++){
              nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
