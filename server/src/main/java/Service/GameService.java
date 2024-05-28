@@ -2,11 +2,12 @@ package Service;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
-import dataaccess.DataAccessInterface;
 import dataaccess.MemoryGameDAO;
 import model.GameData;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collection;
 
 public class GameService {
     public MemoryGameDAO dataAccess;
@@ -15,13 +16,9 @@ public class GameService {
         this.dataAccess = dataAccess;
     }
 
-    public ArrayList listGames(){
+    public Collection listGames(){
         return dataAccess.listGames();
     }
-
-//    public GameData getGame(){
-//
-//    }
 
     public int createGame(String name)  {
 
@@ -62,9 +59,4 @@ public class GameService {
             throw new DataAccessException("Bad color Request");
         }
     }
-
-    
-
-
-
 }

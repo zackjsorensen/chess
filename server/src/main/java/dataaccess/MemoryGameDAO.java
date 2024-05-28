@@ -1,11 +1,9 @@
 package dataaccess;
 
 import model.GameData;
+import server.ListGamesGameUnit;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
     private final Map<Integer, GameData> dataMap;
@@ -34,8 +32,12 @@ public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
         return dataMap.size();
     }
 
-    public ArrayList listGames(){
-        return (ArrayList<GameData>) dataMap.values();
+    public Collection<ListGamesGameUnit> listGames(){
+        Collection<ListGamesGameUnit> listOfGames = List.of();
+        for (GameData val:dataMap.values()){
+            listOfGames.add(new ListGamesGameUnit(val.gameID(), val.whiteUsername(), val.blackUsername(), val.gameName()));
+        }
+        return listOfGames;
     }
 
     public void updateGame(int gameID, GameData game){
