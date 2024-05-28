@@ -1,6 +1,4 @@
-package server;
-
-import model.GameData;
+package server.ReqResObjects;
 
 import java.util.Collection;
 
