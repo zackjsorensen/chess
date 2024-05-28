@@ -92,8 +92,7 @@ public class Handlers {
     public String createGame(Request req, Response res){
         String gameName = gson.fromJson(req.body(), GameData.class).gameName();
         if (gameName == null){
-            res.status(400);
-            return gson.toJson(new ErrorResponse("Error: bad request"));
+            return RespondToBadReq(res);
         }
         if (!checkAuthToken(req)){
             return RespondToUnauthorized(res);
@@ -116,16 +115,14 @@ public class Handlers {
         if (!checkAuthToken(req)){
             return RespondToUnauthorized(res);
         }
-        if (joinRequest.gameID() == 0){
+        if (joinRequest.gameID() == 0 || joinRequest.playerColor()== null || (!joinRequest.playerColor().equals("BLACK") && !joinRequest.playerColor().equals("WHITE"))){
             return RespondToBadReq(res);
         }
         String username = authService.getAuth(req.headers("authorization")).username();
         if (username == null){
             return RespondToUnauthorized(res);
         }
-        if (joinRequest.playerColor()== null || (!joinRequest.playerColor().equals("BLACK") && !joinRequest.playerColor().equals("WHITE"))){
-            return RespondToBadReq(res);
-        }
+
         try {
             if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.playerColor())){
                 res.status(403);
@@ -145,10 +142,6 @@ public class Handlers {
         if (!checkAuthToken(req)){
             return RespondToUnauthorized(res);
         }
-//        if (gameService.listGames() == null){
-//            res.status(200);
-//            return gson.toJson(new ListGamesResult("games", new ArrayList<>()));
-//        }
         res.status(200);
         return gson.toJson(new ListGamesResult(List.of(gameService.listGames())));
     }
