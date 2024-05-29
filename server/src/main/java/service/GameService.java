@@ -1,15 +1,9 @@
-package Service;
+package service;
 
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryGameDAO;
 import model.GameData;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
 
 public class GameService {
     public MemoryGameDAO dataAccess;

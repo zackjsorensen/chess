@@ -1,4 +1,4 @@
-package server.ReqResObjects;
+package server.reqResObjects;
 
 public record ErrorResponse(String message) {
 }

@@ -1,6 +1,6 @@
-package server.Handlers;
+package server.handlers;
 
-import Service.*;
+import service.*;
 import com.google.gson.Gson;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryAuthDAO;
@@ -8,10 +8,10 @@ import dataaccess.MemoryGameDAO;
 import dataaccess.MemoryUserDAO;
 import model.GameData;
 import model.UserData;
-import server.ReqResObjects.ErrorResponse;
-import server.ReqResObjects.JoinRequest;
-import server.ReqResObjects.ListGamesResult;
-import server.ReqResObjects.LoginResult;
+import server.reqResObjects.ErrorResponse;
+import server.reqResObjects.JoinRequest;
+import server.reqResObjects.ListGamesResult;
+import server.reqResObjects.LoginResult;
 import spark.Request;
 import spark.Response;
 import java.util.List;

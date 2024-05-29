@@ -1,9 +1,9 @@
 package server;
 
 import com.google.gson.Gson;
-import server.ReqResObjects.*;
+import server.reqResObjects.*;
 import spark.*;
-import server.Handlers.Handlers;
+import server.handlers.Handlers;
 
 public class Server {
     Handlers myhandlers;

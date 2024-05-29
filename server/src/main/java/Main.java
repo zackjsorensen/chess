@@ -1,8 +1,4 @@
-import Service.UserService;
-import chess.*;
-import dataaccess.MemoryUserDAO;
 import server.Server;
-import spark.Spark;
 
 public class Main {
     public static void main(String[] args) {

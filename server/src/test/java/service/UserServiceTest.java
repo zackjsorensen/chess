@@ -1,12 +1,8 @@
 package service;
 
-import Service.UserService;
-import dataaccess.DataAccessException;
 import dataaccess.MemoryUserDAO;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

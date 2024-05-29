@@ -1,4 +1,4 @@
-package server.ReqResObjects;
+package server.reqResObjects;
 
 import java.util.Collection;
 

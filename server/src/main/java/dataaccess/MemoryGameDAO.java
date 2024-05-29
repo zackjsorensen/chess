@@ -1,7 +1,7 @@
 package dataaccess;
 
 import model.GameData;
-import server.ReqResObjects.ListGamesGameUnit;
+import server.reqResObjects.ListGamesGameUnit;
 
 import java.util.*;
 

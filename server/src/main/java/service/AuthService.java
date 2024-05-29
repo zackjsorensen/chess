@@ -1,4 +1,4 @@
-package Service;
+package service;
 
 import dataaccess.MemoryAuthDAO;
 import model.AuthData;

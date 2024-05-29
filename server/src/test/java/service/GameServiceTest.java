@@ -1,15 +1,11 @@
 package service;
 
-import Service.GameService;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryGameDAO;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions.*;
-
-import javax.xml.crypto.Data;
 
 import static org.junit.jupiter.api.Assertions.*;
 
