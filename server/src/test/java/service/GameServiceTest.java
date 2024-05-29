@@ -1,5 +1,6 @@
-package Service;
+package service;
 
+import Service.GameService;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryGameDAO;

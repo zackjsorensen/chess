@@ -1,5 +1,6 @@
-package Service;
+package service;
 
+import Service.UserService;
 import dataaccess.DataAccessException;
 import dataaccess.MemoryUserDAO;
 import model.UserData;

@@ -1,5 +1,6 @@
-package Service;
+package service;
 
+import Service.AuthService;
 import dataaccess.MemoryAuthDAO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
