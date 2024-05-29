@@ -7,7 +7,6 @@ public class Main {
             if (args.length >= 1) {
                 port = Integer.parseInt(args[0]);
             }
-            // create a server - something like this
             Server server = new Server();
             server.run(port);
 
@@ -17,26 +16,3 @@ public class Main {
         }
     }
 }
-
-//    private static void createRoutes() {
-//        Spark.get("/hello", (req, res) -> "Hello Zacharias!");
-//    }
-
-
-//        var piece = new ChessPiece(ChessGame.TeamColor.WHITE, ChessPiece.PieceType.PAWN);
-//        System.out.println("♕ 240 Chess Server: " + piece);
-
-
-//
-//            var service = new UserService(new MemoryUserDAO());
-//            var server = new Server();
-//            server.run(port);
-//
-//            System.out.printf("Server started on port %d%n", port);
-//            return;
-//        } catch (Throwable ex) {
-//            System.out.printf("Unable to start server: %s%n", ex.getMessage());
-//
-//        }
-//    }
-//}
