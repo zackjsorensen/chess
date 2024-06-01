@@ -1,8 +1,7 @@
 package dataaccess;
 
 
-
-public class MysqlDataAccess implements DataAccessInterface{
+public class MysqlDataAccess implements DataAccessInterface {
 
     public MysqlDataAccess() {
     }
@@ -23,16 +22,32 @@ public class MysqlDataAccess implements DataAccessInterface{
     }
 
     private final String[] createStatements = {
-            // not sure if I need ID here.. only reason would be to have foreign keys...
+            // not sure if I need ID here... only reason would be to have foreign keys...
             """
             CREATE TABLE IF NOT EXISTS users (
               `username` varchar(256) NOT NULL,
               `password` varchar(256),
               'email' varchar(256),
-              PRIMARY KEY (`username`),
-              INDEX(type), // vas es das? 
-              INDEX(name)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+              PRIMARY KEY (`username`)
+            );
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS auth (
+              `authToken` varchar(256),
+              `username` varchar(256) NOT NULL,
+              PRIMARY KEY (`authToken`)
+            );
+            """,
+            """
+            CREATE TABLE IF NOT EXISTS games (
+              `id` int NOT NULL AUTO_INCREMENT,
+              `whiteUsername` varchar(256),
+              'blackUsername' varchar(256),
+              'gameName' varchar(256),
+              'game' longtext,
+              PRIMARY KEY (`id`),
+              INDEX ('gameName')
+            );
             """
     };
 
