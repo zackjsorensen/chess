@@ -1,6 +1,8 @@
 package service;
 
 import dataaccess.MemoryUserDAO;
+import dataaccess.ResponseException;
+import dataaccess.SQLUserDAO;
 import model.UserData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,14 +15,14 @@ class UserServiceTest {
     UserData george = new UserData("George", "1234", "George@test.com");
     UserData elena = new UserData("Elena", "password", "ElenaSanchez@test.com");
     @BeforeEach
-    void setUp(){
-        service = new UserService(new MemoryUserDAO());
+    void setUp() throws ResponseException {
+        service = new UserService(new SQLUserDAO());
         service.addUser(george);
     }
 
 
     @Test
-    void getUserCleared() {
+    void getUserCleared() throws ResponseException {
 
         service.addUser(elena);
         service.clearUsers();
@@ -28,13 +30,13 @@ class UserServiceTest {
     }
 
     @Test
-    void addUser(){
+    void addUser() throws ResponseException {
         Assertions.assertEquals(service.getUser("George"), george);
         assertEquals(service.getUser("George").email(), "George@test.com");
     }
 
     @Test
-    void addMultipleUsers(){
+    void addMultipleUsers() throws ResponseException {
         service.addUser(elena);
         assertEquals(service.getUser("Elena"), elena);
         assertEquals(service.getUser("George"), george);
@@ -55,13 +57,13 @@ class UserServiceTest {
     }
 
     @Test
-    void verifyWrongUserName() {
+    void verifyWrongUserName() throws ResponseException {
         Assertions.assertFalse(service.verify(elena));
         // do I need to implement custom exceptions here?
     }
 
     @Test
-    void verifyWrongPassword()  {
+    void verifyWrongPassword() throws ResponseException {
         UserData notGeorge = new UserData("George", "wrong", "George@test.com");
         Assertions.assertFalse(service.verify(notGeorge));
     }

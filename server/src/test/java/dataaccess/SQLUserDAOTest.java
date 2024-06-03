@@ -30,4 +30,14 @@ class SQLUserDAOTest {
         Exception e = assertThrows(ResponseException.class, ()-> database.add(new UserData("Ben", "Shhh", "n/a")));
     }
 
+    @Test
+    void clearTest() throws ResponseException {
+        database.clear();
+        database.add(new UserData("Ben", "Shhh", "n/a"));
+        database.add(new UserData("Ken", "Shhhhhh", "n/a"));
+        database.clear();
+        assertNull(database.get("Ben"));
+        assertNull(database.get("Ken"));
+    }
+
 }

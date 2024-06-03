@@ -105,7 +105,7 @@ public class SQLUserDAO implements DataAccessInterface{
                 }
             }
         } catch (SQLException | DataAccessException ex) {
-            throw new DataAccessException(String.format("Unable to configure database: %s", ex.getMessage()));
+            throw new ResponseException(500, String.format("Unable to configure database: %s", ex.getMessage()));
         }
     }
 }

@@ -1,11 +1,8 @@
 package server.handlers;
 
+import dataaccess.*;
 import service.*;
 import com.google.gson.Gson;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryAuthDAO;
-import dataaccess.MemoryGameDAO;
-import dataaccess.MemoryUserDAO;
 import model.GameData;
 import model.UserData;
 import server.reqresobjects.ErrorResponse;
@@ -24,7 +21,7 @@ public class Handlers {
     UserData empty;
 
     public Handlers() {
-        userService = new UserService(new MemoryUserDAO()); // we have our userService that starts with an empty userDAO
+        userService = new UserService(new SQLUserDAO()); // we have our userService that starts with an empty userDAO
         authService = new AuthService(new MemoryAuthDAO());
         gameService = new GameService(new MemoryGameDAO());
         gson = new Gson();
@@ -33,16 +30,21 @@ public class Handlers {
 
     public String registerUser(Request req, Response res) {
         model.UserData user = gson.fromJson(req.body(), UserData.class);
-        if(!userService.checkRequest(user)){
-            return respondToBadReq(res);
+        try {
+            if (!userService.checkRequest(user)) {
+                return respondToBadReq(res);
+            }
+            if (userService.getUser(user.username()) != null) {
+                res.status(403);
+                return gson.toJson(new LoginResult(null, "Error: already taken"));
+            }
+            userService.addUser(user);
+            res.status(200);
+            return gson.toJson(authService.createAuth(user.username()));
+        } catch (ResponseException e){
+            res.status(e.statusCode);
+            return e.getMessage();
         }
-        if (userService.getUser(user.username()) != null){
-            res.status(403);
-            return gson.toJson(new LoginResult(null, "Error: already taken"));
-        }
-        userService.addUser(user);
-        res.status(200);
-        return gson.toJson(authService.createAuth(user.username()));
     }
 
     private String respondToBadReq(Response res) {
@@ -50,7 +52,7 @@ public class Handlers {
         return gson.toJson(new ErrorResponse("Error: bad request"));
     }
 
-    public String login(Request req, Response res) {
+    public String login(Request req, Response res) throws ResponseException {
         model.UserData user = gson.fromJson(req.body(), UserData.class);
         if (!userService.verify(user)) {
             return respondToUnauthorized(res);
