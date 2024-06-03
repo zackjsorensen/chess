@@ -1,8 +1,7 @@
 package service;
 
-import dataaccess.MemoryUserDAO;
-import dataaccess.ResponseException;
-import dataaccess.SQLUserDAO;
+import dataaccess.exception.ResponseException;
+import dataaccess.sql.SQLUserDAO;
 import model.UserData;
 
 public class UserService {

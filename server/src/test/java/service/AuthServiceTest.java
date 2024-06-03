@@ -1,7 +1,8 @@
 package service;
 
-import dataaccess.MemoryAuthDAO;
-import org.junit.jupiter.api.Assertions;
+import dataaccess.exception.ResponseException;
+import dataaccess.memorydao.MemoryAuthDAO;
+import dataaccess.sql.SQLAuthDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import model.AuthData;
@@ -14,11 +15,11 @@ class AuthServiceTest {
 
     @BeforeEach
     public void setUp(){
-        service = new AuthService(new MemoryAuthDAO());
+        service = new AuthService(new SQLAuthDAO());
     }
 
     @Test
-    void clear(){
+    void clear() throws ResponseException {
         String keithAuth = service.createAuth("Keith").authToken();
         String bobAuth = service.createAuth("Bob").authToken();
         service.clear();
@@ -27,25 +28,25 @@ class AuthServiceTest {
     }
 
     @Test
-    void getFromEmptyAuth() {
+    void getFromEmptyAuth() throws ResponseException {
         assertNull(service.getAuth("0000"));
     }
 
     @Test
-    void getAuthBob(){
+    void getAuthBob() throws ResponseException {
         String bobAuth = service.createAuth("Bob").authToken();
         assertEquals("Bob", service.getAuth(bobAuth).username());
         assertNotEquals("Bobo", service.getAuth(bobAuth).username());
     }
 
     @Test
-    void deleteEmptyAuth(){
+    void deleteEmptyAuth() throws ResponseException {
         service.deleteAuth("1234");
         assertNull(service.getAuth("1234"));
     }
 
     @Test
-    void deleteAuth(){
+    void deleteAuth() throws ResponseException {
         String joeAuth = service.createAuth("Joe").authToken();
         assertNotNull(service.getAuth(joeAuth));
         service.deleteAuth(joeAuth);
@@ -53,7 +54,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void createTwo(){
+    void createTwo() throws ResponseException {
         String joeAuth = service.createAuth("Joe").authToken();
         String bobAuth = service.createAuth("Bob").authToken();
         assertEquals("Bob", service.getAuth(bobAuth).username());

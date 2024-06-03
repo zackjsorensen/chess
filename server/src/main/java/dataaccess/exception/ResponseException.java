@@ -1,4 +1,4 @@
-package dataaccess;
+package dataaccess.exception;
 
 public class ResponseException extends DataAccessException {
     public int statusCode;

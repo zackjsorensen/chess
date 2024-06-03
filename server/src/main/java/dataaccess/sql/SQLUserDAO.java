@@ -1,19 +1,19 @@
-package dataaccess;
+package dataaccess.sql;
 
 
+import dataaccess.DatabaseManager;
+import dataaccess.exception.DataAccessException;
+import dataaccess.exception.ResponseException;
 import model.UserData;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import static java.sql.Statement.RETURN_GENERATED_KEYS;
-import static java.sql.Types.NULL;
 
 
-public class SQLUserDAO implements DataAccessInterface{
+public class SQLUserDAO extends SQLParentDAO {
 
     public SQLUserDAO() {
         try {
-            configureDatabase();
+            super.configureDatabase(createStatement);
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
@@ -60,32 +60,7 @@ public class SQLUserDAO implements DataAccessInterface{
         return new UserData(username, password, email);
     }
 
-    private int executeUpdate(String statement, Object... params) throws ResponseException {
-        try (var conn = DatabaseManager.getConnection()) {
-            try (var ps = conn.prepareStatement(statement, RETURN_GENERATED_KEYS)) {
-                for (var i = 0; i < params.length; i++) {
-                    var param = params[i];
-                    if (param instanceof String p) ps.setString(i + 1, p);
-                    else if (param instanceof Integer p) ps.setInt(i + 1, p);
-                    else if (param == null) ps.setNull(i + 1, NULL);
-                }
-                ps.executeUpdate();
-
-                var rs = ps.getGeneratedKeys();
-                if (rs.next()) {
-                    return rs.getInt(1);
-                }
-
-                return 0;
-            }
-        } catch (SQLException e) {
-            throw new ResponseException(500, String.format("unable to update database: %s, %s", statement, e.getMessage()));
-        } catch (DataAccessException e) {
-            throw new ResponseException(500, e.getMessage());
-        }
-    }
-
-    private final String[] createStatements = {
+    private final String[] createStatement = {
             """
             CREATE TABLE IF NOT EXISTS  users (
               `username` varchar(256) NOT NULL,
@@ -95,17 +70,4 @@ public class SQLUserDAO implements DataAccessInterface{
             )
             """
     };
-
-    private void configureDatabase() throws DataAccessException {
-        DatabaseManager.createDatabase();
-        try (var conn = DatabaseManager.getConnection()) {
-            for (var statement : createStatements) {
-                try (var preparedStatement = conn.prepareStatement(statement)) {
-                    preparedStatement.executeUpdate();
-                }
-            }
-        } catch (SQLException | DataAccessException ex) {
-            throw new ResponseException(500, String.format("Unable to configure database: %s", ex.getMessage()));
-        }
-    }
 }

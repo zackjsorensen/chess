@@ -1,6 +1,11 @@
 package server.handlers;
 
-import dataaccess.*;
+import dataaccess.exception.DataAccessException;
+import dataaccess.exception.ResponseException;
+import dataaccess.memorydao.MemoryAuthDAO;
+import dataaccess.memorydao.MemoryGameDAO;
+import dataaccess.sql.SQLAuthDAO;
+import dataaccess.sql.SQLUserDAO;
 import service.*;
 import com.google.gson.Gson;
 import model.GameData;
@@ -22,7 +27,7 @@ public class Handlers {
 
     public Handlers() {
         userService = new UserService(new SQLUserDAO()); // we have our userService that starts with an empty userDAO
-        authService = new AuthService(new MemoryAuthDAO());
+        authService = new AuthService(new SQLAuthDAO());
         gameService = new GameService(new MemoryGameDAO());
         gson = new Gson();
         empty = (new UserData(null, null, null));
@@ -68,12 +73,17 @@ public class Handlers {
 
     public String logout(Request req, Response res) {
         String authToken = req.headers("authorization");
-        if (authService.getAuth(authToken)== null){
-           return respondToUnauthorized(res);
+        try {
+            if (authService.getAuth(authToken)== null){
+               return respondToUnauthorized(res);
+            }
+            authService.deleteAuth(authToken);
+            res.status(200);
+            return gson.toJson(empty);
+        } catch (ResponseException e) {
+            res.status(e.statusCode);
+            return e.getMessage();
         }
-        authService.deleteAuth(authToken);
-        res.status(200);
-        return gson.toJson(empty);
     }
 
     public String clearDB(Request req, Response res) {
@@ -91,7 +101,7 @@ public class Handlers {
         }
     }
 
-    public String createGame(Request req, Response res){
+    public String createGame(Request req, Response res) throws ResponseException {
         String gameName = gson.fromJson(req.body(), GameData.class).gameName();
         if (gameName == null){
             return respondToBadReq(res);
@@ -104,7 +114,7 @@ public class Handlers {
         return gson.toJson(new GameData(gameID, null, null, null, null));
     }
 
-    private boolean checkAuthToken(Request req){
+    private boolean checkAuthToken(Request req) throws ResponseException {
         String authToken = req.headers("authorization");
         if (authToken == null){
             return false;
@@ -140,7 +150,7 @@ public class Handlers {
         return gson.toJson(empty);
     }
 
-    public String listGames(Request req, Response res){
+    public String listGames(Request req, Response res) throws ResponseException {
         if (!checkAuthToken(req)){
             return respondToUnauthorized(res);
         }

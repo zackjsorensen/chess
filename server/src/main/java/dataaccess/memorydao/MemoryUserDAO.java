@@ -1,8 +1,8 @@
-package dataaccess;
+package dataaccess.memorydao;
 
-import model.GameData;
+import dataaccess.DataAccessInterface;
+import dataaccess.exception.ResponseException;
 import model.UserData;
-import org.eclipse.jetty.server.Authentication;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +17,11 @@ public class MemoryUserDAO implements DataAccessInterface<String, UserData> {
     @Override
     public void clear() {
         myData.clear();
+    }
+
+    @Override
+    public void clear(String databaseName) throws ResponseException {
+
     }
 
     @Override

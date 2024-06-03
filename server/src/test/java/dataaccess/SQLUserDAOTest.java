@@ -1,5 +1,7 @@
 package dataaccess;
 
+import dataaccess.exception.ResponseException;
+import dataaccess.sql.SQLUserDAO;
 import model.UserData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

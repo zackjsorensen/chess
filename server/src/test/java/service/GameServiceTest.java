@@ -1,8 +1,8 @@
 package service;
 
 import chess.ChessGame;
-import dataaccess.DataAccessException;
-import dataaccess.MemoryGameDAO;
+import dataaccess.exception.DataAccessException;
+import dataaccess.memorydao.MemoryGameDAO;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,8 @@
-package dataaccess;
+package dataaccess.memorydao;
 
+import dataaccess.DataAccessInterface;
+import dataaccess.exception.ResponseException;
 import model.AuthData;
-import model.UserData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,6 +16,10 @@ public class MemoryAuthDAO implements DataAccessInterface<String, AuthData> {
     @Override
     public void clear() {
         myData.clear();
+    }
+
+    @Override
+    public void clear(String databaseName) throws ResponseException {
     }
 
     @Override

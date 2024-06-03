@@ -1,5 +1,7 @@
-package dataaccess;
+package dataaccess.memorydao;
 
+import dataaccess.DataAccessInterface;
+import dataaccess.exception.ResponseException;
 import model.GameData;
 import server.reqresobjects.ListGamesGameUnit;
 
@@ -16,6 +18,10 @@ public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
     @Override
     public void clear() {
         dataMap.clear();
+    }
+
+    @Override
+    public void clear(String databaseName) throws ResponseException {
     }
 
     @Override

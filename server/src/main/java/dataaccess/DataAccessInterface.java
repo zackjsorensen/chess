@@ -1,8 +1,12 @@
 package dataaccess;
 
+import dataaccess.exception.ResponseException;
+
 public interface DataAccessInterface<T, U> {
 
     public void clear() throws ResponseException;
+
+    void clear(String databaseName) throws ResponseException;
 
     public void add(U dataObj) throws ResponseException;
 
