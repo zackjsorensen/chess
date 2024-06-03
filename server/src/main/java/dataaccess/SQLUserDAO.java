@@ -3,6 +3,7 @@ package dataaccess;
 
 import model.UserData;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -32,8 +33,31 @@ public class SQLUserDAO implements DataAccessInterface{
     }
 
     @Override
-    public Object get(Object identifier) {
+    public Object get(Object identifier) throws ResponseException {
+        String username = (String) identifier;
+
+        try (var conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT username, password, email FROM users WHERE username=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, username);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        return readUser(rs);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+        }
+
         return null;
+    }
+
+    private Object readUser(ResultSet rs) throws SQLException {
+        String username = rs.getString("username");
+        String password = rs.getString("password");
+        String email = rs.getString("email");
+        return new UserData(username, password, email);
     }
 
     private int executeUpdate(String statement, Object... params) throws ResponseException {

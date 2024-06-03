@@ -15,8 +15,19 @@ class SQLUserDAOTest {
     }
 
     @Test
-    void addTest1() throws ResponseException {
+    void addTestSuccess() throws ResponseException {
+        database.clear();
         database.add(new UserData("Ben", "Shhh", "n/a"));
+        UserData user = (UserData) database.get("Ben");
+        assertEquals("Ben", user.username());
+        assertEquals("n/a", user.email());
+    }
+
+    @Test
+    void addTestFail() throws ResponseException {
+        database.clear();
+        database.add(new UserData("Ben", "Shhh", "n/a"));
+        Exception e = assertThrows(ResponseException.class, ()-> database.add(new UserData("Ben", "Shhh", "n/a")));
     }
 
 }
