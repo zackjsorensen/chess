@@ -19,8 +19,10 @@ class SQLGameDAOTest {
 
     @Test
     void addSuccess() throws ResponseException {
-        GameData dummy = new GameData(12, "Wyat", "Broc", "Test", new ChessGame());
-        database.add(dummy);
-        assertEquals(dummy, database.get(12));
+        GameData dummy = new GameData(0, "Wyat", "Broc", "Test", new ChessGame());
+        int id = database.add(dummy);
+        assertEquals(dummy.whiteUsername(), database.get(id).whiteUsername());
+        assertEquals(dummy.blackUsername(), database.get(id).blackUsername());
+        assertEquals(dummy.gameName(), database.get(id).gameName());
     }
 }

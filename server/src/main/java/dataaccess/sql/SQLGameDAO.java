@@ -47,7 +47,7 @@ public class SQLGameDAO extends SQLParentDAO{
     public GameData get(int id) throws ResponseException {
 
         try (var conn = DatabaseManager.getConnection()) {
-            String statement = "SELECT FROM games WHERE id=?";
+            String statement = "SELECT * FROM games WHERE id=?";
             try (var ps = conn.prepareStatement(statement)) {
                 ps.setInt(1, id);
                 try (var rs = ps.executeQuery()) {
