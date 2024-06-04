@@ -13,8 +13,7 @@ public class GameService {
 
     public int createGame(String name)  {
 
-        int gameID = dataAccess.size() + 10;
-        dataAccess.add(new GameData(gameID, null, null, name, new ChessGame()));
+        int gameID = dataAccess.add(new GameData(0, null, null, name, new ChessGame()));
         return gameID;
         // will need to handle failures...
         // I guess I could check auth from here, but that seems complicated

@@ -25,8 +25,9 @@ public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
     }
 
     @Override
-    public void add(GameData dataObj) {
+    public int add(GameData dataObj) {
         dataMap.put(dataObj.gameID(), dataObj);
+        return 0;
     }
 
     @Override

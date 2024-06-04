@@ -6,7 +6,6 @@ import dataaccess.exception.DataAccessException;
 import dataaccess.exception.ResponseException;
 
 import java.sql.SQLException;
-import java.util.Arrays;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 import static java.sql.Types.NULL;
@@ -19,8 +18,9 @@ public abstract class SQLParentDAO implements DataAccessInterface {
     }
 
     @Override
-    public void add(Object dataObj) throws ResponseException {
+    public int add(Object dataObj) throws ResponseException {
 
+        return 0;
     }
 
     @Override

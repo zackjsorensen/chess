@@ -25,8 +25,9 @@ public class MemoryUserDAO implements DataAccessInterface<String, UserData> {
     }
 
     @Override
-    public void add(UserData dataObj) {
+    public int add(UserData dataObj) {
         myData.put(dataObj.username(), dataObj);
+        return 0;
     }
 
     @Override

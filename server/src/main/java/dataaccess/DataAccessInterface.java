@@ -8,7 +8,7 @@ public interface DataAccessInterface<T, U> {
 
     void clear(String databaseName) throws ResponseException;
 
-    public void add(U dataObj) throws ResponseException;
+    public int add(U dataObj) throws ResponseException;
 
     public U get(T identifier) throws ResponseException;
 

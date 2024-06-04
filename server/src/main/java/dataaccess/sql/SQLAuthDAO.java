@@ -4,7 +4,6 @@ import dataaccess.DatabaseManager;
 import dataaccess.exception.DataAccessException;
 import dataaccess.exception.ResponseException;
 import model.AuthData;
-import model.UserData;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,10 +28,11 @@ public class SQLAuthDAO extends SQLParentDAO{
     }
 
     @Override
-    public void add(Object dataObj) throws ResponseException {
+    public int add(Object dataObj) throws ResponseException {
         AuthData auth = (AuthData) dataObj;
         var statement = "INSERT INTO auth (authToken, username) VALUES (?, ?)";
         executeUpdate(statement, auth.authToken(), auth.username());
+        return 0;
     }
 
     @Override

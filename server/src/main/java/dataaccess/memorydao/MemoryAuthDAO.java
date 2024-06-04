@@ -23,8 +23,9 @@ public class MemoryAuthDAO implements DataAccessInterface<String, AuthData> {
     }
 
     @Override
-    public void add(AuthData dataObj) {
+    public int add(AuthData dataObj) {
         myData.put(dataObj.authToken(), dataObj);
+        return 0;
     }
 
     @Override

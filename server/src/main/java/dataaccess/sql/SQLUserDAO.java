@@ -26,10 +26,11 @@ public class SQLUserDAO extends SQLParentDAO {
     }
 
     @Override
-    public void add(Object dataObj) throws ResponseException {
+    public int add(Object dataObj) throws ResponseException {
         UserData user = (UserData) dataObj;
         var statement = "INSERT INTO users (username, password, email) VALUES (?, ?, ?)";
         executeUpdate(statement, user.username(), user.password(), user.email());
+        return 0;
     }
 
     @Override

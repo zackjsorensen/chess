@@ -58,5 +58,5 @@ class SQLAuthDAOTest {
         database.add(new AuthData("12345", "Ben"));
         assertThrows(ResponseException.class, () -> database.delete("12355"));
     } // or should this be DataAccessException?
-    
+
 }
