@@ -69,6 +69,9 @@ public class SQLAuthDAO extends SQLParentDAO{
 
     public void delete(String authToken) throws ResponseException {
         String statement = "DELETE FROM auth WHERE authToken=?";
+        if (this.get(authToken) == null){
+            throw new ResponseException(400, "Not logged in");
+        }
         executeUpdate(statement, authToken);
     }
 }
