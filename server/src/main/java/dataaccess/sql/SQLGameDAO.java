@@ -5,10 +5,8 @@ import com.google.gson.Gson;
 import dataaccess.DatabaseManager;
 import dataaccess.exception.DataAccessException;
 import dataaccess.exception.ResponseException;
-import model.AuthData;
 import model.GameData;
 import server.reqresobjects.ListGamesGameUnit;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -40,7 +38,7 @@ public class SQLGameDAO extends SQLParentDAO{
     public int add(Object dataObj) throws ResponseException {
         GameData gameData = (GameData) dataObj;
         String statement = "INSERT INTO games (whiteUsername, blackUsername, gameName, game) VALUES (?, ?, ?, ?)";
-        String json = new Gson().toJson(gameData);
+        String json = new Gson().toJson(gameData.game());
         return executeUpdate(statement, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), json );
     }
 
@@ -71,27 +69,39 @@ public class SQLGameDAO extends SQLParentDAO{
         return new GameData(id, whiteUsername, blackUsername, gameName, game);
     }
 
-    public ArrayList<ListGamesGameUnit> listGames() throws ResponseException {
+    public Object[] listGames() throws ResponseException {
         ArrayList<ListGamesGameUnit> gamesList = new ArrayList<ListGamesGameUnit>();
         try (var conn = DatabaseManager.getConnection()) {
-            String statement = "SELECT id, whiteUsername, blackUsername, gameName FROM games";
+            String statement = "SELECT id, whiteUsername, blackUsername, gameName, game FROM games";
             try (var ps = conn.prepareStatement(statement)) {
                 try (var rs = ps.executeQuery()) {
                     while (rs.next()) {
                         GameData temp = readGame(rs);
-                        gamesList.add(temp.gameID(), new ListGamesGameUnit(temp.gameID(), temp.whiteUsername(), temp.blackUsername(), temp.gameName()));
+                        gamesList.add(new ListGamesGameUnit(temp.gameID(), temp.whiteUsername(), temp.blackUsername(), temp.gameName()));
                     }
                 }
             }
         } catch (Exception e) {
             throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
         }
-        return gamesList;
+        return gamesList.toArray();
     }
 
-    public void updateGame(int id, GameData gameData) throws ResponseException {
-        delete(id);
-        add(gameData);
+    public void updateGameState(int id, GameData gameData) throws ResponseException {
+        String json = new Gson().toJson(gameData.game());
+        String statement = "UPDATE games SET game = ? WHERE id=?";
+        executeUpdate(statement, json, id);
+    }
+
+    public void updatePlayer(int id, String color, String username) throws ResponseException {
+        String statement;
+        if (color.equals("BLACK")){
+            statement = "UPDATE games SET blackUsername = ? WHERE id=?";
+
+        } else {
+            statement = "UPDATE games SET whiteUsername = ? WHERE id=?";
+        }
+        executeUpdate(statement, username, id);
     }
 
     private void delete(int id) throws ResponseException {

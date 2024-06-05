@@ -5,6 +5,7 @@ import dataaccess.exception.ResponseException;
 import dataaccess.memorydao.MemoryAuthDAO;
 import dataaccess.memorydao.MemoryGameDAO;
 import dataaccess.sql.SQLAuthDAO;
+import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
 import service.*;
 import com.google.gson.Gson;
@@ -28,7 +29,7 @@ public class Handlers {
     public Handlers() {
         userService = new UserService(new SQLUserDAO()); // we have our userService that starts with an empty userDAO
         authService = new AuthService(new SQLAuthDAO());
-        gameService = new GameService(new MemoryGameDAO());
+        gameService = new GameService(new SQLGameDAO());
         gson = new Gson();
         empty = (new UserData(null, null, null));
     }

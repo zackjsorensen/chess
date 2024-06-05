@@ -2,24 +2,23 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.exception.DataAccessException;
-import dataaccess.memorydao.MemoryGameDAO;
+import dataaccess.exception.ResponseException;
+import dataaccess.sql.SQLGameDAO;
 import model.GameData;
 
 public class GameService {
-    public MemoryGameDAO dataAccess;
-    public GameService(MemoryGameDAO dataAccess) {
+    public SQLGameDAO dataAccess;
+    public GameService(SQLGameDAO dataAccess) {
         this.dataAccess = dataAccess;
     }
 
-    public int createGame(String name)  {
+    public int createGame(String name) throws ResponseException {
 
         int gameID = dataAccess.add(new GameData(0, null, null, name, new ChessGame()));
         return gameID;
-        // will need to handle failures...
-        // I guess I could check auth from here, but that seems complicated
     }
 
-    public Object[] listGames(){
+    public Object[] listGames() throws ResponseException {
         return dataAccess.listGames();
     }
 
@@ -30,18 +29,11 @@ public class GameService {
         if (isColorTaken(gameID, color)){
             throw new DataAccessException("Error: already taken");
         }
-        GameData oldGameData = dataAccess.get(gameID);
-        String newWhite = "", newBlack = "";
-        if(color.equals("BLACK")){
-            newWhite = oldGameData.whiteUsername();
-            newBlack = username;
-        } else if (color.equals("WHITE")){
-            newWhite = username;
-            newBlack = oldGameData.blackUsername();
-        } // how to handle errors here?
+        dataAccess.updatePlayer(gameID, color, username);
+    }
 
-        dataAccess.updateGame(gameID, new GameData(gameID, newWhite, newBlack,
-                oldGameData.gameName(), oldGameData.game()));
+    public void updateGameState(int id, GameData gameData) throws ResponseException {
+        dataAccess.updateGameState(id, gameData);
     }
 
     public boolean isColorTaken(int gameID, String color) throws DataAccessException {
@@ -54,7 +46,7 @@ public class GameService {
         }
     }
 
-    public void clear(){
+    public void clear() throws ResponseException {
         dataAccess.clear();
     }
 }

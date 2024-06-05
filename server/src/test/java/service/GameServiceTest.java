@@ -2,7 +2,9 @@ package service;
 
 import chess.ChessGame;
 import dataaccess.exception.DataAccessException;
+import dataaccess.exception.ResponseException;
 import dataaccess.memorydao.MemoryGameDAO;
+import dataaccess.sql.SQLGameDAO;
 import model.GameData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,51 +12,52 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameServiceTest {
-    MemoryGameDAO dataAccess;
+    SQLGameDAO dataAccess;
     GameService service;
     @BeforeEach
     void setup(){
-       dataAccess = new MemoryGameDAO();
+       dataAccess = new SQLGameDAO();
        service = new GameService(dataAccess);
     }
 
     @Test
-    void createAddGame() {
+    void createAddGame() throws ResponseException {
         GameData newGame = new GameData(1234, null, null, "MyGame", new ChessGame());
-        dataAccess.add(newGame);
-        assertEquals(dataAccess.get(1234), newGame);
+        int id = dataAccess.add(newGame);
+        assertEquals(dataAccess.get(id).gameName(), newGame.gameName());
     }
 
     @Test
     void createOneGame() throws DataAccessException {
-        service.createGame("Uno");
-        assertEquals( dataAccess.get(10).gameName(), "Uno");
+        int id = service.createGame("Uno");
+        assertEquals( dataAccess.get(id).gameName(), "Uno");
     }
 
     @Test
-    void createMultipleGames()  {
-        // I should do something about if they make a game with a duplicate name
+    void createMultipleGames() throws ResponseException {
+        service.clear();
         service.createGame("uno");
         service.createGame("dos");
         service.createGame("tres");
         var resultList = service.listGames();
-        assertEquals(3, service.listGames().length);
+        assertEquals(3, resultList.length);
     }
 
     @Test
     void joinGameWhite() throws DataAccessException {
-        service.createGame("Uno");
-        service.joinGame(10, "Bub", "WHITE");
-        GameData storedGame = dataAccess.get(10);
-        assertEquals(storedGame.whiteUsername(), "Bub");
+        service.clear();
+        int id = service.createGame("Uno");
+        service.joinGame(id, "Bub", "WHITE");
+        GameData storedGame = dataAccess.get(id);
+        assertEquals("Bub", storedGame.whiteUsername());
     }
 
     @Test
     void joinGameBlackTaken() {
         try {
-            service.createGame("Dos");
-            service.joinGame(10, "Bub", "BLACK");
-            DataAccessException e = assertThrows(DataAccessException.class, () -> service.joinGame(0, "Tim", "BLACK"));
+            int id = service.createGame("Dos");
+            service.joinGame(id, "Bub", "BLACK");
+            DataAccessException e = assertThrows(DataAccessException.class, () -> service.joinGame(id, "Tim", "BLACK"));
         } catch (DataAccessException e) {
             throw new RuntimeException(e);
         }
