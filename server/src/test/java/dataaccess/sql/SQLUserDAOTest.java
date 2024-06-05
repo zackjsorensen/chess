@@ -19,6 +19,7 @@ class SQLUserDAOTest {
 
     @Test
     void addTestSuccess() throws ResponseException {
+        database.clear();
         database.add(new UserData("Ben", "Shhh", "n/a"));
         UserData user = (UserData) database.get("Ben");
         assertEquals("Ben", user.username());
@@ -33,6 +34,7 @@ class SQLUserDAOTest {
 
     @Test
     void clearTest() throws ResponseException {
+        database.clear();
         database.add(new UserData("Ben", "Shhh", "n/a"));
         database.add(new UserData("Ken", "Shhhhhh", "n/a"));
         database.clear();
