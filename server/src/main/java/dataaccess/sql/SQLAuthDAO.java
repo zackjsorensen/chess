@@ -56,7 +56,7 @@ public class SQLAuthDAO extends SQLParentDAO{
         return null;
     }
 
-    private AuthData readAuth(ResultSet rs) throws SQLException {
+    AuthData readAuth(ResultSet rs) throws SQLException {
         String authToken = rs.getString("authToken");
         String username = rs.getString("username");
         return new AuthData(authToken, username);

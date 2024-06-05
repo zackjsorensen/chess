@@ -51,6 +51,6 @@ class SQLUserDAOTest {
     void getTestFail() throws ResponseException {
         assertNull(database.get("123"));
     }
-    
+
 
 }

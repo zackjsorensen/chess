@@ -1,11 +1,14 @@
 package dataaccess.sql;
 
+import dataaccess.DatabaseManager;
 import dataaccess.exception.ResponseException;
 import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -67,5 +70,30 @@ class SQLAuthDAOTest {
         database.clear();
         assertNull(database.get("sdf"));
     }
+
+    @Test
+    void readTest() throws ResponseException {
+        database.add(new AuthData("12345", "Ben"));
+        String authToken = "12345";
+        try (var conn = DatabaseManager.getConnection()) {
+            String statement = "SELECT authToken, username FROM auth WHERE authToken=?";
+            try (var ps = conn.prepareStatement(statement)) {
+                ps.setString(1, authToken);
+                try (var rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                       assertEquals("Ben", database.readAuth(rs).username());
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
+        }
+    }
+
+    @Test
+    void badParamsTest() throws ResponseException {
+        assertThrows(Exception.class, () ->database.get(new ArrayList<Integer>()));
+    }
+
 
 }
