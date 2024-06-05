@@ -13,7 +13,7 @@ class SQLAuthDAOTest {
     static SQLAuthDAO database;
 
     @BeforeAll
-    static void Setup(){
+    static void setup(){
         database = new SQLAuthDAO();
     }
 
@@ -58,5 +58,14 @@ class SQLAuthDAOTest {
         database.add(new AuthData("12345", "Ben"));
         assertThrows(ResponseException.class, () -> database.delete("12355"));
     } // or should this be DataAccessException?
+
+
+    @Test
+    void clear() throws ResponseException {
+        database.add(new AuthData("sfsdsf", "Bo"));
+        database.add(new AuthData("sdf", "Hugh"));
+        database.clear();
+        assertNull(database.get("sdf"));
+    }
 
 }

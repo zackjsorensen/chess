@@ -49,9 +49,3 @@ public class Server {
         Spark.awaitStop();
     }
 }
-
-// TODO:
-// Unit Tests
-// Eliminate code duplication in Phase 0
-// Make API serve static files correctly
-// Map default route -- may be related to static files
