@@ -11,11 +11,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class SQLGameDAOTest {
     SQLGameDAO database;
+    ChessGame blackGame = new ChessGame();
+    ChessGame whiteGame = new ChessGame();
 
     @BeforeEach
     void setUp() throws ResponseException {
         database = new SQLGameDAO();
         database.clear();
+        blackGame.setTeamTurn(ChessGame.TeamColor.BLACK);
+        whiteGame.setTeamTurn(ChessGame.TeamColor.WHITE);
     }
 
     @Test
@@ -47,6 +51,14 @@ class SQLGameDAOTest {
         Object gameData = database.get(id);
         assertInstanceOf(GameData.class, gameData);
         assertInstanceOf(ChessGame.class, ((GameData) gameData).game());
+    }
+
+    @Test
+    void updateGameStateTest() throws ResponseException {
+        GameData dummy = new GameData(0, "Wyat", "Broc", "Test", blackGame);
+        int id = database.add(dummy);
+        database.updateGameState(id, new GameData(id, null, null, null, whiteGame));
+        assertNotEquals(database.get(id).game().getTeamTurn(), ChessGame.TeamColor.BLACK);
     }
 
 }

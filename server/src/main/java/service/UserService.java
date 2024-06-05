@@ -3,6 +3,8 @@ package service;
 import dataaccess.exception.ResponseException;
 import dataaccess.sql.SQLUserDAO;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
+
 
 public class UserService {
     private final SQLUserDAO dataAccess;
@@ -11,7 +13,11 @@ public class UserService {
     }
 
     public void addUser(UserData user) throws ResponseException {
-        dataAccess.add(user);
+        dataAccess.add(new UserData(user.username(), hashPassword(user.password()), user.email()));
+    }
+
+    private String hashPassword(String password){
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     public UserData getUser(String username) throws ResponseException{
@@ -30,8 +36,8 @@ public class UserService {
         if (getUser(user.username()) == null){
             return false;
         } else {
-            UserData dbUser = getUser(user.username());
-            return user.password().equals(dbUser.password());
+            String storedPassword = getUser(user.username()).password();
+            return BCrypt.checkpw(user.password(), storedPassword);
         }
     }
 
