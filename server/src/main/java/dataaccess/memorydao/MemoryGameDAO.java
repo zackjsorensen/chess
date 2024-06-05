@@ -47,8 +47,4 @@ public class MemoryGameDAO implements DataAccessInterface<Integer, GameData> {
         return listOfGames.toArray();
     }
 
-    public void updateGame(int gameID, GameData game){
-        dataMap.put(gameID, game);
-    }
-
 }
