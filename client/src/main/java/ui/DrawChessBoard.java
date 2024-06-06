@@ -3,7 +3,10 @@ package ui;
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
 
+import chess.ChessBoard;
 import chess.ChessGame;
+import chess.ChessPiece;
+import chess.ChessPosition;
 import ui.EscapeSequences;
 
 public class DrawChessBoard {
@@ -16,11 +19,13 @@ public class DrawChessBoard {
     ChessGame game;
     String color;
     boolean whiteLeadsOnEven;
+    ChessBoard board;
 
     public DrawChessBoard(ChessGame game, String color) throws Exception {
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         this.game = game;
         this.color = color;
+        board = game.getBoard();
         if (color.equals("BLACK")) {
             whiteLeadsOnEven = true;
         } else if (color.equals("WHITE")) {
@@ -58,52 +63,103 @@ public class DrawChessBoard {
     private void drawRows() {
         drawLetters();
         for (int row = 0; row < 8; row++) {
+            int rowNum = getRowNum(row);
             out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            drawNumbers(row);
+            out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+            out.printf(" %s ", (rowNum));
             if (row % 2 == 0) {
-                drawWhiteRow();
+                drawWhiteRow(rowNum);
             } else {
-                drawBlackRow();
+                drawBlackRow(rowNum);
             }
 
             out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
-            drawNumbers(row);
+            out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
+            out.printf(" %s ", (rowNum));
             out.println();
         }
+
         drawLetters();
     }
 
-    private void drawNumbers(int row) {
+
+    private int getRowNum(int row) {
         if (color.equals("WHITE")){
-            out.printf(" %s ", (row + 1));
+            return row +1;
         } else {
-            out.printf(" %s ", (8 - row));
+            return 8 - row;
         }
     }
 
-    private void drawWhiteRow() {
+    private int getColNum(int column) {
+        if (color.equals("WHITE")){
+            return 7 - column;
+        } else {
+            return column;
+        }
+    }
+
+    private void drawWhiteRow(int rowNum) {
         for (int column = 0; column < 8; column = column + 2) {
-            drawWhiteSquare();
-            drawBlackSquare();
+            int whiteColNum = getColNum(column);
+            int blackColNum = getColNum(column +1);
+            drawWhiteSquare(rowNum, whiteColNum);
+            drawBlackSquare(rowNum, blackColNum);
         }
     }
 
-    private void drawBlackRow() {
+    private void drawBlackRow(int rowNum) {
         for (int column = 0; column < 8; column = column + 2) {
-            drawBlackSquare();
-            drawWhiteSquare();
+            int blackColNum = getColNum(column);
+            int whiteColNum = getColNum(column + 1);
+            drawBlackSquare(rowNum, blackColNum);
+            drawWhiteSquare(rowNum, whiteColNum);
         }
     }
 
-    private void drawWhiteSquare() {
+    private void drawWhiteSquare(int rowNum, int colNum) {
         out.print(EscapeSequences.SET_BG_COLOR_WHITE);
-        out.print(EMPTY);
+        ChessPiece piece = board.getPiece(new ChessPosition(rowNum, colNum + 1));
+        if (piece == null){
+            out.print(EMPTY);
+        } else {
+            out.print(getPieceTextColor(piece.getTeamColor()));
+            out.print(getPieceSymbol(piece.getPieceType()));
+        }
     }
 
-    private void drawBlackSquare() {
+    private void drawBlackSquare(int rowNum, int colNum) {
         out.print(EscapeSequences.SET_BG_COLOR_BLACK);
-        out.print(EMPTY);
+        ChessPiece piece = board.getPiece(new ChessPosition(rowNum, colNum + 1));
+        if (piece == null){
+            out.print(EMPTY);
+        } else {
+            out.print(getPieceTextColor(piece.getTeamColor()));
+            out.print(getPieceSymbol(piece.getPieceType()));
+        }
     }
+
+    private String getPieceSymbol(ChessPiece.PieceType pieceType){
+        switch(pieceType){
+            case PAWN -> {return " P ";}
+            case ROOK -> {return " R ";}
+            case KNIGHT -> {return " N ";}
+            case BISHOP -> {return " B ";}
+            case QUEEN -> {return " Q ";}
+            case KING -> {return " K ";}
+            default -> {return EMPTY;}
+        }
+    }
+
+    private String getPieceTextColor(ChessGame.TeamColor teamColor) {
+        if (teamColor.equals(ChessGame.TeamColor.BLACK)){
+            return EscapeSequences.SET_TEXT_COLOR_RED;
+        } else {
+            return EscapeSequences.SET_TEXT_COLOR_BLUE;
+        }
+    }
+
+
 }
 
 
