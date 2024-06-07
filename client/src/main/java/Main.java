@@ -41,6 +41,14 @@ public class Main {
         out.println("Enter an email address (optional)");
         String email = scanner.nextLine();
     }
+
+    private static void login(PrintStream out, Scanner scanner){
+        out.println("Enter a username");
+        out.println("Enter a username");
+        String username = scanner.nextLine();
+        out.println("Enter a password");
+        String password = scanner.nextLine();
+    }
 }
 
 // study classpath, linux shortcut??
