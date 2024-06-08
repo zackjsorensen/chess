@@ -7,6 +7,7 @@ import dataaccess.memorydao.MemoryGameDAO;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
+import model.LoginResponse;
 import service.*;
 import com.google.gson.Gson;
 import model.GameData;
@@ -42,7 +43,8 @@ public class Handlers {
             }
             if (userService.getUser(user.username()) != null) {
                 res.status(403);
-                return gson.toJson(new LoginResult(null, "Error: already taken"));
+                return gson.toJson(new LoginResponse(user.username(), null, "Error: already taken"));
+                // hopefully that didn't break everything....
             }
             userService.addUser(user);
             res.status(200);

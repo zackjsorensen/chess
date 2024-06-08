@@ -19,7 +19,7 @@ public class ClientCommunicator {
 
     }
 
-   public void register(UserData userData) throws MalformedURLException {
+   public ResponseObj register(UserData userData) throws MalformedURLException {
        URL url = new URL(BASE_URL + "/user");
        try {
            HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -29,8 +29,7 @@ public class ClientCommunicator {
            String body = gson.toJson(userData);
            OutputStream os = http.getOutputStream();
            os.write(body.getBytes());
-
-
+           return receiveResponse(http);
 
        } catch (IOException e) {
            throw new RuntimeException(e);
