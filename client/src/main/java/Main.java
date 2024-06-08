@@ -12,12 +12,14 @@ import java.util.Scanner;
 
 public class Main {
     private static Object authToken;
+    static PrintStream out;
+    static ServerFacade serverFacade;
 
     public static void main(String[] args) throws Exception {
-        ServerFacade serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade();
 
         System.out.println("♕ Welcome to 240 Chess. Type help for list of commands.");
-        PrintStream out = new PrintStream(System.out, true,StandardCharsets.UTF_8);
+        out = new PrintStream(System.out, true,StandardCharsets.UTF_8);
         Scanner scanner = new Scanner(System.in);
         String line = scanner.nextLine();
         while(!line.equalsIgnoreCase("quit")) {
@@ -26,6 +28,8 @@ public class Main {
                 help(out);
             } else if (line.equalsIgnoreCase("register")) {
                 register(out, scanner, serverFacade);
+            } else if (line.equalsIgnoreCase("login")){
+                login(out, scanner);
             }
             line = scanner.nextLine();
         }
@@ -57,12 +61,20 @@ public class Main {
         }
     }
 
-    private static void login(PrintStream out, Scanner scanner){
-        out.println("Enter a username");
+    private static void login(PrintStream out, Scanner scanner) throws MalformedURLException {
         out.println("Enter a username");
         String username = scanner.nextLine();
         out.println("Enter a password");
         String password = scanner.nextLine();
+        UserData user = new UserData(username, password, null);
+        ResponseObj res = serverFacade.login(user);
+        out.println();
+        if (res.statusCode() == 200 || res.statusCode() == 201){
+            AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+            authToken = auth.authToken();
+            out.println(authToken);
+            // transition to post-login menu
+        }
     }
 }
 

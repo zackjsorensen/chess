@@ -12,4 +12,10 @@ public class ServerFacade {
     public ResponseObj register(UserData user) throws MalformedURLException {
         return communicator.register(user);
     }
+
+    public ResponseObj login(UserData user) throws MalformedURLException {
+        return communicator.login(user);
+    }
+
+
 }
