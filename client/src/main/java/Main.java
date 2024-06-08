@@ -40,6 +40,7 @@ public class Main {
         String password = scanner.nextLine();
         out.println("Enter an email address (optional)");
         String email = scanner.nextLine();
+
     }
 
     private static void login(PrintStream out, Scanner scanner){
