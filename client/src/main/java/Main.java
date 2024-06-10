@@ -14,18 +14,18 @@ public class Main {
     private static Object authToken;
     static PrintStream out;
     static ServerFacade serverFacade;
+    static Scanner scanner;
 
     public static void main(String[] args) throws Exception {
         serverFacade = new ServerFacade();
 
         System.out.println("♕ Welcome to 240 Chess. Type help for list of commands.");
         out = new PrintStream(System.out, true,StandardCharsets.UTF_8);
-        Scanner scanner = new Scanner(System.in);
+        scanner = new Scanner(System.in);
         String line = scanner.nextLine();
         while(!line.equalsIgnoreCase("quit")) {
             if (line.equalsIgnoreCase("help")) {
-                // call help method, pass out as param
-                help(out);
+                help();
             } else if (line.equalsIgnoreCase("register")) {
                 register(out, scanner, serverFacade);
             } else if (line.equalsIgnoreCase("login")){
@@ -36,7 +36,17 @@ public class Main {
 
     }
 
-    private static void help(PrintStream out){
+    private static void postLoginUI(){
+        String line = scanner.nextLine();
+        while(!line.equalsIgnoreCase("logout")){
+            if (line.equalsIgnoreCase("help")) {
+                helpPostLogin();
+            }
+            line = scanner.nextLine();
+        }
+    }
+
+    private static void help(){
         out.println("Commands:");
         out.println(" - register: create a new user");
         out.println(" - login: kind of self-explanatory");
@@ -57,7 +67,7 @@ public class Main {
             AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
             authToken = auth.authToken();
             out.println(authToken);
-            // transition to post-login menu
+            postLoginUI();
         }
     }
 
@@ -73,8 +83,18 @@ public class Main {
             AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
             authToken = auth.authToken();
             out.println(authToken);
-            // transition to post-login menu
+            postLoginUI();
         }
+    }
+
+    private static void helpPostLogin(){
+        out.println("Commands:");
+        out.println(" - logout: take a wild guess what this does");
+        out.println(" - create: create a new game");
+        out.println(" - list: see a list of games");
+        out.println(" - join: join a game");
+        out.println(" - quit: hmmm, I wonder what this command does??");
+        out.println(" - help: see this exact same message, again! You should choose this option...");
     }
 }
 
