@@ -1,3 +1,5 @@
+package serveraccess;
+
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
 import model.UserData;
@@ -10,11 +12,17 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class ClientCommunicator {
-    final String BASE_URL = "http://localhost:8080";
+    String BASE_URL;
     Gson gson;
 
-    public ClientCommunicator() {
+    public ClientCommunicator(int port) {
         gson = new Gson();
+        BASE_URL = "http://localhost:" + port;
+    }
+
+    public ClientCommunicator(){
+        this(8080);
+        // hopefully this doesn't mess stuff up.....
     }
 
    public ResponseObj register(UserData userData) throws MalformedURLException, ResponseException {
@@ -76,10 +84,24 @@ public class ClientCommunicator {
             http.setRequestMethod("DELETE");
             http.setDoOutput(true);
             http.setRequestProperty("authorization", authToken);
-            // return a ResponseObj -- body should be null, all we care about is that status code
+            // return a serveraccess.ResponseObj -- body should be null, all we care about is that status code
             return receiveResponse(http);
         } catch (IOException e) {
             throw new ResponseException(500, "Problem logging out: " + e.getMessage());
+        }
+    }
+
+    public void clear() throws MalformedURLException, ResponseException {
+        URL url = new URL(BASE_URL + "/db");
+        try {
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("DELETE");
+            if (http.getResponseCode() != HttpURLConnection.HTTP_OK){
+                throw new ResponseException(500, "Problem clearing db");
+            }
+            // return a serveraccess.ResponseObj -- body should be null, all we care about is that status code
+        } catch (IOException e) {
+            throw new ResponseException(500, "Problem clearing out: " + e.getMessage());
         }
     }
 

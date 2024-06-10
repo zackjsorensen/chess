@@ -1,13 +1,18 @@
+package serveraccess;
+
 import dataaccess.exception.ResponseException;
 import model.UserData;
-
 import java.net.MalformedURLException;
 
 public class ServerFacade {
     ClientCommunicator communicator;
 
+    public ServerFacade(int port){
+        communicator = new ClientCommunicator(port);
+    }
+
     public ServerFacade() {
-        communicator = new ClientCommunicator();
+        this(8080);
     }
 
     public ResponseObj register(UserData user) throws MalformedURLException, ResponseException {
@@ -20,6 +25,10 @@ public class ServerFacade {
 
     public ResponseObj logout(String authToken) throws MalformedURLException, ResponseException {
         return communicator.logout(authToken);
+    }
+
+    public void clear() throws MalformedURLException, ResponseException {
+        communicator.clear();
     }
 
 

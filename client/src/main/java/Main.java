@@ -1,15 +1,13 @@
-import chess.ChessGame;
-import chess.ChessPiece;
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
 import model.AuthData;
 import model.UserData;
-import ui.DrawChessBoard;
+import serveraccess.ResponseObj;
+import serveraccess.ServerFacade;
 
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
-import java.util.Enumeration;
 import java.util.Scanner;
 
 public class Main {
