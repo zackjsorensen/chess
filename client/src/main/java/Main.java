@@ -1,6 +1,7 @@
 import chess.ChessGame;
 import chess.ChessPiece;
 import com.google.gson.Gson;
+import dataaccess.exception.ResponseException;
 import model.AuthData;
 import model.UserData;
 import ui.DrawChessBoard;
@@ -8,13 +9,19 @@ import ui.DrawChessBoard;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.nio.charset.StandardCharsets;
+import java.util.Enumeration;
 import java.util.Scanner;
 
 public class Main {
-    private static Object authToken;
+    private static String authToken;
     static PrintStream out;
     static ServerFacade serverFacade;
     static Scanner scanner;
+    enum UserState {
+        LOGGED_IN,
+        LOGGED_OUT;
+    }
+    static UserState userState;
 
     public static void main(String[] args) throws Exception {
         serverFacade = new ServerFacade();
@@ -23,6 +30,7 @@ public class Main {
         out = new PrintStream(System.out, true,StandardCharsets.UTF_8);
         scanner = new Scanner(System.in);
         String line = scanner.nextLine();
+        userState = UserState.LOGGED_OUT;
         while(!line.equalsIgnoreCase("quit")) {
             if (line.equalsIgnoreCase("help")) {
                 help();
@@ -36,11 +44,13 @@ public class Main {
 
     }
 
-    private static void postLoginUI(){
+    private static void postLoginUI() throws MalformedURLException, ResponseException {
         String line = scanner.nextLine();
-        while(!line.equalsIgnoreCase("logout")){
+        while(!line.equalsIgnoreCase("quit") && userState == UserState.LOGGED_IN){
             if (line.equalsIgnoreCase("help")) {
                 helpPostLogin();
+            } else if (line.equalsIgnoreCase("logout")){
+                logout();
             }
             line = scanner.nextLine();
         }
@@ -54,7 +64,7 @@ public class Main {
         out.println(" - help: see this exact same message, again! You should choose this option...");
     }
 
-    private static void register(PrintStream out, Scanner scanner, ServerFacade serverFacade) throws MalformedURLException {
+    private static void register(PrintStream out, Scanner scanner, ServerFacade serverFacade) throws MalformedURLException, ResponseException {
         out.println("Enter a username");
         String username = scanner.nextLine();
         out.println("Enter a password");
@@ -67,11 +77,12 @@ public class Main {
             AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
             authToken = auth.authToken();
             out.println(authToken);
+            userState = UserState.LOGGED_IN;
             postLoginUI();
         }
     }
 
-    private static void login(PrintStream out, Scanner scanner) throws MalformedURLException {
+    private static void login(PrintStream out, Scanner scanner) throws MalformedURLException, ResponseException {
         out.println("Enter a username");
         String username = scanner.nextLine();
         out.println("Enter a password");
@@ -83,6 +94,7 @@ public class Main {
             AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
             authToken = auth.authToken();
             out.println(authToken);
+            userState = UserState.LOGGED_IN;
             postLoginUI();
         }
     }
@@ -95,6 +107,14 @@ public class Main {
         out.println(" - join: join a game");
         out.println(" - quit: hmmm, I wonder what this command does??");
         out.println(" - help: see this exact same message, again! You should choose this option...");
+    }
+
+    private static void logout() throws MalformedURLException, ResponseException {
+        ResponseObj res = serverFacade.logout(authToken);
+        if (res.statusCode() == 200 || res.statusCode() == 201) {
+            userState = UserState.LOGGED_OUT;
+            // getting 401....
+        }
     }
 }
 

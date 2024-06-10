@@ -1,3 +1,4 @@
+import dataaccess.exception.ResponseException;
 import model.UserData;
 
 import java.net.MalformedURLException;
@@ -15,6 +16,10 @@ public class ServerFacade {
 
     public ResponseObj login(UserData user) throws MalformedURLException {
         return communicator.login(user);
+    }
+
+    public ResponseObj logout(String authToken) throws MalformedURLException, ResponseException {
+        return communicator.logout(authToken);
     }
 
 
