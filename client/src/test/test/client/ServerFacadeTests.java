@@ -1,6 +1,8 @@
 package client;
 
+import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
+import model.AuthData;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -56,6 +58,20 @@ public class ServerFacadeTests {
     public void loginBad() throws MalformedURLException, ResponseException {
         facade.register(hoid);
         Assertions.assertThrows(ResponseException.class, () -> facade.login(new UserData("Hoid", "Na", null)));
+    }
+
+    @Test
+    public void logoutGood() throws MalformedURLException, ResponseException {
+        facade.register(hoid);
+        ResponseObj res = facade.login(hoid);
+        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        ResponseObj res2 = facade.logout(auth.authToken());
+        assert(res2.statusCode() == 200);
+    }
+
+    @Test
+    public void logoutBad() throws MalformedURLException, ResponseException {
+        Assertions.assertThrows(ResponseException.class, () -> facade.logout("das;dfk"));
     }
 
 }
