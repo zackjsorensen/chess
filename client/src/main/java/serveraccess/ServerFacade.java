@@ -41,5 +41,8 @@ public class ServerFacade {
         return createGameRes.gameID();
     }
 
+    public void joinGame(int gameID, String color, String authToken) throws MalformedURLException, ResponseException {
+        int code = communicator.joinGame(gameID, color, authToken);
+    }
 
 }

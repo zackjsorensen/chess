@@ -24,10 +24,10 @@ public class GameService {
 
     public void joinGame(int gameID, String username, String color) throws DataAccessException {
         if (dataAccess.get(gameID) == null){
-            throw new DataAccessException("Game does not exist");
+            throw new ResponseException(400, "Game does not exist");
         }
         if (isColorTaken(gameID, color)){
-            throw new DataAccessException("Error: already taken");
+            throw new ResponseException(400, "Error: already taken");
         }
         dataAccess.updatePlayer(gameID, color, username);
     }
@@ -37,12 +37,12 @@ public class GameService {
     }
 
     public boolean isColorTaken(int gameID, String color) throws DataAccessException {
-        if (color.equals("WHITE")){
+        if (color.equalsIgnoreCase("WHITE")){
             return dataAccess.get(gameID).whiteUsername() != null;
-        } else if (color.equals("BLACK")) {
+        } else if (color.equalsIgnoreCase("BLACK")) {
             return dataAccess.get(gameID).blackUsername() != null;
         } else {
-            throw new DataAccessException("Bad color Request");
+            throw new ResponseException(400, "Bad color Request");
         }
     }
 

@@ -1,3 +1,4 @@
+import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
 import model.AuthData;
@@ -5,6 +6,7 @@ import model.CreateGameReq;
 import model.UserData;
 import serveraccess.ResponseObj;
 import serveraccess.ServerFacade;
+import ui.DrawChessBoard;
 
 import java.io.PrintStream;
 import java.net.MalformedURLException;
@@ -51,6 +53,10 @@ public class Main {
                 helpPostLogin();
             } else if (line.equalsIgnoreCase("logout")){
                 logout();
+            } else if (line.equalsIgnoreCase("create")){
+                createGame();
+            } else if (line.equalsIgnoreCase("join")){
+                joinGame();
             }
             line = scanner.nextLine();
         }
@@ -129,6 +135,23 @@ public class Main {
             int id = serverFacade.createGame(gameName, authToken);
             out.println("Game ID:" + id);
         } catch (ResponseException e){
+            out.println(e.getMessage());
+        }
+    }
+
+    private static void joinGame() {
+        out.println("Enter game ID");
+        int id = scanner.nextInt();
+        String clear = scanner.nextLine();
+        out.println("Enter color to play as");
+        String color = scanner.nextLine();
+        try {
+            serverFacade.joinGame(id, color, authToken);
+            DrawChessBoard drawBlack = new DrawChessBoard(new ChessGame(), "BLACK");
+            DrawChessBoard drawWhite = new DrawChessBoard(new ChessGame(), "WHITE");
+            drawBlack.drawAll();
+            drawWhite.drawAll();
+        } catch (Exception e) {
             out.println(e.getMessage());
         }
     }

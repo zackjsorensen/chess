@@ -7,18 +7,16 @@ import dataaccess.memorydao.MemoryGameDAO;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
-import model.CreateGameReq;
-import model.LoginResponse;
+import model.*;
 import service.*;
 import com.google.gson.Gson;
-import model.GameData;
-import model.UserData;
 import server.reqresobjects.ErrorResponse;
 import server.reqresobjects.JoinRequest;
 import server.reqresobjects.ListGamesResult;
 import server.reqresobjects.LoginResult;
 import spark.Request;
 import spark.Response;
+
 import java.util.List;
 
 public class Handlers {
@@ -50,7 +48,7 @@ public class Handlers {
             userService.addUser(user);
             res.status(200);
             return gson.toJson(authService.createAuth(user.username()));
-        } catch (ResponseException e){
+        } catch (ResponseException e) {
             res.status(e.statusCode);
             return e.getMessage();
         }
@@ -72,14 +70,14 @@ public class Handlers {
 
     private String respondToUnauthorized(Response res) {
         res.status(401);
-        return gson.toJson(new ErrorResponse( "Error: unauthorized"));
+        return gson.toJson(new ErrorResponse("Error: unauthorized"));
     }
 
     public String logout(Request req, Response res) {
         String authToken = req.headers("authorization");
         try {
-            if (authService.getAuth(authToken)== null){
-               return respondToUnauthorized(res);
+            if (authService.getAuth(authToken) == null) {
+                return respondToUnauthorized(res);
             }
             authService.deleteAuth(authToken);
             res.status(200);
@@ -107,10 +105,10 @@ public class Handlers {
 
     public String createGame(Request req, Response res) throws ResponseException {
         String gameName = gson.fromJson(req.body(), CreateGameReq.class).gameName();
-        if (gameName == null){
+        if (gameName == null) {
             return respondToBadReq(res);
         }
-        if (!checkAuthToken(req)){
+        if (!checkAuthToken(req)) {
             return respondToUnauthorized(res);
         }
         int gameID = gameService.createGame(gameName);
@@ -120,42 +118,37 @@ public class Handlers {
 
     private boolean checkAuthToken(Request req) throws ResponseException {
         String authToken = req.headers("authorization");
-        if (authToken == null){
+        if (authToken == null) {
             return false;
         }
         return authService.getAuth(authToken) != null;
     }
 
     public String joinGame(Request req, Response res) throws DataAccessException {
-        JoinRequest joinRequest = gson.fromJson(req.body(), JoinRequest.class);
-        if (!checkAuthToken(req)){
+        JoinGameReq joinRequest = gson.fromJson(req.body(), JoinGameReq.class);
+        if (!checkAuthToken(req)) {
             return respondToUnauthorized(res);
         }
-        if (joinRequest.gameID() == 0 || joinRequest.playerColor()== null || (!joinRequest.playerColor().equals("BLACK") && !joinRequest.playerColor().equals("WHITE"))){
+        if (joinRequest.gameID() == 0) {
             return respondToBadReq(res);
         }
         String username = authService.getAuth(req.headers("authorization")).username();
-        if (username == null){
+        if (username == null) {
             return respondToUnauthorized(res);
         }
 
-        try {
-            if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.playerColor())){
-                res.status(403);
-                return gson.toJson(new LoginResult(null, "Error: already taken"));
-            }
 
-        } catch (Exception e){
-            res.status(403);
-            return gson.toJson(new ErrorResponse(e.getMessage()));
+        if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.color())) {
+            throw new ResponseException(403, "Color taken");
         }
+
         res.status(200);
-        gameService.joinGame(joinRequest.gameID(), username, joinRequest.playerColor());
+        gameService.joinGame(joinRequest.gameID(), username, joinRequest.color());
         return gson.toJson(empty);
     }
 
     public String listGames(Request req, Response res) throws ResponseException {
-        if (!checkAuthToken(req)){
+        if (!checkAuthToken(req)) {
             return respondToUnauthorized(res);
         }
         res.status(200);

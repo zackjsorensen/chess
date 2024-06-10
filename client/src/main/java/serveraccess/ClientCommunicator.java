@@ -3,6 +3,7 @@ package serveraccess;
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
 import model.CreateGameReq;
+import model.JoinGameReq;
 import model.UserData;
 import java.io.IOException;
 import java.io.InputStream;
@@ -108,17 +109,35 @@ public class ClientCommunicator {
     public ResponseObj createGame(String gameName, String authToken) throws MalformedURLException, ResponseException {
         URL url = new URL(BASE_URL + "/game");
         try {
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            http.setRequestMethod("POST");
-            http.setDoOutput(true);
-            http.setRequestProperty("authorization", authToken);
-            http.addRequestProperty("Content-Type", "application/json");
+            HttpURLConnection http = getAuthorizedConnection(authToken, url, "POST");
             String body = gson.toJson(new CreateGameReq(gameName, null));
             OutputStream os = http.getOutputStream();
             os.write(body.getBytes());
             return receiveResponse(http);
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private HttpURLConnection getAuthorizedConnection(String authToken, URL url, String method) throws IOException {
+        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+        http.setRequestMethod(method);
+        http.setDoOutput(true);
+        http.setRequestProperty("authorization", authToken);
+        http.addRequestProperty("Content-Type", "application/json");
+        return http;
+    }
+
+    public int joinGame(int gameID, String color, String authToken) throws ResponseException, MalformedURLException {
+        URL url = new URL(BASE_URL + "/game");
+        try {
+            HttpURLConnection http = getAuthorizedConnection(authToken, url, "PUT");
+            String body = gson.toJson(new JoinGameReq(gameID, color));
+            OutputStream os = http.getOutputStream();
+            os.write(body.getBytes());
+            return receiveResponse(http).statusCode();
+        } catch (IOException e){
+            throw new RuntimeException(e.getMessage());
         }
     }
 

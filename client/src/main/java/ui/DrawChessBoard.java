@@ -26,9 +26,9 @@ public class DrawChessBoard {
         this.game = game;
         this.color = color;
         board = game.getBoard();
-        if (color.equals("BLACK")) {
+        if (color.equalsIgnoreCase("BLACK")) {
             whiteLeadsOnEven = true;
-        } else if (color.equals("WHITE")) {
+        } else if (color.equalsIgnoreCase("WHITE")) {
             whiteLeadsOnEven = false;
         } else {
             throw new Exception("Bad color parameter");
