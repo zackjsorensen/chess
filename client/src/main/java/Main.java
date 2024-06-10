@@ -1,6 +1,7 @@
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
 import model.AuthData;
+import model.CreateGameReq;
 import model.UserData;
 import serveraccess.ResponseObj;
 import serveraccess.ServerFacade;
@@ -20,6 +21,7 @@ public class Main {
         LOGGED_OUT;
     }
     static UserState userState;
+    static Gson gson = new Gson();
 
     public static void main(String[] args) throws Exception {
         serverFacade = new ServerFacade();
@@ -117,6 +119,17 @@ public class Main {
         if (res.statusCode() == 200 || res.statusCode() == 201) {
             userState = UserState.LOGGED_OUT;
             // getting 401....
+        }
+    }
+
+    private static void createGame() throws MalformedURLException {
+        out.println("Enter desired game name");
+        String gameName = scanner.nextLine();
+        try {
+            int id = serverFacade.createGame(gameName, authToken);
+            out.println("Game ID:" + id);
+        } catch (ResponseException e){
+            out.println(e.getMessage());
         }
     }
 }

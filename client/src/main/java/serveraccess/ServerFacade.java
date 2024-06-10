@@ -1,11 +1,14 @@
 package serveraccess;
 
+import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
+import model.CreateGameReq;
 import model.UserData;
 import java.net.MalformedURLException;
 
 public class ServerFacade {
     ClientCommunicator communicator;
+    Gson gson = new Gson();
 
     public ServerFacade(int port){
         communicator = new ClientCommunicator(port);
@@ -29,6 +32,13 @@ public class ServerFacade {
 
     public void clear() throws MalformedURLException, ResponseException {
         communicator.clear();
+    }
+
+    public int createGame(String gameName, String authToken) throws MalformedURLException, ResponseException {
+
+        ResponseObj res = communicator.createGame(gameName, authToken);
+        CreateGameReq createGameRes = gson.fromJson(res.body(), CreateGameReq.class);
+        return createGameRes.gameID();
     }
 
 

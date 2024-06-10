@@ -74,4 +74,21 @@ public class ServerFacadeTests {
         Assertions.assertThrows(ResponseException.class, () -> facade.logout("das;dfk"));
     }
 
+    @Test
+    public void createGameGood() throws MalformedURLException, ResponseException {
+        ResponseObj res = facade.register(hoid);
+        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        int id = facade.createGame("Uno", auth.authToken());
+        Assertions.assertInstanceOf(Integer.class, id);
+    }
+
+    @Test
+    public void createGameBad() throws MalformedURLException, ResponseException {
+        try {
+            facade.createGame("Uno", null);
+        } catch (ResponseException e) {
+            Assertions.assertEquals("Unauthorized", e.getMessage());
+        }
+    }
+
 }

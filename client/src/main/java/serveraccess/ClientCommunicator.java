@@ -2,6 +2,7 @@ package serveraccess;
 
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
+import model.CreateGameReq;
 import model.UserData;
 import java.io.IOException;
 import java.io.InputStream;
@@ -84,7 +85,6 @@ public class ClientCommunicator {
             http.setRequestMethod("DELETE");
             http.setDoOutput(true);
             http.setRequestProperty("authorization", authToken);
-            // return a serveraccess.ResponseObj -- body should be null, all we care about is that status code
             return receiveResponse(http);
         } catch (IOException e) {
             throw new ResponseException(500, "Problem logging out: " + e.getMessage());
@@ -102,6 +102,23 @@ public class ClientCommunicator {
             // return a serveraccess.ResponseObj -- body should be null, all we care about is that status code
         } catch (IOException e) {
             throw new ResponseException(500, "Problem clearing out: " + e.getMessage());
+        }
+    }
+
+    public ResponseObj createGame(String gameName, String authToken) throws MalformedURLException, ResponseException {
+        URL url = new URL(BASE_URL + "/game");
+        try {
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("POST");
+            http.setDoOutput(true);
+            http.setRequestProperty("authorization", authToken);
+            http.addRequestProperty("Content-Type", "application/json");
+            String body = gson.toJson(new CreateGameReq(gameName, null));
+            OutputStream os = http.getOutputStream();
+            os.write(body.getBytes());
+            return receiveResponse(http);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

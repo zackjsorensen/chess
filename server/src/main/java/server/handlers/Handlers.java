@@ -7,6 +7,7 @@ import dataaccess.memorydao.MemoryGameDAO;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
+import model.CreateGameReq;
 import model.LoginResponse;
 import service.*;
 import com.google.gson.Gson;
@@ -105,7 +106,7 @@ public class Handlers {
     }
 
     public String createGame(Request req, Response res) throws ResponseException {
-        String gameName = gson.fromJson(req.body(), GameData.class).gameName();
+        String gameName = gson.fromJson(req.body(), CreateGameReq.class).gameName();
         if (gameName == null){
             return respondToBadReq(res);
         }
