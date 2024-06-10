@@ -17,7 +17,7 @@ public class ClientCommunicator {
         gson = new Gson();
     }
 
-   public ResponseObj register(UserData userData) throws MalformedURLException {
+   public ResponseObj register(UserData userData) throws MalformedURLException, ResponseException {
        URL url = new URL(BASE_URL + "/user");
        try {
            HttpURLConnection http = (HttpURLConnection) url.openConnection();
@@ -28,7 +28,7 @@ public class ClientCommunicator {
        }
    }
 
-    private ResponseObj getResponseObjLogin(UserData userData, HttpURLConnection http, String method) throws IOException {
+    private ResponseObj getResponseObjLogin(UserData userData, HttpURLConnection http, String method) throws IOException, ResponseException {
         http.setRequestMethod(method);
         http.setDoOutput(true);
         http.addRequestProperty("Content-Type", "application/json");
@@ -38,10 +38,14 @@ public class ClientCommunicator {
         return receiveResponse(http);
     }
     // makes a response object to return to client
-   private ResponseObj receiveResponse(HttpURLConnection http) throws IOException {
+   private ResponseObj receiveResponse(HttpURLConnection http) throws IOException, ResponseException {
         int status = http.getResponseCode();
         String msg = http.getResponseMessage();
-        return new ResponseObj(status, msg, readResponseBody(http));
+        if (status == 200 || status == 201) {
+            return new ResponseObj(status, msg, readResponseBody(http));
+        } else {
+            throw new ResponseException(status, msg);
+        }
    }
 
     // read all the body in as a string - converting to an object will be done closer to where the objects are used
@@ -55,7 +59,7 @@ public class ClientCommunicator {
         }
     }
 
-    public ResponseObj login(UserData userData) throws MalformedURLException {
+    public ResponseObj login(UserData userData) throws MalformedURLException, ResponseException {
         URL url = new URL(BASE_URL + "/session");
         try {
             HttpURLConnection http = (HttpURLConnection) url.openConnection();

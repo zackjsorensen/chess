@@ -10,11 +10,11 @@ public class ServerFacade {
         communicator = new ClientCommunicator();
     }
 
-    public ResponseObj register(UserData user) throws MalformedURLException {
+    public ResponseObj register(UserData user) throws MalformedURLException, ResponseException {
         return communicator.register(user);
     }
 
-    public ResponseObj login(UserData user) throws MalformedURLException {
+    public ResponseObj login(UserData user) throws MalformedURLException, ResponseException {
         return communicator.login(user);
     }
 

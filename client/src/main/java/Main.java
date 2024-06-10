@@ -88,15 +88,20 @@ public class Main {
         out.println("Enter a password");
         String password = scanner.nextLine();
         UserData user = new UserData(username, password, null);
-        ResponseObj res = serverFacade.login(user);
-        out.println();
-        if (res.statusCode() == 200 || res.statusCode() == 201){
-            AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
-            authToken = auth.authToken();
-            out.println(authToken);
-            userState = UserState.LOGGED_IN;
-            postLoginUI();
+        ResponseObj res = null;
+        try {
+            res = serverFacade.login(user);
+            if (res.statusCode() == 200 || res.statusCode() == 201){
+                AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+                authToken = auth.authToken();
+                out.println(authToken);
+                userState = UserState.LOGGED_IN;
+                postLoginUI();
+            }
+        } catch (ResponseException e) {
+            out.println(e.getMessage());
         }
+
     }
 
     private static void helpPostLogin(){
