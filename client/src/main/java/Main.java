@@ -143,7 +143,7 @@ public class Main {
         out.println("Enter game ID");
         int id = scanner.nextInt();
         String clear = scanner.nextLine();
-        out.println("Enter color to play as");
+        out.println("Enter playerColor to play as");
         String color = scanner.nextLine();
         try {
             serverFacade.joinGame(id, color, authToken);

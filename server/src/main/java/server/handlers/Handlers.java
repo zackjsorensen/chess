@@ -125,27 +125,27 @@ public class Handlers {
         if (!checkAuthToken(req)) {
             return respondToUnauthorized(res);
         }
-        if (joinRequest.gameID() == 0 || joinRequest.color() == null || (!joinRequest.color().equalsIgnoreCase("BLACK") && !joinRequest.color().equalsIgnoreCase("WHITE"))) {
+        if (joinRequest.gameID() == 0 || joinRequest.playerColor() == null || (!joinRequest.playerColor().equalsIgnoreCase("BLACK") && !joinRequest.playerColor().equalsIgnoreCase("WHITE"))) {
             return respondToBadReq(res);
         }
         String username = authService.getAuth(req.headers("authorization")).username();
         if (username == null) {
             return respondToUnauthorized(res);
         }
-        if (joinRequest.color() == null){
-            respondToBadReq(res);
-        }
+//        if (joinRequest.playerColor() == null){
+//            respondToBadReq(res);
+//        }
 //            joinRequest = new JoinGameReq(joinRequest.gameID(), "WHITE");
-////            if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.color())){
+////            if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.playerColor())){
 ////                joinRequest = new JoinGameReq(joinRequest.gameID(), "BLACK");
 ////            }
 //        }
-        if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.color())) {
+        if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.playerColor())) {
             throw new ResponseException(403, "Color taken");
         }
 
         res.status(200);
-        gameService.joinGame(joinRequest.gameID(), username, joinRequest.color());
+        gameService.joinGame(joinRequest.gameID(), username, joinRequest.playerColor());
         return gson.toJson(empty);
     }
 

@@ -38,15 +38,17 @@ public class GameService {
     }
 
     public boolean isColorTaken(int gameID, String color) throws DataAccessException {
-//        if (color == null){
-//            color = "WHITE";
+//        if (playerColor == null){
+//            playerColor = "WHITE";
 //        }
         if (color.equalsIgnoreCase("WHITE")){
             return dataAccess.get(gameID).whiteUsername() != null;
         } else if (color.equalsIgnoreCase("BLACK")) {
             return dataAccess.get(gameID).blackUsername() != null;
         } else {
-            throw new ResponseException(400, "Bad color Request");
+//            throw new ResponseException(400, "Bad playerColor Request");
+            throw new DataAccessException("Bad playerColor Request");
+
         }
     }
 

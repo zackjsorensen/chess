@@ -365,7 +365,7 @@ public class MakeMoveTests {
         Assertions.assertEquals(promotionType, whiteEndPiece.getPieceType(),
                 "Found piece at end position is not the correct piece type");
         Assertions.assertEquals(ChessGame.TeamColor.WHITE, whiteEndPiece.getTeamColor(),
-                "Found piece at end position is the wrong team color");
+                "Found piece at end position is the wrong team playerColor");
 
 
         //Black take + promotion
@@ -379,6 +379,6 @@ public class MakeMoveTests {
         Assertions.assertEquals(promotionType, blackEndPiece.getPieceType(),
                 "Found piece at end position is not the correct piece type");
         Assertions.assertEquals(ChessGame.TeamColor.BLACK, blackEndPiece.getTeamColor(),
-                "Found piece at end position is the wrong team color");
+                "Found piece at end position is the wrong team playerColor");
     }
 }

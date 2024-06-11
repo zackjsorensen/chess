@@ -31,7 +31,7 @@ public class DrawChessBoard {
         } else if (color.equalsIgnoreCase("WHITE")) {
             whiteLeadsOnEven = false;
         } else {
-            throw new Exception("Bad color parameter");
+            throw new Exception("Bad playerColor parameter");
         }
     }
 

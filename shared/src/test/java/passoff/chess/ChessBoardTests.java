@@ -26,7 +26,7 @@ public class ChessBoardTests {
         Assertions.assertEquals(piece.getPieceType(), foundPiece.getPieceType(),
                 "ChessPiece returned by getPiece had the wrong piece type");
         Assertions.assertEquals(piece.getTeamColor(), foundPiece.getTeamColor(),
-                "ChessPiece returned by getPiece had the wrong team color");
+                "ChessPiece returned by getPiece had the wrong team playerColor");
     }
 
 
