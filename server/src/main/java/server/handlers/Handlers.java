@@ -127,7 +127,7 @@ public class Handlers {
         if (!checkAuthToken(req)) {
             return respondToUnauthorized(res);
         }
-        if (joinRequest.gameID() == 0 || joinRequest.playerColor() == null || (!joinRequest.playerColor().equalsIgnoreCase("BLACK") && !joinRequest.playerColor().equalsIgnoreCase("WHITE"))) {
+        if (joinRequest.gameID() == 0 || joinRequest.playerColor() == null || (!joinRequest.playerColor().equalsIgnoreCase("BLACK") && !joinRequest.playerColor().equalsIgnoreCase("WHITE") && !joinRequest.playerColor().equalsIgnoreCase("OBS"))) {
             return respondToBadReq(res);
         }
         String username = authService.getAuth(req.headers("authorization")).username();
@@ -138,6 +138,7 @@ public class Handlers {
             res.status(403);
             respondToForbidden(res);
         }
+
 
         res.status(200);
         gameService.joinGame(joinRequest.gameID(), username, joinRequest.playerColor());

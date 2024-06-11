@@ -25,7 +25,7 @@ public class Main {
     static UserState userState;
 
     public static void main(String[] args) throws Exception {
-        serverFacade = new ServerFacade(0);
+        serverFacade = new ServerFacade(8080);
 
         System.out.println("♕ Welcome to 240 Chess. Type help for list of commands.");
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
@@ -46,7 +46,7 @@ public class Main {
         }
     }
 
-    private static void postLoginUI() throws MalformedURLException, ResponseException {
+    private static void postLoginUI() throws Exception {
         String line = scanner.nextLine();
         while (userState == UserState.LOGGED_IN) {
             if (line.equalsIgnoreCase("help")) {
@@ -59,7 +59,10 @@ public class Main {
                 joinGame();
             } else if (line.equalsIgnoreCase("list")) {
                 listGames();
-            } else if (line.equalsIgnoreCase("quit")) {
+            } else if (line.equalsIgnoreCase("observe")) {
+                observe();
+            }
+            else if (line.equalsIgnoreCase("quit")) {
                 logout();
                 System.exit(0);
             } else {
@@ -77,29 +80,33 @@ public class Main {
         out.println(" - help: see this exact same message, again! You should choose this option...");
     }
 
-    private static void register(PrintStream out, Scanner scanner, ServerFacade serverFacade) throws MalformedURLException, ResponseException {
+    private static void register(PrintStream out, Scanner scanner, ServerFacade serverFacade) throws Exception {
         out.println("Enter a username");
         String username = scanner.nextLine();
         out.println("Enter a password");
         String password = scanner.nextLine();
         out.println("Enter an email address (optional)");
         String email = scanner.nextLine();
-        UserData user = new UserData(username, password, email);
-        ResponseObj res = serverFacade.register(user);
-        authHelper(out, res);
+        try {
+            UserData user = new UserData(username, password, email);
+            ResponseObj res = serverFacade.register(user);
+            authHelper(out, res);
+        } catch (ResponseException e){
+            out.println("Username already taken");
+        }
     }
 
-    private static void authHelper(PrintStream out, ResponseObj res) throws MalformedURLException, ResponseException {
+    private static void authHelper(PrintStream out, ResponseObj res) throws Exception {
         if (res.statusCode() == 200 || res.statusCode() == 201) {
             AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
             authToken = auth.authToken();
-            out.println(authToken);
+            out.println("Logged in");
             userState = UserState.LOGGED_IN;
             postLoginUI();
         }
     }
 
-    private static void login(PrintStream out, Scanner scanner) throws MalformedURLException, ResponseException {
+    private static void login(PrintStream out, Scanner scanner) throws Exception {
         out.println("Enter a username");
         String username = scanner.nextLine();
         out.println("Enter a password");
@@ -128,6 +135,7 @@ public class Main {
         ResponseObj res = serverFacade.logout(authToken);
         if (res.statusCode() == 200 || res.statusCode() == 201) {
             userState = UserState.LOGGED_OUT;
+            out.println("Logged out");
         }
     }
 
@@ -144,19 +152,24 @@ public class Main {
 
     private static void joinGame() {
         out.println("Enter game ID");
-        int id = scanner.nextInt();
-        String clear = scanner.nextLine();
-        out.println("Enter playerColor to play as");
-        String color = scanner.nextLine();
         try {
-            serverFacade.joinGame(id, color, authToken);
-            DrawChessBoard drawBlack = new DrawChessBoard(new ChessGame(), "BLACK");
-            DrawChessBoard drawWhite = new DrawChessBoard(new ChessGame(), "WHITE");
-            drawBlack.drawAll();
-            drawWhite.drawAll();
-        } catch (Exception e) {
-            out.println(e.getMessage());
+            int id = scanner.nextInt();
+            String clear = scanner.nextLine();
+            out.println("Enter playerColor to play as");
+            String color = scanner.nextLine();
+            try {
+                serverFacade.joinGame(id, color, authToken);
+                DrawChessBoard drawBlack = new DrawChessBoard(new ChessGame(), "BLACK");
+                DrawChessBoard drawWhite = new DrawChessBoard(new ChessGame(), "WHITE");
+                drawBlack.drawAll();
+                drawWhite.drawAll();
+            } catch (Exception e) {
+                out.println(e.getMessage());
+            }
+        } catch (Exception e){
+            out.println("Please enter a valid game id");
         }
+
     }
 
     private static void listGames() throws MalformedURLException {
@@ -173,5 +186,15 @@ public class Main {
         } catch (ResponseException e) {
             out.println(e.getMessage());
         }
+    }
+
+    private static void observe() throws Exception {
+        out.println("Enter id");
+        int id = scanner.nextInt();
+        String clear = scanner.nextLine();
+        DrawChessBoard drawBlack = new DrawChessBoard(new ChessGame(), "BLACK");
+        DrawChessBoard drawWhite = new DrawChessBoard(new ChessGame(), "WHITE");
+        drawBlack.drawAll();
+        drawWhite.drawAll();
     }
 }
