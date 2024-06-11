@@ -1,6 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
+import dataaccess.exception.ResponseException;
 import server.reqresobjects.*;
 import spark.*;
 import server.handlers.Handlers;
@@ -40,7 +41,11 @@ public class Server {
     public Object errorHandler(Exception e, Request req, Response res) {
         var body = gson.toJson(new ErrorResponse(e.getMessage()));
         res.type("application/json");
-        res.status(500);
+        if (e.getClass() == ResponseException.class){
+            res.status(((ResponseException) e).statusCode);
+        } else {
+            res.status(500);
+        }
         res.body(body);
         return body;
     }

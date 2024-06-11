@@ -38,7 +38,7 @@ public class Handlers {
             }
             if (userService.getUser(user.username()) != null) {
                 res.status(403);
-                return gson.toJson(new LoginResponse(user.username(), null, "Error: already taken"));
+                return gson.toJson(new LoginResponse(null, null, "Error: already taken"));
                 // hopefully that didn't break everything....
             }
             userService.addUser(user);
@@ -132,8 +132,14 @@ public class Handlers {
         if (username == null) {
             return respondToUnauthorized(res);
         }
-
-
+        if (joinRequest.color() == null){
+            respondToBadReq(res);
+        }
+//            joinRequest = new JoinGameReq(joinRequest.gameID(), "WHITE");
+////            if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.color())){
+////                joinRequest = new JoinGameReq(joinRequest.gameID(), "BLACK");
+////            }
+//        }
         if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.color())) {
             throw new ResponseException(403, "Color taken");
         }
