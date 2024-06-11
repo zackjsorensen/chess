@@ -5,6 +5,9 @@ import dataaccess.exception.DataAccessException;
 import dataaccess.exception.ResponseException;
 import dataaccess.sql.SQLGameDAO;
 import model.GameData;
+import model.ListGamesGameUnit;
+
+import java.util.ArrayList;
 
 public class GameService {
     public SQLGameDAO dataAccess;
@@ -18,7 +21,7 @@ public class GameService {
         return gameID;
     }
 
-    public Object[] listGames() throws ResponseException {
+    public ArrayList<ListGamesGameUnit> listGames() throws ResponseException {
         return dataAccess.listGames();
     }
 

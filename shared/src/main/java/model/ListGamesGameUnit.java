@@ -6,11 +6,11 @@ public record ListGamesGameUnit(int gameID, String whiteUsername, String blackUs
 
     @Override
     public String toString() {
-        return "ListGamesGameUnit[" +
-                "gameID=" + gameID + ", " +
-                "whiteUsername=" + whiteUsername + ", " +
-                "blackUsername=" + blackUsername + ", " +
-                "gameName=" + gameName + ']';
+        return
+                "gameID:" + gameID + ", " +
+                "whiteUsername:" + whiteUsername + ", " +
+                "blackUsername:" + blackUsername + ", " +
+                "gameName:" + gameName;
     }
 
 }

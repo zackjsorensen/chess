@@ -40,7 +40,7 @@ class GameServiceTest {
         service.createGame("dos");
         service.createGame("tres");
         var resultList = service.listGames();
-        assertEquals(3, resultList.length);
+        assertEquals(3, resultList.size());
     }
 
     @Test

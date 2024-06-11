@@ -152,7 +152,7 @@ public class Handlers {
             return respondToUnauthorized(res);
         }
         res.status(200);
-        return gson.toJson(new ListGamesResult(List.of(gameService.listGames())));
+        return gson.toJson(new ListGamesResult(gameService.listGames()));
     }
 
 

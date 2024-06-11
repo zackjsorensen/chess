@@ -158,7 +158,15 @@ public class Main {
 
     private static void listGames() throws MalformedURLException {
         ListGamesResult games = serverFacade.listGames(authToken);
-        out.println(games);
+        int i = 1;
+        for (ListGamesGameUnit game: games.games()){
+            out.print(i);
+            out.print(" - ");
+            out.print(game);
+            out.println();
+            i++;
+        }
+
     }
 }
 

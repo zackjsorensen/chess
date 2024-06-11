@@ -69,7 +69,7 @@ public class SQLGameDAO extends SQLParentDAO{
         return new GameData(id, whiteUsername, blackUsername, gameName, game);
     }
 
-    public Object[] listGames() throws ResponseException {
+    public ArrayList<ListGamesGameUnit> listGames() throws ResponseException {
         ArrayList<ListGamesGameUnit> gamesList = new ArrayList<ListGamesGameUnit>();
         try (var conn = DatabaseManager.getConnection()) {
             String statement = "SELECT id, whiteUsername, blackUsername, gameName, game FROM games";
@@ -84,7 +84,7 @@ public class SQLGameDAO extends SQLParentDAO{
         } catch (Exception e) {
             throw new ResponseException(500, String.format("Unable to read data: %s", e.getMessage()));
         }
-        return gamesList.toArray();
+        return gamesList;
     }
 
     public void updateGameState(int id, GameData gameData) throws ResponseException {
