@@ -3,6 +3,7 @@ package client;
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
 import model.AuthData;
+import model.ListGamesResult;
 import model.UserData;
 import org.junit.jupiter.api.*;
 import server.Server;
@@ -89,6 +90,43 @@ public class ServerFacadeTests {
         } catch (ResponseException e) {
             Assertions.assertEquals("Unauthorized", e.getMessage());
         }
+    }
+
+    @Test
+    public void clearTest() throws MalformedURLException, ResponseException {
+        facade.register(hoid);
+        facade.clear();
+        try {
+            facade.login(hoid);
+        } catch (ResponseException e){
+            Assertions.assertEquals("Unauthorized", e.getMessage());
+        }
+    }
+
+    @Test
+    public void joinGood() throws MalformedURLException, ResponseException {
+        ResponseObj res = facade.register(hoid);
+        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        int id = facade.createGame("Uno", auth.authToken());
+        facade.joinGame(id, "BLACK", auth.authToken());
+        ListGamesResult result = facade.listGames(auth.authToken());
+        assert(result.games().getFirst().blackUsername().equals("Hoid"));
+    }
+
+    @Test
+    public void joinBad() throws MalformedURLException, ResponseException {
+        ResponseObj res = facade.register(hoid);
+        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        int id = facade.createGame("Uno", auth.authToken());
+        facade.joinGame(id, "BLACK", auth.authToken());
+        var body = facade.register(new UserData("a", "b", "c")).body();
+        AuthData newAuth = new Gson().fromJson(body, AuthData.class);
+        try {
+            facade.joinGame(id, "BLACK", newAuth.authToken());
+        } catch (ResponseException e){
+            Assertions.assertEquals("Forbidden", e.getMessage());
+        }
+
     }
 
 }
