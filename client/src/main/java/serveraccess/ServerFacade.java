@@ -46,7 +46,7 @@ public class ServerFacade {
         int code = communicator.joinGame(gameID, color, authToken);
     }
 
-    public ListGamesResult listGames(String authToken) throws MalformedURLException {
+    public ListGamesResult listGames(String authToken) throws MalformedURLException, ResponseException {
         ResponseObj res = communicator.listGames(authToken);
         ListGamesResult games = gson.fromJson(res.body(), ListGamesResult.class);
         return games;

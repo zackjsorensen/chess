@@ -1,6 +1,7 @@
 package client;
 
 import com.google.gson.Gson;
+import dataaccess.exception.DataAccessException;
 import dataaccess.exception.ResponseException;
 import model.AuthData;
 import model.ListGamesResult;
@@ -64,8 +65,7 @@ public class ServerFacadeTests {
     @Test
     public void logoutGood() throws MalformedURLException, ResponseException {
         facade.register(hoid);
-        ResponseObj res = facade.login(hoid);
-        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        AuthData auth = getAuthData(facade.login(hoid));
         ResponseObj res2 = facade.logout(auth.authToken());
         assert(res2.statusCode() == 200);
     }
@@ -77,10 +77,14 @@ public class ServerFacadeTests {
 
     @Test
     public void createGameGood() throws MalformedURLException, ResponseException {
-        ResponseObj res = facade.register(hoid);
-        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
-        int id = facade.createGame("Uno", auth.authToken());
+        int id = getId();
         Assertions.assertInstanceOf(Integer.class, id);
+    }
+
+    private int getId() throws MalformedURLException, ResponseException {
+        AuthData auth = getAuthData(facade.register(hoid));
+        int id = facade.createGame("Uno", auth.authToken());
+        return id;
     }
 
     @Test
@@ -105,18 +109,22 @@ public class ServerFacadeTests {
 
     @Test
     public void joinGood() throws MalformedURLException, ResponseException {
-        ResponseObj res = facade.register(hoid);
-        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        AuthData auth = getAuthData(facade.register(hoid));
         int id = facade.createGame("Uno", auth.authToken());
         facade.joinGame(id, "BLACK", auth.authToken());
         ListGamesResult result = facade.listGames(auth.authToken());
         assert(result.games().getFirst().blackUsername().equals("Hoid"));
     }
 
+    private AuthData getAuthData(ResponseObj facade) throws MalformedURLException, ResponseException {
+        ResponseObj res = facade;
+        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        return auth;
+    }
+
     @Test
     public void joinBad() throws MalformedURLException, ResponseException {
-        ResponseObj res = facade.register(hoid);
-        AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
+        AuthData auth = getAuthData(facade.register(hoid));
         int id = facade.createGame("Uno", auth.authToken());
         facade.joinGame(id, "BLACK", auth.authToken());
         var body = facade.register(new UserData("a", "b", "c")).body();
@@ -126,7 +134,26 @@ public class ServerFacadeTests {
         } catch (ResponseException e){
             Assertions.assertEquals("Forbidden", e.getMessage());
         }
+    }
 
+    @Test
+    public void listGood() throws MalformedURLException, ResponseException {
+        AuthData auth = getAuthData(facade.register(hoid));
+        facade.createGame("First", auth.authToken());
+        ListGamesResult result = facade.listGames(auth.authToken());
+        Assertions.assertEquals("First", result.games().getFirst().gameName());
+    }
+
+    @Test
+    public void listEmpty() throws MalformedURLException, ResponseException {
+        AuthData auth = getAuthData(facade.register(hoid));
+        ListGamesResult result = facade.listGames(auth.authToken());
+        assert(result.games().isEmpty());
+    }
+
+    @Test
+    public void listBad() throws MalformedURLException, ResponseException, DataAccessException {
+        Assertions.assertThrows(DataAccessException.class, ()-> facade.listGames(null));
     }
 
 }

@@ -48,7 +48,7 @@ public class Main {
 
     private static void postLoginUI() throws MalformedURLException, ResponseException {
         String line = scanner.nextLine();
-        while ( userState == UserState.LOGGED_IN) {
+        while (userState == UserState.LOGGED_IN) {
             if (line.equalsIgnoreCase("help")) {
                 helpPostLogin();
             } else if (line.equalsIgnoreCase("logout")) {
@@ -160,14 +160,18 @@ public class Main {
     }
 
     private static void listGames() throws MalformedURLException {
-        ListGamesResult games = serverFacade.listGames(authToken);
-        int i = 1;
-        for (ListGamesGameUnit game : games.games()) {
-            out.print(i);
-            out.print(" - ");
-            out.print(game);
-            out.println();
-            i++;
+        try {
+            ListGamesResult games = serverFacade.listGames(authToken);
+            int i = 1;
+            for (ListGamesGameUnit game : games.games()) {
+                out.print(i);
+                out.print(" - ");
+                out.print(game);
+                out.println();
+                i++;
+            }
+        } catch (ResponseException e) {
+            out.println(e.getMessage());
         }
     }
 }
