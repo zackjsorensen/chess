@@ -68,13 +68,8 @@ public class PawnMoves {
     }
 
     private boolean inBounds(ChessPosition positionToCheck) {
-        if (positionToCheck.getColumn() < 1 || positionToCheck.getColumn() > 8) {
-            return false;
-        }
-        if (positionToCheck.getRow() < 1 || positionToCheck.getRow() > 8) {
-            return false;
-        }
-        return true;
+        PieceHelper pawnHelper = new PieceHelper(board, null, color, myPosition);
+        return pawnHelper.inBounds(positionToCheck);
     }
 
     private final ChessPosition myPosition;

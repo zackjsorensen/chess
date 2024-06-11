@@ -57,13 +57,8 @@ public class KnightMoves {
         return moves;
     }
     private boolean inBounds(ChessPosition positionToCheck) {
-        if (positionToCheck.getColumn() < 1 || positionToCheck.getColumn() > 8) {
-            return false;
-        }
-        if (positionToCheck.getRow() < 1 || positionToCheck.getRow() > 8) {
-            return false;
-        }
-        return true;
+        PieceHelper knightHelper = new PieceHelper(board, positions, color, myPosition);
+        return knightHelper.inBounds(positionToCheck);
     }
 
 }
