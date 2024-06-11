@@ -1,7 +1,7 @@
 package serveraccess;
 
 import com.google.gson.Gson;
-import dataaccess.exception.ResponseException;
+import model.exception.ResponseException;
 import model.CreateGameReq;
 import model.JoinGameReq;
 import model.UserData;

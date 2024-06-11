@@ -1,7 +1,6 @@
 package service;
 
-import dataaccess.exception.ResponseException;
-import dataaccess.memorydao.MemoryAuthDAO;
+import model.exception.ResponseException;
 import dataaccess.sql.SQLAuthDAO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

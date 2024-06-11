@@ -1,4 +1,4 @@
-package dataaccess.exception;
+package model.exception;
 
 /**
  * Indicates there was an error connecting to the database

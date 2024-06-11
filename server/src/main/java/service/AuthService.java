@@ -1,7 +1,6 @@
 package service;
 
-import dataaccess.exception.ResponseException;
-import dataaccess.memorydao.MemoryAuthDAO;
+import model.exception.ResponseException;
 import dataaccess.sql.SQLAuthDAO;
 import model.AuthData;
 

@@ -1,8 +1,8 @@
 package client;
 
 import com.google.gson.Gson;
-import dataaccess.exception.DataAccessException;
-import dataaccess.exception.ResponseException;
+import model.exception.DataAccessException;
+import model.exception.ResponseException;
 import model.AuthData;
 import model.ListGamesResult;
 import model.UserData;

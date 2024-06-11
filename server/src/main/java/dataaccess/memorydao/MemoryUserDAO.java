@@ -1,7 +1,7 @@
 package dataaccess.memorydao;
 
 import dataaccess.DataAccessInterface;
-import dataaccess.exception.ResponseException;
+import model.exception.ResponseException;
 import model.UserData;
 
 import java.util.HashMap;

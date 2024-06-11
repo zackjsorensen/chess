@@ -1,6 +1,6 @@
 import chess.ChessGame;
 import com.google.gson.Gson;
-import dataaccess.exception.ResponseException;
+import model.exception.ResponseException;
 import model.*;
 import serveraccess.ResponseObj;
 import serveraccess.ServerFacade;

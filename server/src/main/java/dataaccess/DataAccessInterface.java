@@ -1,6 +1,6 @@
 package dataaccess;
 
-import dataaccess.exception.ResponseException;
+import model.exception.ResponseException;
 
 public interface DataAccessInterface<T, U> {
 

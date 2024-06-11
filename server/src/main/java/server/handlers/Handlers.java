@@ -1,7 +1,7 @@
 package server.handlers;
 
-import dataaccess.exception.DataAccessException;
-import dataaccess.exception.ResponseException;
+import model.exception.DataAccessException;
+import model.exception.ResponseException;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
@@ -12,8 +12,6 @@ import server.reqresobjects.ErrorResponse;
 import model.ListGamesResult;
 import spark.Request;
 import spark.Response;
-
-import java.util.List;
 
 public class Handlers {
     public UserService userService;

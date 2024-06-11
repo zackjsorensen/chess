@@ -1,7 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.exception.ResponseException;
+import model.exception.ResponseException;
 import server.reqresobjects.*;
 import spark.*;
 import server.handlers.Handlers;

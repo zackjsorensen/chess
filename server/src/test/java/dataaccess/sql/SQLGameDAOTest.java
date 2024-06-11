@@ -1,7 +1,7 @@
 package dataaccess.sql;
 
 import chess.ChessGame;
-import dataaccess.exception.ResponseException;
+import model.exception.ResponseException;
 import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
