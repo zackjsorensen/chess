@@ -24,7 +24,6 @@ public class ClientCommunicator {
 
     public ClientCommunicator(){
         this(8080);
-        // hopefully this doesn't mess stuff up.....
     }
 
    public ResponseObj register(UserData userData) throws MalformedURLException, ResponseException {
@@ -47,7 +46,7 @@ public class ClientCommunicator {
         os.write(body.getBytes());
         return receiveResponse(http);
     }
-    // makes a response object to return to client
+
    private ResponseObj receiveResponse(HttpURLConnection http) throws IOException, ResponseException {
         int status = http.getResponseCode();
         String msg = http.getResponseMessage();
@@ -58,7 +57,6 @@ public class ClientCommunicator {
         }
    }
 
-    // read all the body in as a string - converting to an object will be done closer to where the objects are used
     private static String readResponseBody(HttpURLConnection http) throws IOException {
         String responseBody = "";
         try (InputStream respBody = http.getInputStream()) {

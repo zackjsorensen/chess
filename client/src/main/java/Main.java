@@ -16,53 +16,60 @@ public class Main {
     static PrintStream out;
     static ServerFacade serverFacade;
     static Scanner scanner;
+
     enum UserState {
         LOGGED_IN,
         LOGGED_OUT;
     }
+
     static UserState userState;
-    static Gson gson = new Gson();
 
     public static void main(String[] args) throws Exception {
         serverFacade = new ServerFacade();
 
         System.out.println("♕ Welcome to 240 Chess. Type help for list of commands.");
-        out = new PrintStream(System.out, true,StandardCharsets.UTF_8);
+        out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         scanner = new Scanner(System.in);
         String line = scanner.nextLine();
         userState = UserState.LOGGED_OUT;
-        while(!line.equalsIgnoreCase("quit")) {
+        while (!line.equalsIgnoreCase("quit")) {
             if (line.equalsIgnoreCase("help")) {
                 help();
             } else if (line.equalsIgnoreCase("register")) {
                 register(out, scanner, serverFacade);
-            } else if (line.equalsIgnoreCase("login")){
+            } else if (line.equalsIgnoreCase("login")) {
                 login(out, scanner);
+            } else {
+                out.println("Invalid command. Type help to see options");
             }
             line = scanner.nextLine();
         }
-
     }
 
     private static void postLoginUI() throws MalformedURLException, ResponseException {
         String line = scanner.nextLine();
-        while(!line.equalsIgnoreCase("quit") && userState == UserState.LOGGED_IN){
+        while ( userState == UserState.LOGGED_IN) {
             if (line.equalsIgnoreCase("help")) {
                 helpPostLogin();
-            } else if (line.equalsIgnoreCase("logout")){
+            } else if (line.equalsIgnoreCase("logout")) {
                 logout();
-            } else if (line.equalsIgnoreCase("create")){
+            } else if (line.equalsIgnoreCase("create")) {
                 createGame();
-            } else if (line.equalsIgnoreCase("join")){
+            } else if (line.equalsIgnoreCase("join")) {
                 joinGame();
-            } else if (line.equalsIgnoreCase("list")){
+            } else if (line.equalsIgnoreCase("list")) {
                 listGames();
+            } else if (line.equalsIgnoreCase("quit")) {
+                logout();
+                System.exit(0);
+            } else {
+                out.println("Invalid command. Type help to see options");
             }
             line = scanner.nextLine();
         }
     }
 
-    private static void help(){
+    private static void help() {
         out.println("Commands:");
         out.println(" - register: create a new user");
         out.println(" - login: kind of self-explanatory");
@@ -79,7 +86,11 @@ public class Main {
         String email = scanner.nextLine();
         UserData user = new UserData(username, password, email);
         ResponseObj res = serverFacade.register(user);
-        if (res.statusCode() == 200 || res.statusCode() == 201){
+        authHelper(out, res);
+    }
+
+    private static void authHelper(PrintStream out, ResponseObj res) throws MalformedURLException, ResponseException {
+        if (res.statusCode() == 200 || res.statusCode() == 201) {
             AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
             authToken = auth.authToken();
             out.println(authToken);
@@ -97,20 +108,13 @@ public class Main {
         ResponseObj res = null;
         try {
             res = serverFacade.login(user);
-            if (res.statusCode() == 200 || res.statusCode() == 201){
-                AuthData auth = new Gson().fromJson(res.body(), AuthData.class);
-                authToken = auth.authToken();
-                out.println(authToken);
-                userState = UserState.LOGGED_IN;
-                postLoginUI();
-            }
+            authHelper(out, res);
         } catch (ResponseException e) {
             out.println(e.getMessage());
         }
-
     }
 
-    private static void helpPostLogin(){
+    private static void helpPostLogin() {
         out.println("Commands:");
         out.println(" - logout: take a wild guess what this does");
         out.println(" - create: create a new game");
@@ -124,7 +128,6 @@ public class Main {
         ResponseObj res = serverFacade.logout(authToken);
         if (res.statusCode() == 200 || res.statusCode() == 201) {
             userState = UserState.LOGGED_OUT;
-            // getting 401....
         }
     }
 
@@ -134,7 +137,7 @@ public class Main {
         try {
             int id = serverFacade.createGame(gameName, authToken);
             out.println("Game ID:" + id);
-        } catch (ResponseException e){
+        } catch (ResponseException e) {
             out.println(e.getMessage());
         }
     }
@@ -159,15 +162,12 @@ public class Main {
     private static void listGames() throws MalformedURLException {
         ListGamesResult games = serverFacade.listGames(authToken);
         int i = 1;
-        for (ListGamesGameUnit game: games.games()){
+        for (ListGamesGameUnit game : games.games()) {
             out.print(i);
             out.print(" - ");
             out.print(game);
             out.println();
             i++;
         }
-
     }
 }
-
-// study classpath, linux shortcut??

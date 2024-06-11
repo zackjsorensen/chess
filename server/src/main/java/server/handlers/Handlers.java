@@ -23,7 +23,7 @@ public class Handlers {
     UserData empty;
 
     public Handlers() {
-        userService = new UserService(new SQLUserDAO()); // we have our userService that starts with an empty userDAO
+        userService = new UserService(new SQLUserDAO());
         authService = new AuthService(new SQLAuthDAO());
         gameService = new GameService(new SQLGameDAO());
         gson = new Gson();
@@ -39,7 +39,6 @@ public class Handlers {
             if (userService.getUser(user.username()) != null) {
                 res.status(403);
                 return gson.toJson(new LoginResponse(null, null, "Error: already taken"));
-                // hopefully that didn't break everything....
             }
             userService.addUser(user);
             res.status(200);
@@ -95,7 +94,7 @@ public class Handlers {
             authService.clear();
             gameService.clear();
             res.status(200);
-            String body = gson.toJson(empty);// I guess this is returning an empty response
+            String body = gson.toJson(empty);
             res.body(body);
             return body;
         } catch (Exception e) {

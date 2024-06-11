@@ -32,7 +32,6 @@ public class GameService {
         if (isColorTaken(gameID, color)){
             throw new ResponseException(403, "Error: already taken");
         }
-
         dataAccess.updatePlayer(gameID, color, username);
     }
 
@@ -41,17 +40,12 @@ public class GameService {
     }
 
     public boolean isColorTaken(int gameID, String color) throws DataAccessException {
-//        if (playerColor == null){
-//            playerColor = "WHITE";
-//        }
         if (color.equalsIgnoreCase("WHITE")){
             return dataAccess.get(gameID).whiteUsername() != null;
         } else if (color.equalsIgnoreCase("BLACK")) {
             return dataAccess.get(gameID).blackUsername() != null;
         } else {
-//            throw new ResponseException(400, "Bad playerColor Request");
             throw new DataAccessException("Bad playerColor Request");
-
         }
     }
 
