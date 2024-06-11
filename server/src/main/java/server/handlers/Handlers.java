@@ -69,6 +69,11 @@ public class Handlers {
         return gson.toJson(new ErrorResponse("Error: unauthorized"));
     }
 
+    private String respondToForbidden(Response res){
+        res.status(403);
+        return gson.toJson(new ErrorResponse("Error: Forbidden"));
+    }
+
     public String logout(Request req, Response res) {
         String authToken = req.headers("authorization");
         try {
@@ -132,16 +137,9 @@ public class Handlers {
         if (username == null) {
             return respondToUnauthorized(res);
         }
-//        if (joinRequest.playerColor() == null){
-//            respondToBadReq(res);
-//        }
-//            joinRequest = new JoinGameReq(joinRequest.gameID(), "WHITE");
-////            if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.playerColor())){
-////                joinRequest = new JoinGameReq(joinRequest.gameID(), "BLACK");
-////            }
-//        }
         if (gameService.isColorTaken(joinRequest.gameID(), joinRequest.playerColor())) {
-            throw new ResponseException(403, "Color taken");
+            res.status(403);
+            respondToForbidden(res);
         }
 
         res.status(200);

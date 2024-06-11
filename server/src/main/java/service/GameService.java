@@ -27,7 +27,7 @@ public class GameService {
             throw new ResponseException(400, "Game does not exist");
         }
         if (isColorTaken(gameID, color)){
-            throw new ResponseException(400, "Error: already taken");
+            throw new ResponseException(403, "Error: already taken");
         }
 
         dataAccess.updatePlayer(gameID, color, username);
