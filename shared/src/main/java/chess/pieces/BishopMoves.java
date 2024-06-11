@@ -35,22 +35,8 @@ public class BishopMoves {
     }
 
     private void tryOneWay( int rowIncrement, int colIncrement) {
-        ChessPosition nextPosition;
-        for(int i = 1; i < 7; i++){
-             nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
-            if (!inBounds(nextPosition)){
-                break;
-            }
-            if( board.getPiece(nextPosition) != null){
-                if (board.getPiece(nextPosition).getTeamColor() == color){
-                    break;
-                } else {
-                    positions.add(nextPosition);
-                    break;
-                }
-            }
-            positions.add(nextPosition);
-        }
+        PieceHelper helper = new PieceHelper(board, positions, color, myPosition);
+        helper.tryOneWay(rowIncrement, colIncrement);
     }
 
     private boolean inBounds(ChessPosition positionToCheck) {

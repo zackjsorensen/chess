@@ -34,22 +34,8 @@ public class QueenMoves {
     }
 
     private void tryOneWay(int rowIncrement, int colIncrement) {
-        ChessPosition nextPosition;
-        for(int i = 1; i < 7; i++){
-            nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
-            if (!inBounds(nextPosition)){
-                break;
-            }
-            if( board.getPiece(nextPosition) != null){ // if nextPosition is not empty
-                if (board.getPiece(nextPosition).getTeamColor() == color){ // if it's our teammate, break, we can't move there
-                    break;
-                } else { // if it's an enemy piece, we can move there
-                    positions.add(nextPosition); // add position of capturable enemy piece
-                    break;
-                }
-            }
-            positions.add(nextPosition); // if the spot is empty, add the position
-        }
+        PieceHelper queenHelper = new PieceHelper(board, positions, color, myPosition);
+        queenHelper.tryOneWay(rowIncrement, colIncrement);
     }
 
     /** Takes the ArrayList of available positions and uses it to make an ArrayList of Chess Moves*/
