@@ -3,7 +3,7 @@ package dataaccess.memorydao;
 import dataaccess.DataAccessInterface;
 import dataaccess.exception.ResponseException;
 import model.GameData;
-import server.reqresobjects.ListGamesGameUnit;
+import model.ListGamesGameUnit;
 
 import java.util.*;
 

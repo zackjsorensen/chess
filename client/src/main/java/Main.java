@@ -1,9 +1,7 @@
 import chess.ChessGame;
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
-import model.AuthData;
-import model.CreateGameReq;
-import model.UserData;
+import model.*;
 import serveraccess.ResponseObj;
 import serveraccess.ServerFacade;
 import ui.DrawChessBoard;
@@ -57,6 +55,8 @@ public class Main {
                 createGame();
             } else if (line.equalsIgnoreCase("join")){
                 joinGame();
+            } else if (line.equalsIgnoreCase("list")){
+                listGames();
             }
             line = scanner.nextLine();
         }
@@ -154,6 +154,11 @@ public class Main {
         } catch (Exception e) {
             out.println(e.getMessage());
         }
+    }
+
+    private static void listGames() throws MalformedURLException {
+        ListGamesResult games = serverFacade.listGames(authToken);
+        out.println(games);
     }
 }
 

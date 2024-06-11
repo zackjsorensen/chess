@@ -3,6 +3,7 @@ package serveraccess;
 import com.google.gson.Gson;
 import dataaccess.exception.ResponseException;
 import model.CreateGameReq;
+import model.ListGamesResult;
 import model.UserData;
 import java.net.MalformedURLException;
 
@@ -43,6 +44,12 @@ public class ServerFacade {
 
     public void joinGame(int gameID, String color, String authToken) throws MalformedURLException, ResponseException {
         int code = communicator.joinGame(gameID, color, authToken);
+    }
+
+    public ListGamesResult listGames(String authToken) throws MalformedURLException {
+        ResponseObj res = communicator.listGames(authToken);
+        ListGamesResult games = gson.fromJson(res.body(), ListGamesResult.class);
+        return games;
     }
 
 }

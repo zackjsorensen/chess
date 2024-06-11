@@ -6,7 +6,7 @@ import dataaccess.DatabaseManager;
 import dataaccess.exception.DataAccessException;
 import dataaccess.exception.ResponseException;
 import model.GameData;
-import server.reqresobjects.ListGamesGameUnit;
+import model.ListGamesGameUnit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;

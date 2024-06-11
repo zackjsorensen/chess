@@ -1,4 +1,4 @@
-package server.reqresobjects;
+package model;
 
 import java.util.Collection;
 

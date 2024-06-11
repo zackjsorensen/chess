@@ -2,8 +2,6 @@ package server.handlers;
 
 import dataaccess.exception.DataAccessException;
 import dataaccess.exception.ResponseException;
-import dataaccess.memorydao.MemoryAuthDAO;
-import dataaccess.memorydao.MemoryGameDAO;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import dataaccess.sql.SQLUserDAO;
@@ -11,9 +9,7 @@ import model.*;
 import service.*;
 import com.google.gson.Gson;
 import server.reqresobjects.ErrorResponse;
-import server.reqresobjects.JoinRequest;
-import server.reqresobjects.ListGamesResult;
-import server.reqresobjects.LoginResult;
+import model.ListGamesResult;
 import spark.Request;
 import spark.Response;
 

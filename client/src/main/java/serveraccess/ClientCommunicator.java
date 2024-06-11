@@ -141,6 +141,15 @@ public class ClientCommunicator {
         }
     }
 
+    public ResponseObj listGames(String authToken) throws MalformedURLException {
+        URL url = new URL(BASE_URL + "/game");
+        try {
+            HttpURLConnection http = getAuthorizedConnection(authToken, url, "GET");
+            return receiveResponse(http);
+        } catch (IOException | ResponseException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 
