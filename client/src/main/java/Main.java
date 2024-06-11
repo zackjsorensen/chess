@@ -25,7 +25,7 @@ public class Main {
     static UserState userState;
 
     public static void main(String[] args) throws Exception {
-        serverFacade = new ServerFacade();
+        serverFacade = new ServerFacade(0);
 
         System.out.println("♕ Welcome to 240 Chess. Type help for list of commands.");
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
