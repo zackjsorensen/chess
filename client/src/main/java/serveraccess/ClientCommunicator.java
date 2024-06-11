@@ -14,12 +14,12 @@ import java.net.URL;
 import java.util.Scanner;
 
 public class ClientCommunicator {
-    String BASE_URL;
+    String baseUrl;
     Gson gson;
 
     public ClientCommunicator(int port) {
         gson = new Gson();
-        BASE_URL = "http://localhost:" + port;
+        baseUrl = "http://localhost:" + port;
     }
 
     public ClientCommunicator(){
@@ -27,7 +27,7 @@ public class ClientCommunicator {
     }
 
    public ResponseObj register(UserData userData) throws MalformedURLException, ResponseException {
-       URL url = new URL(BASE_URL + "/user");
+       URL url = new URL(baseUrl + "/user");
        try {
            HttpURLConnection http = (HttpURLConnection) url.openConnection();
            return getResponseObjLogin(userData, http, "POST");
@@ -68,7 +68,7 @@ public class ClientCommunicator {
     }
 
     public ResponseObj login(UserData userData) throws MalformedURLException, ResponseException {
-        URL url = new URL(BASE_URL + "/session");
+        URL url = new URL(baseUrl + "/session");
         try {
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             return getResponseObjLogin(userData, http, "POST");
@@ -78,7 +78,7 @@ public class ClientCommunicator {
     }
 
     public ResponseObj logout(String authToken) throws MalformedURLException, ResponseException {
-        URL url = new URL(BASE_URL + "/session");
+        URL url = new URL(baseUrl + "/session");
         try {
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod("DELETE");
@@ -91,7 +91,7 @@ public class ClientCommunicator {
     }
 
     public void clear() throws MalformedURLException, ResponseException {
-        URL url = new URL(BASE_URL + "/db");
+        URL url = new URL(baseUrl + "/db");
         try {
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod("DELETE");
@@ -105,7 +105,7 @@ public class ClientCommunicator {
     }
 
     public ResponseObj createGame(String gameName, String authToken) throws MalformedURLException, ResponseException {
-        URL url = new URL(BASE_URL + "/game");
+        URL url = new URL(baseUrl + "/game");
         try {
             HttpURLConnection http = getAuthorizedConnection(authToken, url, "POST");
             String body = gson.toJson(new CreateGameReq(gameName, null));
@@ -127,7 +127,7 @@ public class ClientCommunicator {
     }
 
     public int joinGame(int gameID, String color, String authToken) throws ResponseException, MalformedURLException {
-        URL url = new URL(BASE_URL + "/game");
+        URL url = new URL(baseUrl + "/game");
         try {
             HttpURLConnection http = getAuthorizedConnection(authToken, url, "PUT");
             String body = gson.toJson(new JoinGameReq(gameID, color));
@@ -140,7 +140,7 @@ public class ClientCommunicator {
     }
 
     public ResponseObj listGames(String authToken) throws MalformedURLException, ResponseException {
-        URL url = new URL(BASE_URL + "/game");
+        URL url = new URL(baseUrl + "/game");
         try {
             HttpURLConnection http = getAuthorizedConnection(authToken, url, "GET");
             return receiveResponse(http);
