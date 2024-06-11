@@ -43,7 +43,7 @@ public class PieceHelper {
         }
     }
 
-    private boolean inBounds(ChessPosition positionToCheck) {
+    public boolean inBounds(ChessPosition positionToCheck) {
         if (positionToCheck.getColumn() < 1 || positionToCheck.getColumn() > 8) {
             return false;
         }

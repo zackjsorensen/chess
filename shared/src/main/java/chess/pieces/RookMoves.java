@@ -56,13 +56,8 @@
           }
           return moves;
       }
-      private boolean inBounds(ChessPosition positionToCheck) {
-          if (positionToCheck.getColumn() < 1 || positionToCheck.getColumn() > 8) {
-              return false;
-          }
-          if (positionToCheck.getRow() < 1 || positionToCheck.getRow() > 8) {
-              return false;
-          }
-          return true;
+      public boolean inBounds(ChessPosition positionToCheck) {
+          PieceHelper rookHelper = new PieceHelper(board, positions, color, myPosition);
+          return rookHelper.inBounds(positionToCheck);
       }
 }

@@ -39,15 +39,6 @@ public class BishopMoves {
         helper.tryOneWay(rowIncrement, colIncrement);
     }
 
-    private boolean inBounds(ChessPosition positionToCheck) {
-        if (positionToCheck.getColumn() < 1 || positionToCheck.getColumn() > 8) {
-            return false;
-        }
-        if (positionToCheck.getRow() < 1 || positionToCheck.getRow() > 8) {
-            return false;
-        }
-        return true;
-    }
 
     private final ChessPosition myPosition;
     private
