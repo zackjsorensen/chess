@@ -1,43 +1,33 @@
 package chess.pieces;
 
-import chess.*;
+import chess.ChessBoard;
+import chess.ChessGame;
+import chess.ChessPosition;
 
 import java.util.ArrayList;
 
-public class BishopMoves {
+public class PieceHelper {
+    private ChessBoard board;
     private ArrayList<ChessPosition> positions;
+    private ChessGame.TeamColor color;
+    int row;
+    int col;
+    private final ChessPosition myPosition;
 
-    public BishopMoves(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor color){
+    public PieceHelper(ChessBoard board, ArrayList<ChessPosition> positions, ChessGame.TeamColor color, ChessPosition myPosition) {
         this.board = board;
-        this.myPosition = myPosition;
+        this.positions = positions;
         this.color = color;
+        this.myPosition = myPosition;
         row = myPosition.getRow();
         col = myPosition.getColumn();
-        positions = new ArrayList<>();
+
     }
 
-    public ArrayList<ChessMove> findPositions(){
-
-        tryOneWay( 1,1);
-        tryOneWay( -1,1);
-        tryOneWay( -1,-1);
-        tryOneWay( 1,-1);
-
-        return makeMovesArray(positions);
-    }
-
-    private ArrayList<ChessMove> makeMovesArray(ArrayList<ChessPosition> positions){
-        ArrayList<ChessMove> moves = new ArrayList<>();
-        for (ChessPosition item : positions){
-            moves.add(new ChessMove(myPosition, item, null));  // figure that out later...
-        }
-        return moves;
-    }
-
-    private void tryOneWay( int rowIncrement, int colIncrement) {
+    public void tryOneWay(int rowIncrement, int colIncrement){
         ChessPosition nextPosition;
         for(int i = 1; i < 7; i++){
-             nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
+            nextPosition= new ChessPosition(row+ rowIncrement*i, col+ colIncrement*i);
             if (!inBounds(nextPosition)){
                 break;
             }
@@ -62,11 +52,4 @@ public class BishopMoves {
         }
         return true;
     }
-
-    private final ChessPosition myPosition;
-    private
-    ChessGame.TeamColor color;
-    ChessBoard board;
-    int row;
-    int col;
 }
