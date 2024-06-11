@@ -125,7 +125,7 @@ public class Handlers {
         if (!checkAuthToken(req)) {
             return respondToUnauthorized(res);
         }
-        if (joinRequest.gameID() == 0) {
+        if (joinRequest.gameID() == 0 || joinRequest.color() == null || (!joinRequest.color().equalsIgnoreCase("BLACK") && !joinRequest.color().equalsIgnoreCase("WHITE"))) {
             return respondToBadReq(res);
         }
         String username = authService.getAuth(req.headers("authorization")).username();
