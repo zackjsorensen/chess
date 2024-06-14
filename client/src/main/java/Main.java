@@ -4,7 +4,9 @@ import model.exception.ResponseException;
 import model.*;
 import serveraccess.ResponseObj;
 import serveraccess.ServerFacade;
+import serveraccess.websocket.WebSocketClient;
 import ui.DrawChessBoard;
+import websocket.WebSocketHandler;
 
 import java.io.PrintStream;
 import java.net.MalformedURLException;
@@ -26,6 +28,8 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         serverFacade = new ServerFacade(8080);
+
+        WebSocketClient webSocketClient = new WebSocketClient();
 
         System.out.println("♕ Welcome to 240 Chess. Type help for list of commands.");
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);

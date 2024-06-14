@@ -5,20 +5,25 @@ import model.exception.ResponseException;
 import server.reqresobjects.*;
 import spark.*;
 import server.handlers.Handlers;
+import websocket.WebSocketHandler;
 
 public class Server {
     Handlers myhandlers;
     Gson gson;
+    WebSocketHandler webSocketHandler;
 
     public Server() {
        myhandlers = new Handlers();
        gson = new Gson();
+       webSocketHandler = new WebSocketHandler();
     }
 
     public int run(int desiredPort) {
         Spark.port(desiredPort);
 
         Spark.staticFiles.location("web");
+
+        Spark.webSocket("/ws", webSocketHandler);
 
         // Register your endpoints and handle exceptions here.
         Spark.post("/user", (req, res)-> myhandlers.registerUser(req, res));
