@@ -53,9 +53,10 @@ public class ServerFacade {
     public void joinGame(int gameID, String color, String authToken) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         int code = communicator.joinGame(gameID, color, authToken);
         if (code > 199 && code < 301){
-            wsClient = new WebSocketClient();
+            wsClient = new WebSocketClient(color);
             // send CONNECT msg to WS server
             wsClient.send(gson.toJson(new ConnectCommand(authToken, gameID)));
+
         }
     }
 
