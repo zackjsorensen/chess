@@ -24,7 +24,6 @@ public class WebSocketClient extends Endpoint {
             }
         });
 
-        send(message);
     }
 
     // send message to server
