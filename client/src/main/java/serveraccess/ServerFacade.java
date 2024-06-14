@@ -5,14 +5,22 @@ import model.exception.ResponseException;
 import model.CreateGameReq;
 import model.ListGamesResult;
 import model.UserData;
+import serveraccess.websocket.WebSocketClient;
+import websocket.commands.ConnectCommand;
+
+import javax.websocket.DeploymentException;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 public class ServerFacade {
     ClientCommunicator communicator;
     Gson gson = new Gson();
+    WebSocketClient wsClient;
 
     public ServerFacade(int port){
         communicator = new ClientCommunicator(port);
+        wsClient = null;
     }
 
     public ServerFacade() {
@@ -42,8 +50,13 @@ public class ServerFacade {
         return createGameRes.gameID();
     }
 
-    public void joinGame(int gameID, String color, String authToken) throws MalformedURLException, ResponseException {
+    public void joinGame(int gameID, String color, String authToken) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         int code = communicator.joinGame(gameID, color, authToken);
+        if (code > 199 && code < 301){
+            wsClient = new WebSocketClient();
+            // send CONNECT msg to WS server
+            wsClient.send(gson.toJson(new ConnectCommand(authToken, gameID)));
+        }
     }
 
     public ListGamesResult listGames(String authToken) throws MalformedURLException, ResponseException {

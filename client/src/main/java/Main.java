@@ -29,7 +29,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         serverFacade = new ServerFacade(8080);
 
-        WebSocketClient webSocketClient = new WebSocketClient();
+//        WebSocketClient webSocketClient = new WebSocketClient();
 
         System.out.println("♕ Welcome to 240 Chess. Type help for list of commands.");
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
