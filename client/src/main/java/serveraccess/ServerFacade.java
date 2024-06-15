@@ -18,7 +18,7 @@ import java.net.URISyntaxException;
 public class ServerFacade {
     ClientCommunicator communicator;
     Gson gson = new Gson();
-    WebSocketClient wsClient;
+    public WebSocketClient wsClient;
 
     public ServerFacade(int port){
         communicator = new ClientCommunicator(port);

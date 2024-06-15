@@ -6,6 +6,7 @@ import serveraccess.ResponseObj;
 import serveraccess.ServerFacade;
 import serveraccess.websocket.WebSocketClient;
 import ui.DrawChessBoard;
+import ui.GamePlayUI;
 import websocket.WebSocketHandler;
 
 import java.io.PrintStream;
@@ -163,6 +164,8 @@ public class Main {
             String color = scanner.nextLine();
             try {
                 serverFacade.joinGame(id, color, authToken);
+                GamePlayUI gamePlayUI =new GamePlayUI(authToken, serverFacade, scanner);
+                gamePlayUI.run();
             } catch (Exception e) {
                 out.println(e.getMessage());
             }
@@ -192,5 +195,7 @@ public class Main {
         out.println("Enter id");
         int id = scanner.nextInt();
         serverFacade.observeGame(id, authToken);
+        GamePlayUI gamePlayUI =new GamePlayUI(authToken, serverFacade, scanner);
+        gamePlayUI.run();
     }
 }

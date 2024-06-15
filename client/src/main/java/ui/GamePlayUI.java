@@ -1,5 +1,6 @@
 package ui;
 
+import server.Server;
 import serveraccess.ServerFacade;
 
 import java.io.PrintStream;
@@ -11,11 +12,15 @@ public class GamePlayUI {
     PrintStream out;
     private Scanner scanner;
     public DrawChessBoard chessBoard;
+    public ServerFacade serverFacade;
+    public String authToken;
 
 
     public GamePlayUI(String authToken, ServerFacade serverFacade, Scanner scanner) {
         out = new PrintStream(System.out, true,StandardCharsets.UTF_8);
         this.scanner = scanner;
+        this.serverFacade = serverFacade;
+        this.authToken = authToken;
     }
 
     public void run() {
@@ -25,13 +30,16 @@ public class GamePlayUI {
             if (line.equalsIgnoreCase("help")){
                 help();
             } else if (line.equalsIgnoreCase("Redraw")){
-
+                chessBoard = serverFacade.wsClient.chessBoard;
+                chessBoard.drawAll();
             } else if (line.equalsIgnoreCase("Leave")){
-
+                // code to leave
+                break;
             } else if (line.equalsIgnoreCase("Move")){
 
             } else if (line.equalsIgnoreCase("Resign")){
-
+                // code to lose
+                break;
             } else if (line.equalsIgnoreCase("Highlight")){
 
             } else {
