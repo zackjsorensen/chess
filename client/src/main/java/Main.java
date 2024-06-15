@@ -164,7 +164,7 @@ public class Main {
             String color = scanner.nextLine();
             try {
                 serverFacade.joinGame(id, color, authToken);
-                GamePlayUI gamePlayUI =new GamePlayUI(authToken, serverFacade, scanner);
+                GamePlayUI gamePlayUI =new GamePlayUI(authToken, serverFacade, scanner, id);
                 gamePlayUI.run();
             } catch (Exception e) {
                 out.println(e.getMessage());
@@ -195,7 +195,7 @@ public class Main {
         out.println("Enter id");
         int id = scanner.nextInt();
         serverFacade.observeGame(id, authToken);
-        GamePlayUI gamePlayUI =new GamePlayUI(authToken, serverFacade, scanner);
+        GamePlayUI gamePlayUI =new GamePlayUI(authToken, serverFacade, scanner, id);
         gamePlayUI.run();
     }
 }
