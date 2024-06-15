@@ -15,7 +15,8 @@ public class Server {
     public Server() {
        myhandlers = new Handlers();
        gson = new Gson();
-       webSocketHandler = new WebSocketHandler(myhandlers.gameService.dataAccess);
+       webSocketHandler = new WebSocketHandler(myhandlers.gameService.dataAccess,
+               myhandlers.authService.dataAccess);
     }
 
     public int run(int desiredPort) {

@@ -1,7 +1,9 @@
 package websocket;
 
 import com.google.gson.Gson;
+import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
+import dataaccess.sql.SQLUserDAO;
 import model.GameData;
 import model.exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
@@ -11,6 +13,7 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.ConnectCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.LoadGameMessage;
+import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
 import java.io.IOException;
@@ -24,9 +27,11 @@ public class WebSocketHandler {
     public Map<Integer, Set<Connection>> connections = new HashMap<>();
     Gson gson = new Gson();
     SQLGameDAO gameDAO;
+    SQLAuthDAO authDAO;
 
-    public WebSocketHandler(SQLGameDAO gameDAO) {
+    public WebSocketHandler(SQLGameDAO gameDAO, SQLAuthDAO authDAO) {
         this.gameDAO = gameDAO;
+        this.authDAO = authDAO;
     }
 
     @OnWebSocketMessage
@@ -55,7 +60,20 @@ public class WebSocketHandler {
         saveSession(command, session);
         GameData gameData = (GameData) gameDAO.get(command.gameID);
         sendMessage(session, new LoadGameMessage(gson.toJson(gameData.game())));
-        // send them the game state
+        // send notification of join to other players
+        String username = authDAO.get(command.getAuthString()).username();
+        GameData myGame = (GameData) gameDAO.get(command.gameID);
+        String joinedAs;
+        if (myGame.blackUsername() != null && myGame.blackUsername().equals(username)){
+            joinedAs = "Black";
+        } else if (myGame.whiteUsername() != null && myGame.whiteUsername().equals(username)){
+            joinedAs = "White";
+        } else {
+            joinedAs = "Observer";
+        }
+
+        Notification notification = new Notification(String.format("%s joined as %s", username, joinedAs));
+        broadcast(command.gameID, notification, command.getAuthString());
     }
 
     private void saveSession(ConnectCommand command, Session session) {
@@ -74,6 +92,15 @@ public class WebSocketHandler {
     public void sendMessage(Session session, ServerMessage msg) throws IOException {
         String json = gson.toJson(msg);
         session.getRemote().sendString(json);
+    }
+
+    public void broadcast(int id, Notification notification, String authTokenToExclude) throws IOException {
+        Set<Connection> gameConnections = connections.get(id);
+        for (Connection c : gameConnections){
+            if (!c.authToken.equals(authTokenToExclude)) {
+                sendMessage(c.session, notification);
+            }
+        }
     }
 
 

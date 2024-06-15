@@ -7,7 +7,7 @@ import org.mindrot.jbcrypt.BCrypt;
 
 
 public class UserService {
-    private final SQLUserDAO dataAccess;
+    public final SQLUserDAO dataAccess;
     public UserService(SQLUserDAO dataAccess) {
         this.dataAccess = dataAccess;
     }

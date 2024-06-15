@@ -7,7 +7,7 @@ import model.AuthData;
 import java.util.UUID;
 
 public class AuthService {
-    private final SQLAuthDAO dataAccess;
+    public final SQLAuthDAO dataAccess;
     public AuthService(SQLAuthDAO dataAccess) {
         this.dataAccess = dataAccess;
     }
