@@ -4,7 +4,7 @@ import chess.ChessGame;
 import chess.ChessMove;
 
 public class MakeMoveCommand extends UserGameCommand{
-    Integer gameID;
+    public Integer gameID;
     public ChessMove move;
 
     public MakeMoveCommand(String authToken, int gameID, ChessMove move) {

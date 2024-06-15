@@ -78,7 +78,7 @@ public class GamePlayUI {
         if (endPos == null) {return;}
         ChessMove move = new ChessMove(startPos, endPos, null);
         MakeMoveCommand command = new MakeMoveCommand(authToken, id, move);
-        out.println(command);
+        out.println(move);
         serverFacade.wsClient.send(gson.toJson(command));
     }
 
@@ -93,8 +93,8 @@ public class GamePlayUI {
         column = LetterToInt.convert(input.charAt(0));
         out.println(column);
         int temp = Character.getNumericValue(input.charAt(1));
-        if (temp > 8){
-            out.println("Invalid: Please enter one letter and one number, like so: a3. Type move to try again.");
+        if (temp > 8 || temp < 0 || column < 0 || column > 7){
+            out.println("Invalid: Please enter one letter(a-h) and one number(1-8), like so: a3. Type move to try again.");
             return null;
         }
         row = 8 - temp;
