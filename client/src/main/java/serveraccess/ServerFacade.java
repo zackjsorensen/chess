@@ -61,6 +61,11 @@ public class ServerFacade {
         }
     }
 
+    public void observeGame(int gameID, String authToken) throws DeploymentException, URISyntaxException, IOException {
+        wsClient = new WebSocketClient("Observer");
+        wsClient.send(gson.toJson(new ConnectCommand(authToken, gameID)));
+    }
+
     public ListGamesResult listGames(String authToken) throws MalformedURLException, ResponseException {
         ResponseObj res = communicator.listGames(authToken);
         ListGamesResult games = gson.fromJson(res.body(), ListGamesResult.class);

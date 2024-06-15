@@ -30,6 +30,8 @@ public class DrawChessBoard {
             whiteLeadsOnEven = true;
         } else if (color.equalsIgnoreCase("WHITE")) {
             whiteLeadsOnEven = false;
+        } else if (color.equalsIgnoreCase("observer")) {
+            whiteLeadsOnEven = false;
         } else {
             throw new Exception("Bad playerColor parameter");
         }
@@ -44,12 +46,12 @@ public class DrawChessBoard {
         }
     }
 
-    private void drawBlackTurn() {
+    public void drawBlackTurn() {
         letters = "    a  b  c  d  e  f  g  h";
         drawRows();
     }
 
-    private void drawWhiteTurn() {
+    public void drawWhiteTurn() {
         letters = "    h  g  f  e  d  c  b  a";
         drawRows();
     }

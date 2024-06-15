@@ -68,7 +68,11 @@ public class WebSocketClient extends Endpoint {
     private void loadGame(LoadGameMessage loadMsg) throws Exception {
         String gameString = loadMsg.game;
         ChessGame game = gson.fromJson(gameString, ChessGame.class);
-        chessBoard = new DrawChessBoard(game, color);
+        if (color.equalsIgnoreCase("Observer")){
+            chessBoard = new DrawChessBoard(game, "WHITE");
+        } else {
+            chessBoard = new DrawChessBoard(game, color);
+        }
         chessBoard.drawAll();
     }
 

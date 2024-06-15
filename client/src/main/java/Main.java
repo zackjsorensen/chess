@@ -191,10 +191,6 @@ public class Main {
     private static void observe() throws Exception {
         out.println("Enter id");
         int id = scanner.nextInt();
-        String clear = scanner.nextLine();
-        DrawChessBoard drawBlack = new DrawChessBoard(new ChessGame(), "BLACK");
-        DrawChessBoard drawWhite = new DrawChessBoard(new ChessGame(), "WHITE");
-        drawBlack.drawAll();
-        drawWhite.drawAll();
+        serverFacade.observeGame(id, authToken);
     }
 }
