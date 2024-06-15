@@ -12,6 +12,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.ConnectCommand;
 import websocket.commands.UserGameCommand;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
@@ -48,25 +49,39 @@ public class WebSocketHandler {
         }
         // save session to map
         // switch statement to make it the right kind of command
-        switch (command.getCommandType()){
-            case CONNECT -> {connect(gson.fromJson(message, ConnectCommand.class), session);}
-            case MAKE_MOVE -> {}
-            case LEAVE -> {}
-            case RESIGN -> {}
+        switch (command.getCommandType()) {
+            case CONNECT -> {
+                connect(gson.fromJson(message, ConnectCommand.class), session);
+            }
+            case MAKE_MOVE -> {
+            }
+            case LEAVE -> {
+            }
+            case RESIGN -> {
+            }
         }
     }
 
-    private void connect(ConnectCommand command, Session session) throws ResponseException, IOException {
+    private int connect(ConnectCommand command, Session session) throws ResponseException, IOException {
         saveSession(command, session);
         GameData gameData = (GameData) gameDAO.get(command.gameID);
+        if (gameData == null) {
+            sendMessage(session, new ErrorMessage("Invalid game ID"));
+            return 1;
+        }
+        String username = (authDAO.get(command.getAuthString()) == null) ? (null) : (authDAO.get(command.getAuthString()).username());
+        if (username == null) {
+            sendMessage(session, new ErrorMessage("Invalid credentials"));
+            return 1;
+        }
+
         sendMessage(session, new LoadGameMessage(gson.toJson(gameData.game())));
-        // send notification of join to other players
-        String username = authDAO.get(command.getAuthString()).username();
-        GameData myGame = (GameData) gameDAO.get(command.gameID);
+        GameData dbGame = (GameData) gameDAO.get(command.gameID);
+
         String joinedAs;
-        if (myGame.blackUsername() != null && myGame.blackUsername().equals(username)){
+        if (dbGame.blackUsername() != null && dbGame.blackUsername().equals(username)) {
             joinedAs = "Black";
-        } else if (myGame.whiteUsername() != null && myGame.whiteUsername().equals(username)){
+        } else if (dbGame.whiteUsername() != null && dbGame.whiteUsername().equals(username)) {
             joinedAs = "White";
         } else {
             joinedAs = "Observer";
@@ -74,12 +89,13 @@ public class WebSocketHandler {
 
         Notification notification = new Notification(String.format("%s joined as %s", username, joinedAs));
         broadcast(command.gameID, notification, command.getAuthString());
+        return 0;
     }
 
     private void saveSession(ConnectCommand command, Session session) {
         Integer id = command.gameID;
         Connection newConnection = new Connection(session, command.getAuthString());
-        if (connections.containsKey(id)){
+        if (connections.containsKey(id)) {
             Set<Connection> tempSet = connections.get(id);
             tempSet.add(newConnection);
         } else {
@@ -96,14 +112,12 @@ public class WebSocketHandler {
 
     public void broadcast(int id, Notification notification, String authTokenToExclude) throws IOException {
         Set<Connection> gameConnections = connections.get(id);
-        for (Connection c : gameConnections){
+        for (Connection c : gameConnections) {
             if (!c.authToken.equals(authTokenToExclude)) {
                 sendMessage(c.session, notification);
             }
         }
     }
-
-
 
 
 }
