@@ -64,9 +64,10 @@ public class DrawChessBoard {
         drawLetters();
         for (int row = 0; row < 8; row++) {
             int rowNum = getRowNum(row);
+            int displayRowNum = getRowDisplayNum(row);
             out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
-            out.printf(" %s ", (rowNum));
+            out.printf(" %s ", (displayRowNum));
             if (row % 2 == 0) {
                 drawWhiteRow(rowNum);
             } else {
@@ -75,7 +76,7 @@ public class DrawChessBoard {
 
             out.print(EscapeSequences.SET_BG_COLOR_LIGHT_GREY);
             out.print(EscapeSequences.SET_TEXT_COLOR_WHITE);
-            out.printf(" %s ", (rowNum));
+            out.printf(" %s ", (displayRowNum));
             out.println();
         }
 
@@ -84,15 +85,23 @@ public class DrawChessBoard {
 
 
     private int getRowNum(int row) {
-        if (color.equals("WHITE")){
-            return row +1;
-        } else {
+        if (color.equalsIgnoreCase("WHITE")){
             return 8 - row;
+        } else {
+            return row + 1;
+        }
+    }
+
+    private int getRowDisplayNum(int row){
+        if (color.equalsIgnoreCase("WHITE")){
+            return row + 1;
+        } else {
+            return 8-row;
         }
     }
 
     private int getColNum(int column) {
-        if (color.equals("WHITE")){
+        if (color.equalsIgnoreCase("WHITE")){
             return 7 - column;
         } else {
             return column;
