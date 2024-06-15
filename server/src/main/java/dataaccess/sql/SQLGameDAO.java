@@ -34,6 +34,8 @@ public class SQLGameDAO extends SQLParentDAO{
         }
     }
 
+
+
     @Override
     public int add(Object dataObj) throws ResponseException {
         GameData gameData = (GameData) dataObj;
@@ -42,7 +44,12 @@ public class SQLGameDAO extends SQLParentDAO{
         return executeUpdate(statement, gameData.whiteUsername(), gameData.blackUsername(), gameData.gameName(), json );
     }
 
-    public GameData get(int id) throws ResponseException {
+    @Override
+    public Object get(Object identifier) throws ResponseException{
+        return getHelper((Integer) identifier);
+    }
+
+    public GameData getHelper(int id) throws ResponseException {
 
         try (var conn = DatabaseManager.getConnection()) {
             String statement = "SELECT * FROM games WHERE id=?";

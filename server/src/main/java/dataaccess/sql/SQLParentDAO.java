@@ -24,9 +24,7 @@ public abstract class SQLParentDAO implements DataAccessInterface {
     }
 
     @Override
-    public Object get(Object identifier) throws ResponseException {
-        return null;
-    }
+    public abstract Object get(Object identifier) throws ResponseException;
 
     public int executeUpdate(String statement, Object... params) throws ResponseException {
         try (var conn = DatabaseManager.getConnection()) {

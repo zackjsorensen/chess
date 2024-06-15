@@ -5,6 +5,7 @@ import dataaccess.sql.SQLGameDAO;
 import model.GameData;
 import model.exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.ConnectCommand;
@@ -31,11 +32,11 @@ public class WebSocketHandler {
     @OnWebSocketMessage
     public void onMessage(Session session, String message) throws IOException, ResponseException {
         System.out.println("WS recieved this: " + message);
-        session.getRemote().sendString("WS response: " + message);
 
         UserGameCommand command;
         try {
             command = gson.fromJson(message, UserGameCommand.class);
+            System.out.println(command);
         } catch (Exception e) {
             // idk about this....
             throw new ResponseException(401, "Invalid user command");
@@ -43,7 +44,7 @@ public class WebSocketHandler {
         // save session to map
         // switch statement to make it the right kind of command
         switch (command.getCommandType()){
-            case CONNECT -> {connect((ConnectCommand) command, session);}
+            case CONNECT -> {connect(gson.fromJson(message, ConnectCommand.class), session);}
             case MAKE_MOVE -> {}
             case LEAVE -> {}
             case RESIGN -> {}
@@ -74,5 +75,8 @@ public class WebSocketHandler {
         String json = gson.toJson(msg);
         session.getRemote().sendString(json);
     }
+
+
+
 
 }

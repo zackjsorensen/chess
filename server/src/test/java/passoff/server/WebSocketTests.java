@@ -248,10 +248,10 @@ public class WebSocketTests {
         setupNormalGame();
 
         //have white player leave
-        //all other players get notified, white player should not be
+        //all other players getHelper notified, white player should not be
         leave(white, gameID, Set.of(black, observer), Set.of());
 
-        //observer leaves - only black player should get a notification
+        //observer leaves - only black player should getHelper a notification
         leave(observer, gameID, Set.of(black), Set.of(white));
     }
 
@@ -262,7 +262,7 @@ public class WebSocketTests {
         setupNormalGame();
 
         //have white player leave
-        //all other players get notified, white player should not be
+        //all other players getHelper notified, white player should not be
         leave(white, gameID, Set.of(black, observer), Set.of());
 
         //replace white player with a different player

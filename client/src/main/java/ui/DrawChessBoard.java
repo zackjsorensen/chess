@@ -37,7 +37,7 @@ public class DrawChessBoard {
 
 
     public void drawAll() {
-        if (color.equals("BLACK")) {
+        if (color.equalsIgnoreCase("BLACK")) {
             drawBlackTurn();
         } else {
             drawWhiteTurn();

@@ -10,7 +10,10 @@ import org.junit.jupiter.api.*;
 import server.Server;
 import serveraccess.*;
 
+import javax.websocket.DeploymentException;
+import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 
 
 public class ServerFacadeTests {
@@ -108,7 +111,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void joinGood() throws MalformedURLException, ResponseException {
+    public void joinGood() throws IOException, ResponseException, DeploymentException, URISyntaxException {
         AuthData auth = getAuthData(facade.register(hoid));
         int id = facade.createGame("Uno", auth.authToken());
         facade.joinGame(id, "BLACK", auth.authToken());
@@ -123,7 +126,7 @@ public class ServerFacadeTests {
     }
 
     @Test
-    public void joinBad() throws MalformedURLException, ResponseException {
+    public void joinBad() throws IOException, ResponseException, DeploymentException, URISyntaxException {
         AuthData auth = getAuthData(facade.register(hoid));
         int id = facade.createGame("Uno", auth.authToken());
         facade.joinGame(id, "BLACK", auth.authToken());

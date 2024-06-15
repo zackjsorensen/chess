@@ -23,13 +23,13 @@ class GameServiceTest {
     void createAddGame() throws ResponseException {
         GameData newGame = new GameData(1234, null, null, "MyGame", new ChessGame());
         int id = dataAccess.add(newGame);
-        assertEquals(dataAccess.get(id).gameName(), newGame.gameName());
+        assertEquals(dataAccess.getHelper(id).gameName(), newGame.gameName());
     }
 
     @Test
     void createOneGame() throws DataAccessException {
         int id = service.createGame("Uno");
-        assertEquals( dataAccess.get(id).gameName(), "Uno");
+        assertEquals( dataAccess.getHelper(id).gameName(), "Uno");
     }
 
     @Test
@@ -47,7 +47,7 @@ class GameServiceTest {
         service.clear();
         int id = service.createGame("Uno");
         service.joinGame(id, "Bub", "WHITE");
-        GameData storedGame = dataAccess.get(id);
+        GameData storedGame = dataAccess.getHelper(id);
         assertEquals("Bub", storedGame.whiteUsername());
     }
 

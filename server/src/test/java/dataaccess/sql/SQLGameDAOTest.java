@@ -26,9 +26,9 @@ class SQLGameDAOTest {
     void addSuccess() throws ResponseException {
         GameData dummy = new GameData(0, "Wyat", "Broc", "Test", new ChessGame());
         int id = database.add(dummy);
-        assertEquals(dummy.whiteUsername(), database.get(id).whiteUsername());
-        assertEquals(dummy.blackUsername(), database.get(id).blackUsername());
-        assertEquals(dummy.gameName(), database.get(id).gameName());
+        assertEquals(dummy.whiteUsername(), database.getHelper(id).whiteUsername());
+        assertEquals(dummy.blackUsername(), database.getHelper(id).blackUsername());
+        assertEquals(dummy.gameName(), database.getHelper(id).gameName());
     }
 
     @Test
@@ -40,15 +40,15 @@ class SQLGameDAOTest {
     }
 
     @Test
-    void getEmpty() throws ResponseException {
-        assertNull(database.get(1));
+    void getHelperEmpty() throws ResponseException {
+        assertNull(database.getHelper(1));
     }
 
     @Test
-    void getSuccess() throws ResponseException {
+    void getHelperSuccess() throws ResponseException {
         GameData dummy = new GameData(0, "Wyat", "Broc", "Test", new ChessGame());
         int id = database.add(dummy);
-        Object gameData = database.get(id);
+        Object gameData = database.getHelper(id);
         assertInstanceOf(GameData.class, gameData);
         assertInstanceOf(ChessGame.class, ((GameData) gameData).game());
     }
@@ -58,7 +58,7 @@ class SQLGameDAOTest {
         GameData dummy = new GameData(0, "Wyat", "Broc", "Test", blackGame);
         int id = database.add(dummy);
         database.updateGameState(id, new GameData(id, null, null, null, whiteGame));
-        assertNotEquals(database.get(id).game().getTeamTurn(), ChessGame.TeamColor.BLACK);
+        assertNotEquals(database.getHelper(id).game().getTeamTurn(), ChessGame.TeamColor.BLACK);
     }
 
 }

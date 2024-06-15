@@ -10,6 +10,7 @@ import java.util.Scanner;
 public class GamePlayUI {
     PrintStream out;
     private Scanner scanner;
+    public DrawChessBoard chessBoard;
 
 
     public GamePlayUI(String authToken, ServerFacade serverFacade, Scanner scanner) {

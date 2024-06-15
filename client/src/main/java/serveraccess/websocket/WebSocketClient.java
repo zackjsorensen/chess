@@ -14,16 +14,19 @@ import java.net.URISyntaxException;
 public class WebSocketClient extends Endpoint {
     Gson gson = new Gson();
     Session session;
-    public DrawChessBoard drawChessBoard;
+    public DrawChessBoard chessBoard;
     String color;
     ChessGame.TeamColor team;
 
     public WebSocketClient(String color) throws URISyntaxException, DeploymentException, IOException {
-        if (color.equalsIgnoreCase("black")){
+        if (color == null){
+            team = ChessGame.TeamColor.WHITE;
+        } else if (color.equalsIgnoreCase("black")){
             team = ChessGame.TeamColor.BLACK;
         } else {
             team = ChessGame.TeamColor.WHITE;
         }
+        this.color = color;
         // when we make a websocket, we really want to be starting it.
         URI uri = new URI("ws://localhost:8080/ws");
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
@@ -35,8 +38,9 @@ public class WebSocketClient extends Endpoint {
             public void onMessage(String s) {
                 try {
                     ServerMessage msg = gson.fromJson(s, ServerMessage.class);
+                    System.out.println(msg);
                     switch (msg.getServerMessageType()) {
-                        case LOAD_GAME -> {}
+                        case LOAD_GAME -> {loadGame(gson.fromJson(s, LoadGameMessage.class));}
                         case ERROR -> {}
                         case NOTIFICATION -> {}
                     }
@@ -44,6 +48,8 @@ public class WebSocketClient extends Endpoint {
 
                 } catch (Exception e){
                     System.out.println("Unreadable data sent from server ws");
+                    System.out.println("Caught: " + e.getMessage());
+                    e.printStackTrace();
                 }
 
 
@@ -61,7 +67,8 @@ public class WebSocketClient extends Endpoint {
     private void loadGame(LoadGameMessage loadMsg) throws Exception {
         String gameString = loadMsg.game;
         ChessGame game = gson.fromJson(gameString, ChessGame.class);
-        drawChessBoard = new DrawChessBoard(game, color);
+        chessBoard = new DrawChessBoard(game, color);
+        chessBoard.drawAll();
     }
 
 

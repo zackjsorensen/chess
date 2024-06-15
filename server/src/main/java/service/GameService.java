@@ -26,7 +26,7 @@ public class GameService {
     }
 
     public void joinGame(int gameID, String username, String color) throws DataAccessException {
-        if (dataAccess.get(gameID) == null){
+        if (dataAccess.getHelper(gameID) == null){
             throw new ResponseException(400, "Game does not exist");
         }
         if (!color.equalsIgnoreCase("OBS") && isColorTaken(gameID, color)){
@@ -41,9 +41,9 @@ public class GameService {
 
     public boolean isColorTaken(int gameID, String color) throws DataAccessException {
         if (color.equalsIgnoreCase("WHITE")){
-            return dataAccess.get(gameID).whiteUsername() != null;
+            return dataAccess.getHelper(gameID).whiteUsername() != null;
         } else if (color.equalsIgnoreCase("BLACK")) {
-            return dataAccess.get(gameID).blackUsername() != null;
+            return dataAccess.getHelper(gameID).blackUsername() != null;
         } else {
             throw new DataAccessException("Bad playerColor Request");
         }

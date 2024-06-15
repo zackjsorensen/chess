@@ -163,10 +163,6 @@ public class Main {
             String color = scanner.nextLine();
             try {
                 serverFacade.joinGame(id, color, authToken);
-                DrawChessBoard drawBlack = new DrawChessBoard(new ChessGame(), "BLACK");
-                DrawChessBoard drawWhite = new DrawChessBoard(new ChessGame(), "WHITE");
-                drawBlack.drawAll();
-                drawWhite.drawAll();
             } catch (Exception e) {
                 out.println(e.getMessage());
             }
