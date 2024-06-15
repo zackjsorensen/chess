@@ -70,12 +70,15 @@ public class GamePlayUI {
     private void makeMove() throws IOException {
         out.println("Enter the current position of the piece you want to move: ");
         String startPosString = scanner.nextLine();
+        ChessPosition startPos = convertToChessPosition(startPosString);
+        if (startPos == null) {return;}
         out.println("Enter the position you want the piece to move to:");
         String endPosString = scanner.nextLine();
-        ChessPosition startPos = convertToChessPosition(startPosString);
         ChessPosition endPos = convertToChessPosition(endPosString);
+        if (endPos == null) {return;}
         ChessMove move = new ChessMove(startPos, endPos, null);
         MakeMoveCommand command = new MakeMoveCommand(authToken, id, move);
+        out.println(command);
         serverFacade.wsClient.send(gson.toJson(command));
     }
 
@@ -83,12 +86,13 @@ public class GamePlayUI {
         int column;
         int row;
 
-        if (input.length() != 2) {
+        if (input.length() < 2) {
             out.println("Invalid: Please enter one letter and one number, like so: a3. Type move to try again.");
             return null;
         }
         column = LetterToInt.convert(input.charAt(0));
-        int temp = input.charAt(1);
+        out.println(column);
+        int temp = Character.getNumericValue(input.charAt(1));
         if (temp > 8){
             out.println("Invalid: Please enter one letter and one number, like so: a3. Type move to try again.");
             return null;
@@ -96,10 +100,5 @@ public class GamePlayUI {
         row = 8 - temp;
         return new ChessPosition(row, column);
     }
-
-
-
-
-
 
 }
