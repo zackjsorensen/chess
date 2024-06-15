@@ -29,7 +29,7 @@ public class GameService {
         if (dataAccess.getHelper(gameID) == null){
             throw new ResponseException(400, "Game does not exist");
         }
-        if (!color.equalsIgnoreCase("OBS") && isColorTaken(gameID, color)){
+        if ((!color.equalsIgnoreCase("OBS")) && isColorTaken(gameID, color)){
             throw new ResponseException(403, "Error: already taken");
         }
         dataAccess.updatePlayer(gameID, color, username);

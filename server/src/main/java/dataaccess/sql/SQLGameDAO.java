@@ -102,7 +102,7 @@ public class SQLGameDAO extends SQLParentDAO{
 
     public void updatePlayer(int id, String color, String username) throws ResponseException {
         String statement;
-        if (color.equals("BLACK")){
+        if (color.equalsIgnoreCase("BLACK")){
             statement = "UPDATE games SET blackUsername = ? WHERE id=?";
 
         } else {

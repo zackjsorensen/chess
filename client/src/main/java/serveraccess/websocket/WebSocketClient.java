@@ -4,6 +4,7 @@ import chess.ChessGame;
 import com.google.gson.Gson;
 import ui.DrawChessBoard;
 import websocket.messages.LoadGameMessage;
+import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
@@ -69,6 +70,10 @@ public class WebSocketClient extends Endpoint {
         ChessGame game = gson.fromJson(gameString, ChessGame.class);
         chessBoard = new DrawChessBoard(game, color);
         chessBoard.drawAll();
+    }
+
+    private void notify(Notification notification){
+        System.out.println(notification.getServerMessageType());
     }
 
 
