@@ -43,7 +43,7 @@ public class WebSocketClient extends Endpoint {
                     switch (msg.getServerMessageType()) {
                         case LOAD_GAME -> {loadGame(gson.fromJson(s, LoadGameMessage.class));}
                         case ERROR -> {}
-                        case NOTIFICATION -> {}
+                        case NOTIFICATION -> WebSocketClient.this.notify(gson.fromJson(s, Notification.class));
                     }
 
 
@@ -73,7 +73,7 @@ public class WebSocketClient extends Endpoint {
     }
 
     private void notify(Notification notification){
-        System.out.println(notification.getServerMessageType());
+        System.out.println(notification.message);
     }
 
 
