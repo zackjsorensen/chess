@@ -76,10 +76,19 @@ public class GamePlayUI {
         String endPosString = scanner.nextLine();
         ChessPosition endPos = convertToChessPosition(endPosString);
         if (endPos == null) {return;}
-        ChessMove move = new ChessMove(startPos, endPos, null);
+        ChessPosition startPosNotation = trueToPositionNotation(startPos);
+        ChessPosition endPosNotation = trueToPositionNotation(endPos);
+        // we will have to do something about that null ...
+        ChessMove move = new ChessMove(startPosNotation, endPosNotation, null);
         MakeMoveCommand command = new MakeMoveCommand(authToken, id, move);
         out.println(move);
         serverFacade.wsClient.send(gson.toJson(command));
+    }
+
+    private ChessPosition trueToPositionNotation(ChessPosition pos){
+        int row = pos.getRow() + 1;
+        int col = pos.getColumn() + 1;
+        return new ChessPosition(row, col);
     }
 
     private ChessPosition convertToChessPosition(String input){

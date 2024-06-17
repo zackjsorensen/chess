@@ -7,11 +7,9 @@ import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
-import dataaccess.sql.SQLUserDAO;
 import model.GameData;
 import model.exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
-import org.eclipse.jetty.websocket.api.annotations.OnWebSocketError;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.ConnectCommand;
@@ -106,19 +104,18 @@ public class WebSocketHandler {
     }
 
     private void makeMove(MakeMoveCommand command, Session session) throws ResponseException, IOException, InvalidMoveException {
-        // get the chess move, verify the validity
-        // is it their turn? Maybe keep track of that locally? IDK
+        // assume that we get this in Position Notation, not true Notation...
         GameData dbGameData = (GameData) gameDAO.get(command.gameID);
         ChessGame dbGame = dbGameData.game();
         String username = getUsername(command, session);
-        if (verifyTurn(session, dbGameData, username, dbGame)){
-            ChessPosition startPosTrueNotation = command.move.getStartPosition();
-            ChessPosition endPosTrueNotation = command.move.getEndPosition();
-            ChessMove movePosNotation = new ChessMove(boardToPositionNotation(startPosTrueNotation), boardToPositionNotation(endPosTrueNotation), command.move.getPromotionPiece());
-            Collection<ChessMove> validMoves = dbGame.validMoves(boardToPositionNotation(startPosTrueNotation));
+        if (verifyTurn(session, dbGameData, username, dbGame)) {
+//            ChessPosition startPosTrueNotation = command.move.getStartPosition();
+//            ChessPosition endPosTrueNotation = command.move.getEndPosition();
+            //ChessMove movePosNotation = new ChessMove(trueToPositionNotation(startPosTrueNotation), trueToPositionNotation(endPosTrueNotation), command.move.getPromotionPiece());
+            Collection<ChessMove> validMoves = dbGame.validMoves(command.move.getStartPosition());
             // will that work, or is it only by object reference?
-            if (validMoves.contains(movePosNotation)){
-                dbGame.makeMove(movePosNotation);
+            if (validMoves.contains(command.move)) {
+                dbGame.makeMove(command.move);
 
                 // is the reference updated? It should be...
                 gameDAO.updateGameState(dbGameData.gameID(), dbGameData);
@@ -132,35 +129,30 @@ public class WebSocketHandler {
 
     }
 
-    private ChessPosition boardToPositionNotation(ChessPosition pos){
-        int row = pos.getRow() + 1;
-        int col = pos.getColumn() + 1;
-        return new ChessPosition(row, col);
-    }
 
     private boolean verifyTurn(Session session, GameData dbGameData, String username, ChessGame dbGame) throws IOException {
         String joinedAs = getUserColor(dbGameData, username);
         ChessGame.TeamColor teamColor = dbGame.getTeamTurn();
-        if (joinedAs.equalsIgnoreCase("Observer")){
+        if (joinedAs.equalsIgnoreCase("Observer")) {
             sendMessage(session, new ErrorMessage("Error: Observers cannot make moves"));
             return false;
-        } else if (stringToTeamColor(joinedAs) != teamColor){
+        } else if (stringToTeamColor(joinedAs) != teamColor) {
             sendMessage(session, new ErrorMessage("Error: It is not your turn"));
             return false;
         }
         return true;
     }
 
-    private ChessGame.TeamColor stringToTeamColor(String colorStr){
-        if (colorStr.equalsIgnoreCase("BLACK")){
+    private ChessGame.TeamColor stringToTeamColor(String colorStr) {
+        if (colorStr.equalsIgnoreCase("BLACK")) {
             return ChessGame.TeamColor.BLACK;
-        } else if (colorStr.equalsIgnoreCase("WHITE")){
+        } else if (colorStr.equalsIgnoreCase("WHITE")) {
             return ChessGame.TeamColor.WHITE;
         } else {
             return null;
         }
     }
-    
+
     private void saveSession(ConnectCommand command, Session session) {
         Integer id = command.gameID;
         Connection newConnection = new Connection(session, command.getAuthString());
@@ -182,18 +174,21 @@ public class WebSocketHandler {
     public void broadcast(int id, Notification notification, String authTokenToExclude) throws IOException {
         Set<Connection> gameConnections = connections.get(id);
         for (Connection c : gameConnections) {
-            if (!c.authToken.equals(authTokenToExclude)) {
-                sendMessage(c.session, notification);
+            if (c.session.isOpen()) {
+                if (!c.authToken.equals(authTokenToExclude)) {
+                    sendMessage(c.session, notification);
+                }
             }
+
         }
     }
 
     public void sendGame(int id, LoadGameMessage message) throws IOException {
         Set<Connection> gameConnections = connections.get(id);
         for (Connection c : gameConnections) {
-            sendMessage(c.session, message);
+            if (c.session.isOpen()){
+                sendMessage(c.session, message);
+            }
         }
     }
-
-
 }
