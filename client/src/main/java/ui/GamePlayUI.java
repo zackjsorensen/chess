@@ -7,6 +7,7 @@ import chess.ChessPosition;
 import com.google.gson.Gson;
 import server.Server;
 import serveraccess.ServerFacade;
+import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 
 import java.io.IOException;
@@ -45,6 +46,7 @@ public class GamePlayUI {
                 chessBoard.drawAll();
             } else if (line.equalsIgnoreCase("Leave")){
                 // code to leave
+                leave();
                 break;
             } else if (line.equalsIgnoreCase("Move")){
                 makeMove();
@@ -86,10 +88,18 @@ public class GamePlayUI {
             out.print("Enter piece to promote pawn to: ");
             String promotionPieceStr = scanner.nextLine();
             pieceType = strToPieceType(promotionPieceStr);
+            if (pieceType == null){
+                return;
+            }
         }
         move = new ChessMove(startPosNotation, endPosNotation, pieceType);
         MakeMoveCommand command = new MakeMoveCommand(authToken, id, move);
         out.println(move);
+        serverFacade.wsClient.send(gson.toJson(command));
+    }
+
+    private void leave() throws IOException {
+        LeaveCommand command = new LeaveCommand(authToken, id);
         serverFacade.wsClient.send(gson.toJson(command));
     }
 

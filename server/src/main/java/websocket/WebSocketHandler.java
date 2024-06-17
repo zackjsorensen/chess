@@ -13,6 +13,7 @@ import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import websocket.commands.ConnectCommand;
+import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
 import websocket.commands.UserGameCommand;
 import websocket.messages.ErrorMessage;
@@ -54,8 +55,7 @@ public class WebSocketHandler {
                 connect(gson.fromJson(message, ConnectCommand.class), session);
             }
             case MAKE_MOVE -> makeMove(gson.fromJson(message, MakeMoveCommand.class), session);
-            case LEAVE -> {
-            }
+            case LEAVE -> {leave(gson.fromJson(message, LeaveCommand.class), session);}
             case RESIGN -> {
             }
         }
@@ -80,6 +80,21 @@ public class WebSocketHandler {
         Notification notification = new Notification(String.format("%s joined as %s", username, joinedAs));
         broadcast(command.gameID, notification, command.getAuthString());
         return 0;
+    }
+
+    private void leave(LeaveCommand command, Session session) throws ResponseException, IOException {
+        GameData dbGameData = (GameData) gameDAO.get(command.gameID);
+        ChessGame dbGame = dbGameData.game();
+        String username = getUsername(command, session);
+        String joinedAs = getUserColor(dbGameData, username);
+        if (joinedAs.equalsIgnoreCase("black")){
+            dbGameData = new GameData(dbGameData.gameID(), dbGameData.whiteUsername(), null, dbGameData.gameName(), dbGame);
+        } else if (joinedAs.equalsIgnoreCase("white")){
+            dbGameData = new GameData(dbGameData.gameID(), null, dbGameData.blackUsername(), dbGameData.gameName(), dbGame);
+        }
+        gameDAO.updateGameState(dbGameData.gameID(), dbGameData);
+        session.close();
+        broadcast(command.gameID,new Notification( String.format("%s left the game.", username)), null);
     }
 
     private String getUsername(UserGameCommand command, Session session) throws ResponseException, IOException {
@@ -125,6 +140,15 @@ public class WebSocketHandler {
                 sendGame(command.gameID, new LoadGameMessage(gson.toJson(dbGame)));
                 broadcast(command.gameID, new Notification(String.format("%s made the following move: %s ", username, command.move)), command.getAuthString());
                 // need to add in check, checkmate, stalemate
+                ChessGame.TeamColor nextPlayer = dbGame.getTeamTurn();
+                if (dbGame.isInCheckmate(nextPlayer)){
+                    broadcast(command.gameID, new Notification(String.format("%s is in checkmate.", nextPlayer.toString())), null);
+                    // what else...
+                } else if (dbGame.isInCheck(nextPlayer)){
+                    broadcast(command.gameID, new Notification(String.format("%s is in check", nextPlayer.toString())), null);
+                } else if (dbGame.isInStalemate(nextPlayer)){
+                    broadcast(command.gameID, new Notification("Stalemate"), null);
+                }
             } else {
                 sendMessage(session, new ErrorMessage("Error - invalid move"));
             }
