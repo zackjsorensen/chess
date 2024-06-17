@@ -51,7 +51,6 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition)  {
-        ChessPosition posToPass = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
         TeamColor myColor = board.getPiece(startPosition).getTeamColor();
         ChessPiece myPiece = new ChessPiece(myColor, board.getPiece(startPosition).getPieceType());
         Collection<ChessMove> possibleMoves = myPiece.pieceMoves(board, startPosition);

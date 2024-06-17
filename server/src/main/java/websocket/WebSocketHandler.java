@@ -112,14 +112,14 @@ public class WebSocketHandler {
         ChessGame dbGame = dbGameData.game();
         String username = getUsername(command, session);
         if (verifyTurn(session, dbGameData, username, dbGame)){
-            // make sure the move is their piece and it's valid
-            ChessPosition startPos = command.move.getStartPosition();
-            // need to do this to compensate for the -1 in the getChessPiece... will have to find a way to clean it up
-            ChessPosition posToPass = new ChessPosition(startPos.getRow() + 1, startPos.getColumn() + 1);
-            Collection<ChessMove> validMoves = dbGame.validMoves(startPos);
+            ChessPosition startPosTrueNotation = command.move.getStartPosition();
+            ChessPosition endPosTrueNotation = command.move.getEndPosition();
+            ChessMove movePosNotation = new ChessMove(boardToPositionNotation(startPosTrueNotation), boardToPositionNotation(endPosTrueNotation), command.move.getPromotionPiece());
+            Collection<ChessMove> validMoves = dbGame.validMoves(boardToPositionNotation(startPosTrueNotation));
             // will that work, or is it only by object reference?
-            if (validMoves.contains(command.move)){
-                dbGame.makeMove(command.move);
+            if (validMoves.contains(movePosNotation)){
+                dbGame.makeMove(movePosNotation);
+
                 // is the reference updated? It should be...
                 gameDAO.updateGameState(dbGameData.gameID(), dbGameData);
                 sendGame(command.gameID, new LoadGameMessage(gson.toJson(dbGame)));
@@ -130,6 +130,12 @@ public class WebSocketHandler {
             }
         }
 
+    }
+
+    private ChessPosition boardToPositionNotation(ChessPosition pos){
+        int row = pos.getRow() + 1;
+        int col = pos.getColumn() + 1;
+        return new ChessPosition(row, col);
     }
 
     private boolean verifyTurn(Session session, GameData dbGameData, String username, ChessGame dbGame) throws IOException {
