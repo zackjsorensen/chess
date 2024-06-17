@@ -27,6 +27,7 @@ public class ChessBoard implements Cloneable {
     public void addPiece(ChessPosition position, ChessPiece piece) {
         board[position.getRow() - 1][position.getColumn() - 1] = piece;
         // -1 is needed because internally arrays go from 0 to 7, but position notation is from 1 to 8
+        // should have just converted it in the first level of UI
     }
 
     /**

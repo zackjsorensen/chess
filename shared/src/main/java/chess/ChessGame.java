@@ -51,8 +51,9 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition)  {
-        TeamColor myColor = board.getPiece(startPosition).getTeamColor();
-        ChessPiece myPiece = new ChessPiece(myColor, board.getPiece(startPosition).getPieceType());
+        ChessPosition posToPass = new ChessPosition(startPosition.getRow() + 1, startPosition.getColumn() + 1);
+        TeamColor myColor = board.getPiece(posToPass).getTeamColor();
+        ChessPiece myPiece = new ChessPiece(myColor, board.getPiece(posToPass).getPieceType());
         Collection<ChessMove> possibleMoves = myPiece.pieceMoves(board, startPosition);
         final ChessBoard oldestBoard = getBoard();
         ArrayList<ChessMove> validMovesCollection = new ArrayList<>();   // why collection? Why not just ArrayList?

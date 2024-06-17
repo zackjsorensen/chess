@@ -114,6 +114,8 @@ public class WebSocketHandler {
         if (verifyTurn(session, dbGameData, username, dbGame)){
             // make sure the move is their piece and it's valid
             ChessPosition startPos = command.move.getStartPosition();
+            // need to do this to compensate for the -1 in the getChessPiece... will have to find a way to clean it up
+            ChessPosition posToPass = new ChessPosition(startPos.getRow() + 1, startPos.getColumn() + 1);
             Collection<ChessMove> validMoves = dbGame.validMoves(startPos);
             // will that work, or is it only by object reference?
             if (validMoves.contains(command.move)){
@@ -123,6 +125,8 @@ public class WebSocketHandler {
                 sendGame(command.gameID, new LoadGameMessage(gson.toJson(dbGame)));
                 broadcast(command.gameID, new Notification(String.format("%s made the following move: %s ", username, command.move)), command.getAuthString());
                 // need to add in check, checkmate, stalemate
+            } else {
+                sendMessage(session, new ErrorMessage("Error - invalid move"));
             }
         }
 
