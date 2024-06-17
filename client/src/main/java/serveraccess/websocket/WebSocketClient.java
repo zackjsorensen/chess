@@ -20,7 +20,7 @@ public class WebSocketClient extends Endpoint {
     String color;
     ChessGame.TeamColor team;
 
-    public WebSocketClient(String color) throws URISyntaxException, DeploymentException, IOException {
+    public WebSocketClient(String color, int port) throws URISyntaxException, DeploymentException, IOException {
         if (color == null) {
             team = ChessGame.TeamColor.WHITE;
         } else if (color.equalsIgnoreCase("black")) {
@@ -30,7 +30,8 @@ public class WebSocketClient extends Endpoint {
         }
         this.color = color;
         // URL HERE -- shouldn't be hard coded....
-        URI uri = new URI("ws://localhost:8080/ws");
+        String urlString = "ws://localhost:" + port + "/ws";
+        URI uri = new URI(urlString);
         WebSocketContainer container = ContainerProvider.getWebSocketContainer();
         this.session = container.connectToServer(this, uri);
 

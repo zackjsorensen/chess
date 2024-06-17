@@ -19,10 +19,12 @@ public class ServerFacade {
     ClientCommunicator communicator;
     Gson gson = new Gson();
     public WebSocketClient wsClient;
+    int port;
 
     public ServerFacade(int port){
         communicator = new ClientCommunicator(port);
         wsClient = null;
+        this.port = port;
     }
 
     public ServerFacade() {
@@ -55,14 +57,14 @@ public class ServerFacade {
     public void joinGame(int gameID, String color, String authToken) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         int code = communicator.joinGame(gameID, color, authToken);
         if (code > 199 && code < 301){
-            wsClient = new WebSocketClient(color);
+            wsClient = new WebSocketClient(color, port);
             // send CONNECT msg to WS server
             wsClient.send(gson.toJson(new ConnectCommand(authToken, gameID)));
         }
     }
 
     public void observeGame(int gameID, String authToken) throws DeploymentException, URISyntaxException, IOException {
-        wsClient = new WebSocketClient("Observer");
+        wsClient = new WebSocketClient("Observer", port);
         wsClient.send(gson.toJson(new ConnectCommand(authToken, gameID)));
     }
 
