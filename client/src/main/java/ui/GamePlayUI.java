@@ -90,7 +90,7 @@ public class GamePlayUI {
             out.println("Invalid: Please enter one letter and one number, like so: a3. Type move to try again.");
             return null;
         }
-        column = LetterToInt.convert(input.charAt(0));
+        column = LetterToInt.convert(input.charAt(0)) - 1;
         out.println(column);
         int temp = Character.getNumericValue(input.charAt(1));
         if (temp > 8 || temp < 0 || column < 0 || column > 7){

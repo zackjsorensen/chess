@@ -26,8 +26,19 @@ public class ChessMove {
 
     @Override
     public String toString() {
-        return (" (R:" + endPosition.getRow() + ", C:" + endPosition.getColumn() + ", " + promotionPiece + ")");
+        return (numsToChessNotation(startPosition) + " -> " + numsToChessNotation(endPosition));
     }
+
+
+    public String numsToChessNotation(ChessPosition pos){
+        int col = pos.getColumn();
+        int row = pos.getRow();
+        // WIll that work??
+        char colLetter = (char) (col + 97);
+        int rowNotation = 8 - row;
+        return (" " + colLetter + rowNotation);
+    }
+
 
     /**
      * @return ChessPosition of ending location

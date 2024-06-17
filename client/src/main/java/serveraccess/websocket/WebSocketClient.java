@@ -3,6 +3,7 @@ package serveraccess.websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import ui.DrawChessBoard;
+import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
 import websocket.messages.ServerMessage;
@@ -43,8 +44,7 @@ public class WebSocketClient extends Endpoint {
                         case LOAD_GAME -> {
                             loadGame(gson.fromJson(s, LoadGameMessage.class));
                         }
-                        case ERROR -> {
-                        }
+                        case ERROR -> error(gson.fromJson(s, ErrorMessage.class));
                         case NOTIFICATION -> WebSocketClient.this.notify(gson.fromJson(s, Notification.class));
                     }
                 } catch (Exception e) {
@@ -74,6 +74,10 @@ public class WebSocketClient extends Endpoint {
 
     private void notify(Notification notification) {
         System.out.println(notification.message);
+    }
+
+    private void error(ErrorMessage error){
+        System.out.println(error.errorMessage);
     }
 
     @Override
