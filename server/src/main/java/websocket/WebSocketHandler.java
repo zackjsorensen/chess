@@ -108,6 +108,9 @@ public class WebSocketHandler {
         GameData dbGameData = (GameData) gameDAO.get(command.gameID);
         ChessGame dbGame = dbGameData.game();
         String username = getUsername(command, session);
+        if (username == null){
+            return;
+        }
         if (verifyTurn(session, dbGameData, username, dbGame)) {
 //            ChessPosition startPosTrueNotation = command.move.getStartPosition();
 //            ChessPosition endPosTrueNotation = command.move.getEndPosition();
