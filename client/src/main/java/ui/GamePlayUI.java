@@ -101,6 +101,7 @@ public class GamePlayUI {
     private void leave() throws IOException {
         LeaveCommand command = new LeaveCommand(authToken, id);
         serverFacade.wsClient.send(gson.toJson(command));
+        serverFacade.wsClient.
     }
 
     private ChessPiece.PieceType strToPieceType(String str){

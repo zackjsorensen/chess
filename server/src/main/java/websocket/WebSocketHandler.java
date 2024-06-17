@@ -87,14 +87,18 @@ public class WebSocketHandler {
         ChessGame dbGame = dbGameData.game();
         String username = getUsername(command, session);
         String joinedAs = getUserColor(dbGameData, username);
+        String color = null;
         if (joinedAs.equalsIgnoreCase("black")){
-            dbGameData = new GameData(dbGameData.gameID(), dbGameData.whiteUsername(), null, dbGameData.gameName(), dbGame);
+            color = "BLACK";
         } else if (joinedAs.equalsIgnoreCase("white")){
-            dbGameData = new GameData(dbGameData.gameID(), null, dbGameData.blackUsername(), dbGameData.gameName(), dbGame);
+            color = "WHITE";
         }
-        gameDAO.updateGameState(dbGameData.gameID(), dbGameData);
+        if (color != null){
+            gameDAO.updatePlayer(dbGameData.gameID(), color, null);
+        }
+
+        broadcast(command.gameID,new Notification( String.format("%s left the game.", username)), command.getAuthString());
         session.close();
-        broadcast(command.gameID,new Notification( String.format("%s left the game.", username)), null);
     }
 
     private String getUsername(UserGameCommand command, Session session) throws ResponseException, IOException {
