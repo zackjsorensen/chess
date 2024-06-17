@@ -1,6 +1,8 @@
 package ui;
 
+import chess.ChessBoard;
 import chess.ChessMove;
+import chess.ChessPiece;
 import chess.ChessPosition;
 import com.google.gson.Gson;
 import server.Server;
@@ -78,11 +80,39 @@ public class GamePlayUI {
         if (endPos == null) {return;}
         ChessPosition startPosNotation = trueToPositionNotation(startPos);
         ChessPosition endPosNotation = trueToPositionNotation(endPos);
-        // we will have to do something about that null ...
         ChessMove move = new ChessMove(startPosNotation, endPosNotation, null);
+        ChessPiece.PieceType pieceType = null;
+        if (checkIfPawnPromotion(move)){
+            out.print("Enter piece to promote pawn to: ");
+            String promotionPieceStr = scanner.nextLine();
+            pieceType = strToPieceType(promotionPieceStr);
+        }
+        move = new ChessMove(startPosNotation, endPosNotation, pieceType);
         MakeMoveCommand command = new MakeMoveCommand(authToken, id, move);
         out.println(move);
         serverFacade.wsClient.send(gson.toJson(command));
+    }
+
+    private ChessPiece.PieceType strToPieceType(String str){
+        switch (str){
+            case ("Queen"), ("queen") -> {return ChessPiece.PieceType.QUEEN;}
+            case ("Rook"), ("rook") -> {return ChessPiece.PieceType.ROOK;}
+            case ("Bishop"), ("bishop") -> {return ChessPiece.PieceType.BISHOP;}
+            case ("Knight"), ("knight") -> {return ChessPiece.PieceType.KNIGHT;}
+            default -> {
+                out.println("Invalid type. Type move to try again.");
+                return null;
+            }
+        }
+    }
+
+    private boolean checkIfPawnPromotion(ChessMove move){
+        // remember, in position notation
+        ChessBoard board = serverFacade.wsClient.game.getBoard();
+        if (board.getPiece(move.getStartPosition()).getPieceType() == ChessPiece.PieceType.PAWN){
+            return move.getEndPosition().getRow() == 8 || move.getEndPosition().getRow() == 1;
+        }
+        return false;
     }
 
     private ChessPosition trueToPositionNotation(ChessPosition pos){

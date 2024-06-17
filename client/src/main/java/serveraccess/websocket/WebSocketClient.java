@@ -19,6 +19,7 @@ public class WebSocketClient extends Endpoint {
     public DrawChessBoard chessBoard;
     String color;
     ChessGame.TeamColor team;
+    public ChessGame game;
 
     public WebSocketClient(String color, int port) throws URISyntaxException, DeploymentException, IOException {
         if (color == null) {
@@ -29,6 +30,7 @@ public class WebSocketClient extends Endpoint {
             team = ChessGame.TeamColor.WHITE;
         }
         this.color = color;
+        game = null;
         // URL HERE -- shouldn't be hard coded....
         String urlString = "ws://localhost:" + port + "/ws";
         URI uri = new URI(urlString);
@@ -64,7 +66,7 @@ public class WebSocketClient extends Endpoint {
 
     private void loadGame(LoadGameMessage loadMsg) throws Exception {
         String gameString = loadMsg.game;
-        ChessGame game = gson.fromJson(gameString, ChessGame.class);
+        game = gson.fromJson(gameString, ChessGame.class);
         if (color.equalsIgnoreCase("Observer")) {
             chessBoard = new DrawChessBoard(game, "WHITE");
         } else {
