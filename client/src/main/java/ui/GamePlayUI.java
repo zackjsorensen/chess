@@ -5,7 +5,6 @@ import chess.ChessMove;
 import chess.ChessPiece;
 import chess.ChessPosition;
 import com.google.gson.Gson;
-import server.Server;
 import serveraccess.ServerFacade;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
