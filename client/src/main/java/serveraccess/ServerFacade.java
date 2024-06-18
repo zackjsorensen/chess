@@ -5,6 +5,7 @@ import model.exception.ResponseException;
 import model.CreateGameReq;
 import model.ListGamesResult;
 import model.UserData;
+import serveraccess.websocket.GameOverException;
 import serveraccess.websocket.WebSocketClient;
 import ui.GamePlayUI;
 import websocket.commands.ConnectCommand;
@@ -20,11 +21,13 @@ public class ServerFacade {
     Gson gson = new Gson();
     public WebSocketClient wsClient;
     int port;
+    public boolean gameOver;
 
     public ServerFacade(int port){
         communicator = new ClientCommunicator(port);
         wsClient = null;
         this.port = port;
+        gameOver = false;
     }
 
     public ServerFacade() {
@@ -57,9 +60,10 @@ public class ServerFacade {
     public void joinGame(int gameID, String color, String authToken) throws IOException, ResponseException, DeploymentException, URISyntaxException {
         int code = communicator.joinGame(gameID, color, authToken);
         if (code > 199 && code < 301){
-            wsClient = new WebSocketClient(color, port);
-            // send CONNECT msg to WS server
-            wsClient.send(gson.toJson(new ConnectCommand(authToken, gameID)));
+
+                wsClient = new WebSocketClient(color, port);
+                // send CONNECT msg to WS server
+                wsClient.send(gson.toJson(new ConnectCommand(authToken, gameID)));
         }
     }
 

@@ -12,10 +12,7 @@ import model.exception.ResponseException;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import websocket.commands.ConnectCommand;
-import websocket.commands.LeaveCommand;
-import websocket.commands.MakeMoveCommand;
-import websocket.commands.UserGameCommand;
+import websocket.commands.*;
 import websocket.messages.ErrorMessage;
 import websocket.messages.LoadGameMessage;
 import websocket.messages.Notification;
@@ -56,7 +53,7 @@ public class WebSocketHandler {
             }
             case MAKE_MOVE -> makeMove(gson.fromJson(message, MakeMoveCommand.class), session);
             case LEAVE -> {leave(gson.fromJson(message, LeaveCommand.class), session);}
-            case RESIGN -> {
+            case RESIGN -> { resign(gson.fromJson(message, ResignCommand.class), session);
             }
         }
     }
@@ -96,8 +93,16 @@ public class WebSocketHandler {
         if (color != null){
             gameDAO.updatePlayer(dbGameData.gameID(), color, null);
         }
-
         broadcast(command.gameID,new Notification( String.format("%s left the game.", username)), command.getAuthString());
+
+        session.close();
+    }
+
+    private void resign(ResignCommand command, Session session) throws ResponseException, IOException {
+        String username = getUsername(command, session);
+
+        broadcast(command.gameID,new Notification( String.format("%s resigned from the game.", username)), command.getAuthString());
+        sendMessage(session, new Notification("You have resigned; the game is over"));
         session.close();
     }
 
@@ -146,12 +151,13 @@ public class WebSocketHandler {
                 // need to add in check, checkmate, stalemate
                 ChessGame.TeamColor nextPlayer = dbGame.getTeamTurn();
                 if (dbGame.isInCheckmate(nextPlayer)){
-                    broadcast(command.gameID, new Notification(String.format("%s is in checkmate.", nextPlayer.toString())), null);
-                    // what else...
+                    broadcast(command.gameID, new Notification(String.format("%s is in checkmate. Game over", nextPlayer.toString())), null);
+                    dbGameData.endGame();
+                    // what else???
                 } else if (dbGame.isInCheck(nextPlayer)){
                     broadcast(command.gameID, new Notification(String.format("%s is in check", nextPlayer.toString())), null);
                 } else if (dbGame.isInStalemate(nextPlayer)){
-                    broadcast(command.gameID, new Notification("Stalemate"), null);
+                    broadcast(command.gameID, new Notification("Stalemate, Game over"), null);
                 }
             } else {
                 sendMessage(session, new ErrorMessage("Error - invalid move"));

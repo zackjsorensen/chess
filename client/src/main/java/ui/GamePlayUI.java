@@ -9,6 +9,7 @@ import server.Server;
 import serveraccess.ServerFacade;
 import websocket.commands.LeaveCommand;
 import websocket.commands.MakeMoveCommand;
+import websocket.commands.ResignCommand;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -38,7 +39,7 @@ public class GamePlayUI {
     public void run() throws IOException {
         out.println("Game joined. Type help for commands");
         String line = scanner.nextLine();
-        while (true){
+        while (!serverFacade.gameOver){
             if (line.equalsIgnoreCase("help")){
                 help();
             } else if (line.equalsIgnoreCase("Redraw")){
@@ -101,7 +102,11 @@ public class GamePlayUI {
     private void leave() throws IOException {
         LeaveCommand command = new LeaveCommand(authToken, id);
         serverFacade.wsClient.send(gson.toJson(command));
-        serverFacade.wsClient.
+    }
+
+    private void resign() throws IOException {
+        ResignCommand command = new ResignCommand(authToken, id);
+        serverFacade.wsClient.send(gson.toJson(command));
     }
 
     private ChessPiece.PieceType strToPieceType(String str){

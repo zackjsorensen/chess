@@ -10,6 +10,7 @@ import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
 import java.io.IOException;
+import java.lang.module.ResolutionException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
@@ -20,6 +21,7 @@ public class WebSocketClient extends Endpoint {
     String color;
     ChessGame.TeamColor team;
     public ChessGame game;
+    public boolean gameOver;
 
     public WebSocketClient(String color, int port) throws URISyntaxException, DeploymentException, IOException {
         if (color == null) {
@@ -31,6 +33,7 @@ public class WebSocketClient extends Endpoint {
         }
         this.color = color;
         game = null;
+        gameOver = false;
         // URL HERE -- shouldn't be hard coded....
         String urlString = "ws://localhost:" + port + "/ws";
         URI uri = new URI(urlString);
@@ -64,15 +67,27 @@ public class WebSocketClient extends Endpoint {
         this.session.getBasicRemote().sendText(msg);
     }
 
-    private void loadGame(LoadGameMessage loadMsg) throws Exception {
+    private void loadGame(LoadGameMessage loadMsg) throws GameOverException {
         String gameString = loadMsg.game;
         game = gson.fromJson(gameString, ChessGame.class);
         if (color.equalsIgnoreCase("Observer")) {
-            chessBoard = new DrawChessBoard(game, "WHITE");
+            try {
+                chessBoard = new DrawChessBoard(game, "WHITE");
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         } else {
-            chessBoard = new DrawChessBoard(game, color);
+            try {
+                chessBoard = new DrawChessBoard(game, color);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
         }
         chessBoard.drawAll();
+        if (game.isInStalemate(ChessGame.TeamColor.BLACK) || game.isInStalemate(ChessGame.TeamColor.WHITE) || game.isInCheckmate(ChessGame.TeamColor.WHITE) || game.isInCheckmate(ChessGame.TeamColor.BLACK)){
+            gameOver = true;
+            // throw new GameOverException("Game is over");
+        }
     }
 
     private void notify(Notification notification) {
