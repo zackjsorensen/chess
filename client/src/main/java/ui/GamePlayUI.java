@@ -6,13 +6,13 @@ import chess.ChessPiece;
 import chess.ChessPosition;
 import com.google.gson.Gson;
 import serveraccess.ServerFacade;
-import websocket.commands.LeaveCommand;
-import websocket.commands.MakeMoveCommand;
-import websocket.commands.ResignCommand;
+
+import model.websocket.commands.LeaveCommand;
+import model.websocket.commands.MakeMoveCommand;
+import model.websocket.commands.ResignCommand;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.module.ResolutionException;
 import java.nio.charset.StandardCharsets;
 import java.util.Scanner;
 

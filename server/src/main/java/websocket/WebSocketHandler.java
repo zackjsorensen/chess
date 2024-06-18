@@ -2,21 +2,20 @@ package websocket;
 
 import chess.ChessGame;
 import chess.ChessMove;
-import chess.ChessPosition;
 import chess.InvalidMoveException;
 import com.google.gson.Gson;
 import dataaccess.sql.SQLAuthDAO;
 import dataaccess.sql.SQLGameDAO;
 import model.GameData;
 import model.exception.ResponseException;
+import model.websocket.commands.*;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
-import websocket.commands.*;
-import websocket.messages.ErrorMessage;
-import websocket.messages.LoadGameMessage;
-import websocket.messages.Notification;
-import websocket.messages.ServerMessage;
+import model.websocket.messages.ErrorMessage;
+import model.websocket.messages.LoadGameMessage;
+import model.websocket.messages.Notification;
+import model.websocket.messages.ServerMessage;
 
 import java.io.IOException;
 import java.util.*;

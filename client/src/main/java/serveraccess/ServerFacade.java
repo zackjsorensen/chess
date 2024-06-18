@@ -5,11 +5,8 @@ import model.exception.ResponseException;
 import model.CreateGameReq;
 import model.ListGamesResult;
 import model.UserData;
-import serveraccess.websocket.GameOverException;
 import serveraccess.websocket.WebSocketClient;
-import ui.GamePlayUI;
-import websocket.commands.ConnectCommand;
-import websocket.commands.UserGameCommand;
+import model.websocket.commands.ConnectCommand;
 
 import javax.websocket.DeploymentException;
 import java.io.IOException;

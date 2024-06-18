@@ -1,4 +1,4 @@
-package websocket.commands;
+package model.websocket.commands;
 
 public class ResignCommand extends UserGameCommand{
     public Integer gameID;

@@ -1,4 +1,4 @@
-package websocket.commands;
+package model.websocket.commands;
 
 public class ConnectCommand extends UserGameCommand{
     public Integer gameID;

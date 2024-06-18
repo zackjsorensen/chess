@@ -10,8 +10,8 @@ import passoff.websocket.TestCommand;
 import passoff.websocket.TestMessage;
 import passoff.websocket.WebsocketTestingEnvironment;
 import server.Server;
-import websocket.commands.UserGameCommand;
-import websocket.messages.ServerMessage;
+import model.websocket.commands.UserGameCommand;
+import model.websocket.messages.ServerMessage;
 
 import java.net.URISyntaxException;
 import java.util.*;

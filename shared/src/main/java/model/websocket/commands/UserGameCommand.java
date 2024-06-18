@@ -1,4 +1,4 @@
-package websocket.commands;
+package model.websocket.commands;
 
 import java.util.Objects;
 
