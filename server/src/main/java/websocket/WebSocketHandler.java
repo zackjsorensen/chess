@@ -101,12 +101,17 @@ public class WebSocketHandler {
 
         GameData gameData = (GameData) gameDAO.get(command.gameID);
         String joinedAs = getUserColor(gameData, username);
-        if (joinedAs.equalsIgnoreCase("Observer")){
+        if (gameData.blackUsername().equalsIgnoreCase("Resigned") || gameData.whiteUsername().equalsIgnoreCase("Resigned")){
+            sendMessage(session, new ErrorMessage("The game has already been resigned and is over"));
+        } else if (command.resigned){
+            sendMessage(session, new ErrorMessage("You have already resigned"));
+        }
+        else if (joinedAs.equalsIgnoreCase("Observer")){
             sendMessage(session, new ErrorMessage("Error: Observers cannot resign"));
         } else {
             broadcast(command.gameID, new Notification(String.format("%s resigned from the game.", username)), command.getAuthString());
             sendMessage(session, new Notification("You have resigned; the game is over"));
-            session.close();
+            gameDAO.updatePlayer(command.gameID, joinedAs, "RESIGNED");
         }
     }
 
@@ -122,9 +127,9 @@ public class WebSocketHandler {
     private String getUserColor(GameData dbGame, String username) {
         String joinedAs;
         if (dbGame.blackUsername() != null && dbGame.blackUsername().equals(username)) {
-            joinedAs = "Black";
+            joinedAs = "BLACK";
         } else if (dbGame.whiteUsername() != null && dbGame.whiteUsername().equals(username)) {
-            joinedAs = "White";
+            joinedAs = "WHITE";
         } else {
             joinedAs = "Observer";
         }
@@ -136,6 +141,10 @@ public class WebSocketHandler {
         GameData dbGameData = (GameData) gameDAO.get(command.gameID);
         ChessGame dbGame = dbGameData.game();
         String username = getUsername(command, session);
+        if (dbGameData.whiteUsername().equalsIgnoreCase("Resigned") || dbGameData.blackUsername().equalsIgnoreCase("resigned")){
+            sendMessage(session, new ErrorMessage("Error: the game has already been resigned and is over"));
+            return;
+        }
         if (username == null){
             return;
         }

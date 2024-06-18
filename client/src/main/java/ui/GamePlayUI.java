@@ -26,6 +26,7 @@ public class GamePlayUI {
     public String authToken;
     int id;
     Gson gson = new Gson();
+    boolean resigned;
 
 
     public GamePlayUI(String authToken, ServerFacade serverFacade, Scanner scanner, int id) {
@@ -34,12 +35,13 @@ public class GamePlayUI {
         this.serverFacade = serverFacade;
         this.authToken = authToken;
         this.id = id;
+        resigned = false;
     }
 
     public void run() throws IOException {
         out.println("Game joined. Type help for commands");
         String line = scanner.nextLine();
-        while (!serverFacade.gameOver){
+        while (true){
             if (line.equalsIgnoreCase("help")){
                 help();
             } else if (line.equalsIgnoreCase("Redraw")){
@@ -115,7 +117,9 @@ public class GamePlayUI {
 
     private void resign() throws IOException {
         ResignCommand command = new ResignCommand(authToken, id);
+        command.resigned = resigned;
         serverFacade.wsClient.send(gson.toJson(command));
+        resigned = true;
     }
 
     private ChessPiece.PieceType strToPieceType(String str){
