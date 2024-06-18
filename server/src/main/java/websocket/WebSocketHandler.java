@@ -99,9 +99,15 @@ public class WebSocketHandler {
     private void resign(ResignCommand command, Session session) throws ResponseException, IOException {
         String username = getUsername(command, session);
 
-        broadcast(command.gameID,new Notification( String.format("%s resigned from the game.", username)), command.getAuthString());
-        sendMessage(session, new Notification("You have resigned; the game is over"));
-        session.close();
+        GameData gameData = (GameData) gameDAO.get(command.gameID);
+        String joinedAs = getUserColor(gameData, username);
+        if (joinedAs.equalsIgnoreCase("Observer")){
+            sendMessage(session, new ErrorMessage("Error: Observers cannot resign"));
+        } else {
+            broadcast(command.gameID, new Notification(String.format("%s resigned from the game.", username)), command.getAuthString());
+            sendMessage(session, new Notification("You have resigned; the game is over"));
+            session.close();
+        }
     }
 
     private String getUsername(UserGameCommand command, Session session) throws ResponseException, IOException {

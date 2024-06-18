@@ -52,10 +52,9 @@ public class GamePlayUI {
             } else if (line.equalsIgnoreCase("Move")){
                 makeMove();
             } else if (line.equalsIgnoreCase("Resign")){
-                // code to lose
-                break;
+                resign();
             } else if (line.equalsIgnoreCase("Highlight")){
-
+                highlight();
             } else {
                 out.println("Invalid command. Type help to see valid commands. ");
             }
@@ -71,6 +70,16 @@ public class GamePlayUI {
         out.println("Resign - forfeit a game.");
         out.println("Highlight - Highlights legal moves for a piece at the entered position.");
     }
+
+    private void highlight(){
+        out.println("Enter position");
+        String pos = scanner.nextLine();
+        ChessPosition posTrue = convertToChessPosition(pos);
+        ChessPosition goodPos = trueToPositionNotation(posTrue);
+        chessBoard = serverFacade.wsClient.chessBoard;
+        chessBoard.drawMoves(goodPos);
+    }
+
 
     private void makeMove() throws IOException {
         out.println("Enter the current position of the piece you want to move: ");

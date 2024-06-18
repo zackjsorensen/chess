@@ -2,11 +2,10 @@ package ui;
 
 import java.io.PrintStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collection;
 
-import chess.ChessBoard;
-import chess.ChessGame;
-import chess.ChessPiece;
-import chess.ChessPosition;
+import chess.*;
 import ui.EscapeSequences;
 
 public class DrawChessBoard {
@@ -20,12 +19,16 @@ public class DrawChessBoard {
     String color;
     boolean whiteLeadsOnEven;
     ChessBoard board;
+    public boolean gameOver;
+    Collection<ChessMove> moves;
 
     public DrawChessBoard(ChessGame game, String color) throws Exception {
         out = new PrintStream(System.out, true, StandardCharsets.UTF_8);
         this.game = game;
         this.color = color;
         board = game.getBoard();
+        gameOver = false;
+        moves = new ArrayList<>();
     }
 
 
@@ -35,6 +38,17 @@ public class DrawChessBoard {
         } else {
             drawWhiteTurn();
         }
+    }
+
+    public void drawMoves(ChessPosition pos){
+        ChessPiece.PieceType piece = board.getPiece(pos).getPieceType();
+        ChessPiece chessPiece;
+        if (color.equalsIgnoreCase("BLACK")){
+            chessPiece = new ChessPiece(ChessGame.TeamColor.BLACK, piece);
+        } else {
+            chessPiece = new ChessPiece(ChessGame.TeamColor.WHITE, piece);
+        }
+        moves = chessPiece.pieceMoves(board, pos);
     }
 
     public void drawBlackTurn() {
@@ -124,7 +138,10 @@ public class DrawChessBoard {
         ChessPiece piece = board.getPiece(new ChessPosition(rowNum, colNum + 1));
         if (piece == null){
             out.print(EMPTY);
-        } else {
+        } else if (moves.contains(new ChessPosition(rowNum, colNum))){
+            out.print(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
+            out.print(getPieceTextColor(piece.getTeamColor()));
+        }else {
             out.print(getPieceTextColor(piece.getTeamColor()));
             out.print(getPieceSymbol(piece.getPieceType()));
         }
@@ -135,6 +152,9 @@ public class DrawChessBoard {
         ChessPiece piece = board.getPiece(new ChessPosition(rowNum, colNum + 1));
         if (piece == null){
             out.print(EMPTY);
+        }else if (moves.contains(new ChessPosition(rowNum, colNum))){
+            out.print(EscapeSequences.SET_BG_COLOR_DARK_GREEN);
+            out.print(getPieceTextColor(piece.getTeamColor()));
         } else {
             out.print(getPieceTextColor(piece.getTeamColor()));
             out.print(getPieceSymbol(piece.getPieceType()));
