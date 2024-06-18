@@ -42,11 +42,9 @@ public class WebSocketHandler {
             command = gson.fromJson(message, UserGameCommand.class);
             System.out.println(command);
         } catch (Exception e) {
-            // idk about this....
             throw new ResponseException(401, "Invalid user command");
         }
-        // save session to map
-        // switch statement to make it the right kind of command
+
         switch (command.getCommandType()) {
             case CONNECT -> {
                 connect(gson.fromJson(message, ConnectCommand.class), session);
@@ -136,11 +134,7 @@ public class WebSocketHandler {
             return;
         }
         if (verifyTurn(session, dbGameData, username, dbGame)) {
-//            ChessPosition startPosTrueNotation = command.move.getStartPosition();
-//            ChessPosition endPosTrueNotation = command.move.getEndPosition();
-            //ChessMove movePosNotation = new ChessMove(trueToPositionNotation(startPosTrueNotation), trueToPositionNotation(endPosTrueNotation), command.move.getPromotionPiece());
             Collection<ChessMove> validMoves = dbGame.validMoves(command.move.getStartPosition());
-            // will that work, or is it only by object reference?
             if (validMoves.contains(command.move)) {
                 dbGame.makeMove(command.move);
 
@@ -148,12 +142,10 @@ public class WebSocketHandler {
                 gameDAO.updateGameState(dbGameData.gameID(), dbGameData);
                 sendGame(command.gameID, new LoadGameMessage(gson.toJson(dbGame)));
                 broadcast(command.gameID, new Notification(String.format("%s made the following move: %s ", username, command.move)), command.getAuthString());
-                // need to add in check, checkmate, stalemate
                 ChessGame.TeamColor nextPlayer = dbGame.getTeamTurn();
                 if (dbGame.isInCheckmate(nextPlayer)){
                     broadcast(command.gameID, new Notification(String.format("%s is in checkmate. Game over", nextPlayer.toString())), null);
                     dbGameData.endGame();
-                    // what else???
                 } else if (dbGame.isInCheck(nextPlayer)){
                     broadcast(command.gameID, new Notification(String.format("%s is in check", nextPlayer.toString())), null);
                 } else if (dbGame.isInStalemate(nextPlayer)){
