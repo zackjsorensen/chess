@@ -1,4 +1,4 @@
-package model.websocket.messages;
+package websocket.messages;
 
 public class Notification extends ServerMessage{
     public String message;

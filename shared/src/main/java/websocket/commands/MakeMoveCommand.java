@@ -1,5 +1,6 @@
-package model.websocket.commands;
+package websocket.commands;
 
+import chess.ChessGame;
 import chess.ChessMove;
 
 public class MakeMoveCommand extends UserGameCommand{

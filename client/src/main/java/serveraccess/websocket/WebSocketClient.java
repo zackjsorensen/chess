@@ -3,13 +3,14 @@ package serveraccess.websocket;
 import chess.ChessGame;
 import com.google.gson.Gson;
 import ui.DrawChessBoard;
-import model.websocket.messages.ErrorMessage;
-import model.websocket.messages.LoadGameMessage;
-import model.websocket.messages.Notification;
-import model.websocket.messages.ServerMessage;
+import websocket.messages.ErrorMessage;
+import websocket.messages.LoadGameMessage;
+import websocket.messages.Notification;
+import websocket.messages.ServerMessage;
 
 import javax.websocket.*;
 import java.io.IOException;
+import java.lang.module.ResolutionException;
 import java.net.URI;
 import java.net.URISyntaxException;
 

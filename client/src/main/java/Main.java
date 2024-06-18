@@ -4,10 +4,8 @@ import model.exception.ResponseException;
 import model.*;
 import serveraccess.ResponseObj;
 import serveraccess.ServerFacade;
-import serveraccess.websocket.WebSocketClient;
-import ui.DrawChessBoard;
 import ui.GamePlayUI;
-import websocket.WebSocketHandler;
+
 
 import java.io.PrintStream;
 import java.net.MalformedURLException;
